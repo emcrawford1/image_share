@@ -11,17 +11,16 @@ const flexContainer = {
   justifyContent: 'center',
 };
 
-class PCategoryView extends Component {
+class PSpecificPictureView extends Component {
 
   state = {
-
+    id: this.props.match.params.id,
     userId: "1",
     picture: {
-      id: this.props.match.params.id,
       title: "My Veggie Burger Recipe",
       firstName: "Wanda",
       lastName: "Denkins",
-      userName: "wandaDenkins79",
+      userName: "wandadenkins79",
       dateAdded: "May 4, 2019",
       description: "It's not the best veggie burger I've ever had, but I can get that ground beef real close.",
       price: "100.00",
@@ -60,7 +59,7 @@ class PCategoryView extends Component {
         <Nav />
         <div style={flexContainer}>
           <PSpecificPic
-            key={this.state.picture.id}
+            key={this.state.picture.userName}
             title={this.state.picture.title}
             fullName={this.state.picture.firstName + " " + this.state.picture.lastName}
             username={this.state.picture.userName}
@@ -68,6 +67,7 @@ class PCategoryView extends Component {
             description={this.state.picture.description}
             price={this.state.picture.price}
             filePath={this.state.picture.filePath}
+            link={"/pviewphotographerprofile/" + this.state.picture.userName}
             disabled={addCartDisabled}
             // onClick={() => this.addToCart(this.state.picture.id, this.state.userId)}
             onClick={() => this.addToCart(this.state.disabled)}
@@ -81,6 +81,6 @@ class PCategoryView extends Component {
   }
 }
 
-export default PCategoryView;
+export default PSpecificPictureView;
 
 
