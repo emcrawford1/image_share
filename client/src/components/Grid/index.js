@@ -9,12 +9,12 @@ const box = {
 
 }
 
-const imgWrapper = {}
+//Will need to wrap this in a flexbox div
 
 function Grid(props) {
   return (
     <a href={"/" + props.link}>
-    <img src={props.filePath} className="rounded-lg" style={box}  alt=""/>{props.link}
+    <img src={props.filePath} className="rounded-sm" style={box}  alt=""/>{props.name}
     </a>
   )
 }

@@ -16,11 +16,11 @@ class PurchaserLanding extends Component {
   state = {
     pictures: [{
       category: "Weddings",
-      filePath: "images/picture8.jpg"
+      filePath: "/images/picture8.jpg"
     },
   {
     category: "Urban",
-    filePath: "images/picture5.jpg"
+    filePath: "/images/picture5.jpg"
   }],
     searchVal: ""
   };
@@ -41,8 +41,9 @@ class PurchaserLanding extends Component {
         {this.state.pictures.map ((pic, index) => (
           <Grid 
           key={index}
-          link={pic.category}
+          link={"pcategoryview/" + pic.category}
           filePath={pic.filePath}
+          name={pic.category}
           />
         )
           )}
