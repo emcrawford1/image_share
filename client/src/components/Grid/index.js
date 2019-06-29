@@ -18,8 +18,11 @@ const price = {
 }
 
 const postPurchaseStyle = {
-
   marginTop: "25%"
+}
+
+const myPurchaseStyle = {
+  marginTop: "25px"
 }
 //Will need to wrap this in a flexbox div
 
@@ -58,5 +61,18 @@ export function PostPurchaseGrid(props) {
     </div>
   </div>
   
+  )
+}
+
+export function MyPurchasesGrid(props) {
+  return(
+    <div style={myPurchaseStyle}>
+      <h3>{props.confirmationNumber}</h3>
+      <div className="row">
+        <h5 className="col">{props.date}</h5>
+        <h5 className="col">{props.totalPrice}</h5>
+        
+      </div>
+    </div>
   )
 }

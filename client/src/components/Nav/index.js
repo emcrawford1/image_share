@@ -11,6 +11,9 @@ function Nav(props) {
     <a className="navbar-brand" style={navSpacer} href="/">
         Home
     </a>
+    <a className="navbar-brand" style={navSpacer} href={"/mypurchases/" + props.id}>
+        My Purchases
+    </a>
       <a className="navbar-brand" style={navSpacer} href="/logout">
         Logout
     </a>

@@ -7,6 +7,7 @@ import PViewPhotographerProlile from "./pages/PViewPhotographerProfile";
 import PurchaseCart from "./pages/PurchaseCart";
 import Checkout from "./pages/Checkout";
 import PostPurchase from "./pages/PostPurchase";
+import MyPurchases from "./pages/MyPurchases";
 import Login from "./pages/Login";
 import './App.css';
 
@@ -23,6 +24,7 @@ function App() {
          <Route exact path="/purchaserlandingpage" component={PurchaserLandingPage} />
          <Route exact path="/checkout/:id" component={Checkout} />
          <Route exact path="/postpurchase/:id" component={PostPurchase} />
+         <Route exact path="/mypurchases/:id" component={MyPurchases} />
        </Switch>
      </div>
    </Router>
