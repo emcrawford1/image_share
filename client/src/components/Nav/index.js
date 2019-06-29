@@ -4,7 +4,7 @@ const navSpacer = {
   marginLeft: "15px"
 }
 
-function Nav() {
+function Nav(props) {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
       [Image Share]
@@ -13,6 +13,9 @@ function Nav() {
     </a>
       <a className="navbar-brand" style={navSpacer} href="/logout">
         Logout
+    </a>
+    <a className="navbar-brand" style={navSpacer} href={"/purchasecart/" + props.id}>
+        View Cart
     </a>
     <div className="container">
     <div className="row">

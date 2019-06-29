@@ -14,8 +14,8 @@ const flexContainer = {
 class PSpecificPictureView extends Component {
 
   state = {
-    id: this.props.match.params.id,
     userId: "1",
+    id: this.props.match.params.id,
     picture: {
       title: "My Veggie Burger Recipe",
       firstName: "Wanda",
@@ -56,7 +56,8 @@ class PSpecificPictureView extends Component {
     console.log(addCartDisabled);
     return (
       <div className="wrapper">
-        <Nav />
+        <Nav 
+        id={this.state.userId}/>
         <div style={flexContainer}>
           <PSpecificPic
             key={this.state.picture.userName}

@@ -1,36 +1,86 @@
 import React, { Component } from "react";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
-import { PUserProfile } from "../components/Card";
+import { ViewCart } from "../components/Card";
+import { BtnSet } from "../components/Grid";
 import API from "../utils/API";
 
 //Styling
-const flexContainer = {
-  display: 'flex',
-  flexWrap: 'wrap',
-  justifyContent: 'center',
-};
 
- 
+const cartContainer = {
+  marginTop: "25px"
+}
+
 class PurchaseCart extends Component {
 
   state = {
 
-   
-      userName: this.props.match.params.id,
-      firstName: "Wanda",
-      lastName: "Denkins",
-      dateAdded: "May 4, 2019",
-      filePath: "/images/picture5.jpg",
-      businessName: "Wanda's Burgers",
-      aboutMe: "Serving up our own rendition of veggie burgers",
-      searchVal: ""
-  
+    totalPrice: "",
+    userId: this.props.match.params.id,
+
+    cartItems: [
+      {
+        purchaserId: "10",
+        pictureId: "32",
+        title: "Just a Beautiful Photograph",
+        firstName: "Wanda",
+        lastName: "Denkins",
+        price: "40",
+        filePath: "/images/picture5.jpg",
+      },
+
+      {
+        purchaserId: "11",
+        pictureId: "33",
+        title: "Inspiring",
+        firstName: "George",
+        lastName: "Thormul",
+        price: "4103",
+        filePath: "/images/picture5.jpg",
+      },
+
+      {
+        purchaserId: "12",
+        pictureId: "34",
+        title: "You've Got an Error",
+        firstName: "Percy",
+        lastName: "Moravin",
+        price: "404",
+        filePath: "/images/picture8.jpg",
+      },
+
+      {
+        purchaserId: "13",
+        pictureId: "35",
+        title: "Leet",
+        firstName: "m3lvIn",
+        lastName: "t03h@7g@r",
+        price: "1337",
+        filePath: "/images/picture5.jpg",
+      }
+    ]
+
   };
 
-  //This needs to be uncommented when ORM is set up
+  componentWillMount() {
+    this.getTotalPrice();
+    console.log(this.state.totalPrice);
+  }
+
+  getTotalPrice() {
+
+    const priceArray = this.state.cartItems.map(item => parseInt(item.price));
+
+    const reducer = (accumulator, currentValue) => accumulator + currentValue;
+    const newPrice = priceArray.reduce(reducer, 0);
+
+    this.setState({ totalPrice: newPrice });
+    console.log(this.state.totalPrice);
+  }
+  //This needs to be uncommented when ORM is set up.  This is probably going to need more ORM logic to call
+  //the database for each picture in the user's cart.  May need to try to set up an index
   // componentWillMount() {
-  //   API.getPhotographerProfile(this.props.match.params.id)
+  //   API.getCartItems(this.props.match.params.id)
   //     .then(res => this.setState({pictures: res.data, searchValue: "" }))
   //     .catch(err => console.log(err));
   // }
@@ -42,36 +92,85 @@ class PurchaseCart extends Component {
   //   .catch(err => console.log(err));
   // }
 
-  //Testing
-  addToCart(lol){
-  
-    this.setState({disabled: "true"});
-    console.log(this.state.disabled);
+  //Testing - This will actually need to call the ORM with the 
+  removeFromCart(index) {
+
+    console.log("Removing: " + this.state.cartItems[index]);
+
+    let newCart = this.state.cartItems;
+    newCart.splice(index, 1);
+    this.setState({ cartItems: newCart });
+    this.getTotalPrice();
+
+  }
+
+ nextPage() {
+   let path = "/";
+   this.props.history.push(path)
+ }
+  //Testing - this will need to actually call one of the ORM functions above.
+  clearCart() {
+    //Clear the whole thing.
+
+    const newthing =  [{
+      purchaserId: "13",
+      pictureId: "35",
+      title: "Leet",
+      firstName: "m3lvIn",
+      lastName: "t03h@7g@r",
+      price: "1337",
+      filePath: "/images/picture5.jpg",
+    }]
+    this.setState({ cartItems: []})
   }
 
   render() {
 
+    if (this.state.cartItems.length === 0) {
+      return (
+        <div className="wrapper">
+          <Nav
+            id={this.state.userId}
+          />
+          <div className="container">
+            <h2>There are no items in your cart.</h2>
+          </div>
+          <Footer />
+        </div>
+      )
+    }
+
     return (
       <div className="wrapper">
-        <Nav />
-        <div style={flexContainer}>
-          <PUserProfile
-            key={this.state.userName}
-            fullName={this.state.firstName + " " + this.state.lastName}
-            username={this.state.userName}
-            businessName={this.state.businessName}
-            dateAdded={this.state.dateAdded}
-            aboutMe={this.state.aboutMe}
-            filePath={this.state.filePath}
-            link={"/photouserpictures/" + this.state.username}
-          />
 
+        <Nav
+          id={this.state.userId}
+        />
 
+        <div className="container" style={cartContainer}>
+
+          {this.state.cartItems.map((item, index) =>
+            <ViewCart
+              key={index}
+              title={item.title}
+              fullName={item.firstName + " " + item.lastName}
+              price={item.price}
+              image={item.filePath}
+              onClick={() => this.removeFromCart(index)}
+            />
+
+          )}
+          <BtnSet
+            totalPrice={"Total Cost: $" + this.state.totalPrice} 
+            clearCart={() => this.clearCart()}
+            nextPage={() => this.nextPage()} />
         </div>
         <Footer />
       </div>
     )
   }
 }
-
 export default PurchaseCart;
+
+
+

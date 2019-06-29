@@ -6,7 +6,7 @@ import PSpecificPictureView from "./pages/PSpecificPictureView";
 import PViewPhotographerProlile from "./pages/PViewPhotographerProfile";
 import PurchaseCart from "./pages/PurchaseCart";
 import Login from "./pages/Login";
-// import './App.css';
+import './App.css';
 
 function App() {
   return (
@@ -16,8 +16,8 @@ function App() {
          <Route exact path="/" component={PurchaserLandingPage} />
          <Route exact path="/pcategoryview/:category" component={PCategoryView} />
          <Route exact path="/pspecificpictureview/:id" component={PSpecificPictureView} />
-         <Route exact path="/PViewPhotographerProfile/:id" component={PViewPhotographerProlile} />
-         <Route exact path="/PurchaseCart/:id" component={PurchaseCart} />
+         <Route exact path="/pviewphotographerprofile/:id" component={PViewPhotographerProlile} />
+         <Route exact path="/purchasecart/:id" component={PurchaseCart} />
          <Route exact path="/purchaserlandingpage" component={PurchaserLandingPage} />
        </Switch>
      </div>

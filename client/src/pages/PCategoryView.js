@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
-import Grid from "../components/Grid";
+import { PicGrid } from "../components/Grid";
 import API from "../utils/API";
 
 //Styling
@@ -14,6 +14,7 @@ const flexContainer = {
 class PCategoryView extends Component {
 
   state = {
+    userId: "10",
     pictures: [{
       id: "27",
       title: "Nice Picture",
@@ -37,10 +38,12 @@ class PCategoryView extends Component {
   render() {
     return (
       <div className="wrapper">
-      <Nav />
+      <Nav 
+      id={this.state.userId}
+      />
       <div style={flexContainer}>
         {this.state.pictures.map ((pic, index) => (
-          <Grid 
+          <PicGrid 
           key={index}
           link={"PSpecificPictureView/" + pic.id}
           filePath={pic.filePath}

@@ -16,8 +16,9 @@ const addToCartButtonStyle = {
   marginLeft: "10px"
 }
 
-const removeFromCartButtonStyle = {
+const viewCart = {
 
+  marginBottom: "15px"
 }
 
 
@@ -67,10 +68,10 @@ export function PUserProfile(props) {
     );
 }
 
-export function PurchaseCart(props) {
+export function ViewCart(props) {
   return (
 
-    <div className="row no-gutters">
+    <div className="row no-gutters" style={viewCart}>
         <div className="col-md-2">
           <img src={props.image} className="card-img" alt={props.title} />
         </div>
@@ -78,7 +79,7 @@ export function PurchaseCart(props) {
           <div className="card-body">
             <h5 className="card-title">{props.title}</h5>
             <p className="card-text">{props.fullName}</p>
-            <p className="card-text">{props.price}</p>
+            <p className="card-text">{"Price: $" + props.price}</p>
             <button style={addToCartButtonStyle} type="button" onClick={props.onClick} className="btn btn-outline-danger">Remove</button>
           </div>
         </div>

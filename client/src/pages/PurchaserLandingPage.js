@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
-import Grid from "../components/Grid";
+import {PicGrid} from "../components/Grid";
 import API from "../utils/API";
 
 //Styling
@@ -14,6 +14,7 @@ const flexContainer = {
 class PurchaserLanding extends Component {
 
   state = {
+    userId: "29",
     pictures: [{
       category: "Weddings",
       filePath: "/images/picture8.jpg"
@@ -36,10 +37,12 @@ class PurchaserLanding extends Component {
   render() {
     return (
       <div className="wrapper">
-      <Nav />
+      <Nav 
+      id={this.state.userId}
+      />
       <div style={flexContainer}>
         {this.state.pictures.map ((pic, index) => (
-          <Grid 
+          <PicGrid 
           key={index}
           link={"pcategoryview/" + pic.category}
           filePath={pic.filePath}

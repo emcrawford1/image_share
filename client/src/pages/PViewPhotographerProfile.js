@@ -16,12 +16,14 @@ class PViewPhotographerProfile extends Component {
 
   state = {
 
-   
+     userId: "27",
+     filePath: "/images/picture5.jpg",
+      
       userName: this.props.match.params.id,
       firstName: "Wanda",
       lastName: "Denkins",
       dateAdded: "May 4, 2019",
-      filePath: "/images/picture5.jpg",
+     
       businessName: "Wanda's Burgers",
       aboutMe: "Serving up our own rendition of veggie burgers",
       searchVal: ""
@@ -53,7 +55,9 @@ class PViewPhotographerProfile extends Component {
 
     return (
       <div className="wrapper">
-        <Nav />
+        <Nav 
+        id={this.state.userId}
+        />
         <div style={flexContainer}>
           <PUserProfile
             key={this.state.userName}
