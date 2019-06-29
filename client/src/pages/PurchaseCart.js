@@ -105,7 +105,7 @@ class PurchaseCart extends Component {
   }
 
  nextPage() {
-   let path = "/";
+   let path = "/checkout/" + this.state.userId;
    this.props.history.push(path)
  }
   //Testing - this will need to actually call one of the ORM functions above.
