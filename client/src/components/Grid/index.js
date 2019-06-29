@@ -9,6 +9,9 @@ const box = {
 
 }
 
+const textStyle = {
+  textAlign: "center"
+}
 const price = {
   marginRight: "20px",
   marginLeft: "20px"
@@ -18,9 +21,12 @@ const price = {
 
 export function PicGrid(props) {
   return (
+    <div style={box}>
     <a href={"/" + props.link}>
-      <img src={props.filePath} className="rounded-sm" style={box} alt="" />{props.name}
+      <img src={props.filePath} className="rounded-sm" style={box} alt="" />
+      <div style={textStyle}>{props.name}</div>
     </a>
+    </div>
   )
 }
 

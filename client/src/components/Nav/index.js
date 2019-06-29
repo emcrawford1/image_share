@@ -8,8 +8,8 @@ function Nav(props) {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
       [Image Share]
-    <a className="navbar-brand" style={navSpacer} href="/profile">
-        Profile
+    <a className="navbar-brand" style={navSpacer} href="/">
+        Home
     </a>
       <a className="navbar-brand" style={navSpacer} href="/logout">
         Logout
