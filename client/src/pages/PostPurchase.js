@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
-import { CheckoutForm } from "../components/Form";
+import { PostPurchaseGrid } from "../components/Grid";
 import API from "../utils/API";
 
 //Styling
@@ -11,26 +11,21 @@ const flexContainer = {
   justifyContent: 'center',
 };
 
-class PCategoryView extends Component {
+class PostPurchase extends Component {
 
   state = {
     userId: "10",
-    totalPrice: "75.00",
+    firstName: "Danithon",
+    confirmationNumber: "34",
     searchVal: ""
   };
 
-  //This will need to get the total price of the user's orders and update the totalPrice property
+  //This needs to be uncommented when ORM is set up
   // componentWillMount() {
-  //   API.getPictures(this.props.match.params.userId)
+  //   API.getPictures(this.props.match.params.category)
   //     .then(res => this.setState({pictures: res.data, searchValue: "" }))
   //     .catch(err => console.log(err));
   // }
-
-
- nextPage() {
-  let path = "/postpurchase/" + this.state.userId;
-  this.props.history.push(path);
-}
 
   render() {
     return (
@@ -38,13 +33,11 @@ class PCategoryView extends Component {
         <Nav
           id={this.state.userId}
         />
-        <div style={flexContainer}>
-
-          <CheckoutForm
-            totalPrice={"Total Price: $" + this.state.totalPrice}
-            nextPage={() => this.nextPage()}
+        <div className="container" style={flexContainer}>
+          <PostPurchaseGrid
+            thankYouMessage={this.state.firstName + ", thank you for your purchase!"}
+            confirmationNumber={"Your confirmation number is: " + this.state.confirmationNumber}
           />
-
         </div>
         <Footer />
       </div>
@@ -52,4 +45,6 @@ class PCategoryView extends Component {
   }
 }
 
-export default PCategoryView;
+export default PostPurchase;
+
+

@@ -17,6 +17,10 @@ const price = {
   marginLeft: "20px"
 }
 
+const postPurchaseStyle = {
+
+  marginTop: "25%"
+}
 //Will need to wrap this in a flexbox div
 
 export function PicGrid(props) {
@@ -37,5 +41,22 @@ export function BtnSet(props) {
       {props.totalPrice}
       <button type="button" onClick={props.nextPage} className="btn btn-outline-primary">Next</button>
     </div>
+  )
+}
+
+export function PostPurchaseGrid(props) {
+  return(
+  <div style={postPurchaseStyle}>
+     <div className="row">
+    <h1>[Image Share]</h1>
+    </div>
+    <div className="row">
+      {props.thankYouMessage} 
+    </div>
+    <div className="row">
+      {props.confirmationNumber}
+    </div>
+  </div>
+  
   )
 }
