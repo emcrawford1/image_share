@@ -70,6 +70,7 @@ export function MyPurchasesGrid(props) {
       <h3>{props.confirmationNumber}</h3>
       <div className="row">
         <h5 className="col">{props.date}</h5>
+        <a href={props.link}>View Photos</a>
         <h5 className="col">{props.totalPrice}</h5>
         
       </div>

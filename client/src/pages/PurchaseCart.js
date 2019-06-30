@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Nav from "../components/Nav";
+import {PurchNav} from "../components/Nav";
 import Footer from "../components/Footer";
 import { ViewCart } from "../components/Card";
 import { BtnSet } from "../components/Grid";
@@ -129,7 +129,7 @@ class PurchaseCart extends Component {
     if (this.state.cartItems.length === 0) {
       return (
         <div className="wrapper">
-          <Nav
+          <PurchNav
             id={this.state.userId}
           />
           <div className="container">
@@ -143,7 +143,7 @@ class PurchaseCart extends Component {
     return (
       <div className="wrapper">
 
-        <Nav
+        <PurchNav
           id={this.state.userId}
         />
 

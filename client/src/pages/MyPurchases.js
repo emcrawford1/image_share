@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Nav from "../components/Nav";
+import { PurchNav } from "../components/Nav";
 import Footer from "../components/Footer";
 import { PostPurchaseGrid, MyPurchasesGrid } from "../components/Grid";
 import API from "../utils/API";
@@ -63,7 +63,7 @@ class MyPurchases extends Component {
     if (this.state.purchases.length === 0) {
       return (
         <div className="wrapper">
-          <Nav
+          <PurchNav
             id={this.state.userId}
           />
           <div className="container">
@@ -75,7 +75,7 @@ class MyPurchases extends Component {
     }
     return (
       <div className="wrapper">
-        <Nav
+        <PurchNav
           id={this.state.userId}
         />
         <div className="container" >
@@ -86,6 +86,7 @@ class MyPurchases extends Component {
               key={index}
               confirmationNumber={"Confirmation Number: " + purchase.confirmationNumber}
               date={"Purchase Date: " + purchase.date}
+              link={"/pyourphotos/" + purchase.confirmationNumber}
               totalPrice={"Total price: $" + purchase.totalPrice}
             />
           ))}

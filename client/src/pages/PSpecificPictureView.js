@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Nav from "../components/Nav";
+import { PurchNav } from "../components/Nav";
 import Footer from "../components/Footer";
 import { PSpecificPic } from "../components/Card";
 import API from "../utils/API";
@@ -56,7 +56,7 @@ class PSpecificPictureView extends Component {
     console.log(addCartDisabled);
     return (
       <div className="wrapper">
-        <Nav 
+        <PurchNav 
         id={this.state.userId}/>
         <div style={flexContainer}>
           <PSpecificPic

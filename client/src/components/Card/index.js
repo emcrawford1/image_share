@@ -68,6 +68,29 @@ export function PUserProfile(props) {
     );
 }
 
+//This should be refactored and combined with PUserProfile
+export function ViewYourPhoto(props) {
+  return (
+    
+    <div className="row no-gutters" style={cardStyle}>
+      <div className="col-lg-6">
+        <img src={props.filePath} className="card-img" alt={props.fullName} />
+      </div>
+      <div className="col-lg-6">
+        <div className="card-body">
+          <h2 className="card-title">{props.fullName} <small className="text-muted">{" (" + props.username + ")"}</small></h2>
+          <p className="card-text">{props.dateAdded}</p>
+          <p className="card-text">{props.confirmationNumber}</p>
+          <p className="card-text">{props.purchasePrice}</p>
+        </div>
+      </div>
+    </div>
+    
+    );
+}
+
+
+
 export function ViewCart(props) {
   return (
 

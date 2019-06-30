@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import {PurchNav} from "../components/Nav";
 import Footer from "../components/Footer";
-import { PUserProfile } from "../components/Card";
+import { ViewYourPhoto } from "../components/Card";
 import API from "../utils/API";
 
 //Styling
@@ -17,15 +17,17 @@ class PViewPhotographerProfile extends Component {
   state = {
 
      userId: "27",
-     filePath: "/images/picture5.jpg",
+     filePath: "/images/picture2.jpg",
       
-      userName: this.props.match.params.id,
+      pictureId: this.props.match.params.id,
       firstName: "Wanda",
       lastName: "Denkins",
-      dateAdded: "May 4, 2019",
+      userName: "leroy4545@gmail.com",
+      confirmationNumber: "23214",
+      dateAdded: "May 17, 2019",
+      purchasePrice: "35",
      
-      businessName: "Wanda's Burgers",
-      aboutMe: "Serving up our own rendition of veggie burgers",
+     
       searchVal: ""
   
   };
@@ -59,15 +61,14 @@ class PViewPhotographerProfile extends Component {
         id={this.state.userId}
         />
         <div style={flexContainer}>
-          <PUserProfile
+          <ViewYourPhoto
             key={this.state.userName}
             fullName={this.state.firstName + " " + this.state.lastName}
             username={this.state.userName}
-            businessName={this.state.businessName}
-            dateAdded={this.state.dateAdded}
-            aboutMe={this.state.aboutMe}
+            confirmationNumber={"Confirmation Number: #" + this.state.confirmationNumber}
+            dateAdded={"Date Photo was Added: " + this.state.dateAdded}
+            purchasePrice={"Amount Paid: $" + this.state.purchasePrice}
             filePath={this.state.filePath}
-            link={"/pviewphotographerphotos/" + this.state.userName}
           />
 
 

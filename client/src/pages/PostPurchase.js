@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Nav from "../components/Nav";
+import { PurchNav } from "../components/Nav";
 import Footer from "../components/Footer";
 import { PostPurchaseGrid } from "../components/Grid";
 import API from "../utils/API";
@@ -30,7 +30,7 @@ class PostPurchase extends Component {
   render() {
     return (
       <div className="wrapper">
-        <Nav
+        <PurchNav 
           id={this.state.userId}
         />
         <div className="container" style={flexContainer}>
