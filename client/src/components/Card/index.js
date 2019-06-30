@@ -1,5 +1,6 @@
 import React from "react";
 
+//These components could probably be refactored
 
 //Styling
 
@@ -36,9 +37,9 @@ export function PSpecificPic(props) {
       <div className="card-body">
         <h2 className="card-title">{props.fullName}</h2>
         <a href={props.link}><p className="card-text"><small className="text-muted">{props.username}</small></p></a>
-        <p className="card-text">Date Added: {" " + props.dateAdded}</p>
-        <p className="card-text">Description: {" " + props.description}</p>
-        <div className="center"><h5>Price:</h5>{" $" + props.price}<button style={addToCartButtonStyle} type="button" onClick={props.onClick} className="btn btn-outline-dark" disabled={props.disabled}>Add to Cart</button></div>
+        <p className="card-text">{props.dateAdded}</p>
+        <p className="card-text">{props.description}</p>
+        <div className="center">{props.price}<button style={addToCartButtonStyle} type="button" onClick={props.onClick} className={props.BtnClass} disabled={props.disabled}>{props.BtnName}</button></div>
       </div>
     </div>
   </div>
@@ -60,7 +61,7 @@ export function PUserProfile(props) {
           <p className="card-text">Business Name: {" " + props.businessName}</p>
           <p className="card-text">Member Since: {" " + props.dateAdded}</p>
           <p className="card-text">About Me: {" " + props.aboutMe}</p>
-          <a href={props.link}><div className="card-text">View Pictures</div></a>
+          <a href={props.link}><div className="card-text">{props.linkDesc}</div></a>
         </div>
       </div>
     </div>

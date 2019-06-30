@@ -77,3 +77,19 @@ export function MyPurchasesGrid(props) {
     </div>
   )
 }
+
+
+export function PhotographerSalesGrid(props) {
+  return(
+    <div style={myPurchaseStyle}>
+      <h3>{props.dateSold}</h3>
+      <div className="row">
+        <h5 className="col"><a href={props.link}>{props.title}</a></h5>
+        <h5 className="col">{props.purchaser}</h5>
+        <h5 className="col">{props.date}</h5>
+        <h5 className="col">{props.price}</h5>
+        
+      </div>
+    </div>
+  )
+}

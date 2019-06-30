@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { PhotoNav } from "../components/Nav";
+import {PhotoNav} from "../components/Nav";
 import Footer from "../components/Footer";
-import { PUserProfile } from "../components/Card";
+import { PSpecificPic } from "../components/Card";
 import API from "../utils/API";
 
 //Styling
@@ -11,8 +11,12 @@ const flexContainer = {
   justifyContent: 'center',
 };
 
+
+//Button styling
+const BtnStyle = "btn btn-outline-danger";
+const BtnText = "Delete";
  
-class PViewPhotographerProfile extends Component {
+class PhotographerPhotoView extends Component {
 
   state = {
 
@@ -20,13 +24,12 @@ class PViewPhotographerProfile extends Component {
      filePath: "/images/picture5.jpg",
       
       id: this.props.match.params.id,
-      userName: "wdenkins",
-      firstName: "Wanda",
-      lastName: "Denkins",
+      userName: "wdenkins79",
       dateAdded: "May 4, 2019",
-     
-      businessName: "Wanda's Burgers",
-      aboutMe: "Serving up our own rendition of veggie burgers",
+      price: "400",
+      title: "Taking a walk in the snow",
+      description: "I decided to take this picture one day when it was bright and snowy out.",
+      
       searchVal: ""
   
   };
@@ -45,11 +48,12 @@ class PViewPhotographerProfile extends Component {
   //   .catch(err => console.log(err));
   // }
 
-  //Testing
-  addToCart(lol){
+  //This will need to call the delete photo method and then take the user back to
+  //their photos
+  deletePhoto(){
   
-    this.setState({disabled: "true"});
-    console.log(this.state.disabled);
+    let path = "/photographermypictures/" + this.state.userId;
+    this.props.history.push(path)
   }
 
   render() {
@@ -60,15 +64,18 @@ class PViewPhotographerProfile extends Component {
         id={this.state.userId}
         />
         <div style={flexContainer}>
-          <PUserProfile
+        <PSpecificPic
             key={this.state.userName}
-            fullName={this.state.firstName + " " + this.state.lastName}
-            username={this.state.userName}
-            businessName={this.state.businessName}
-            dateAdded={this.state.dateAdded}
-            aboutMe={this.state.aboutMe}
+            fullName={this.state.title}
+           
+            dateAdded={"Date Added: " + this.state.dateAdded}
+            description={"Description: " + this.state.description}
+            price={"Price: $" + this.state.price}
             filePath={this.state.filePath}
-            
+            BtnClass={BtnStyle}
+            BtnName={BtnText}
+           
+            onClick={() => this.deletePhoto()}
           />
 
 
@@ -79,4 +86,4 @@ class PViewPhotographerProfile extends Component {
   }
 }
 
-export default PViewPhotographerProfile;
+export default PhotographerPhotoView;

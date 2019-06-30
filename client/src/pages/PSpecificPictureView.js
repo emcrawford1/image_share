@@ -11,6 +11,11 @@ const flexContainer = {
   justifyContent: 'center',
 };
 
+
+//Button styling
+const BtnStyle = "btn btn-outline-dark";
+const BtnText = "Add to Cart";
+
 class PSpecificPictureView extends Component {
 
   state = {
@@ -64,12 +69,14 @@ class PSpecificPictureView extends Component {
             title={this.state.picture.title}
             fullName={this.state.picture.firstName + " " + this.state.picture.lastName}
             username={this.state.picture.userName}
-            dateAdded={this.state.picture.dateAdded}
-            description={this.state.picture.description}
-            price={this.state.picture.price}
+            dateAdded={"Date Added: " + this.state.picture.dateAdded}
+            description={"Description: " + this.state.picture.description}
+            price={"Price: $" + this.state.picture.price}
             filePath={this.state.picture.filePath}
             link={"/pviewphotographerprofile/" + this.state.picture.userName}
             disabled={addCartDisabled}
+            BtnClass={BtnStyle}
+            BtnName={BtnText}
             // onClick={() => this.addToCart(this.state.picture.id, this.state.userId)}
             onClick={() => this.addToCart(this.state.disabled)}
           />

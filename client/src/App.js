@@ -11,6 +11,10 @@ import MyPurchases from "./pages/MyPurchases";
 import PViewPhotographerPhotos from "./pages/PViewPhotographerPhotos";
 import PYourPhotos from "./pages/PYourPhotos";
 import PurchasedPhotoView from "./pages/PurchasedPhotoView";
+import PhotographerLanding from "./pages/PhotographerLanding";
+import PhotographerMyPictures from "./pages/PhotographerMyPictures";
+import PhotographerPhotoView from "./pages/PhotographerPhotoView";
+import PhotographerSales from "./pages/PhotographerSales";
 import Login from "./pages/Login";
 import './App.css';
 
@@ -19,7 +23,7 @@ function App() {
    <Router>
      <div>
        <Switch>
-         <Route exact path="/" component={PurchaserLandingPage} />
+         <Route exact path="/" component={PhotographerLanding} />
          <Route exact path="/pcategoryview/:category" component={PCategoryView} />
          <Route exact path="/pspecificpictureview/:id" component={PSpecificPictureView} />
          <Route exact path="/pviewphotographerprofile/:id" component={PViewPhotographerProlile} />
@@ -30,7 +34,11 @@ function App() {
          <Route exact path="/mypurchases/:id" component={MyPurchases} />
          <Route exact path="/pviewphotographerphotos/:id" component={PViewPhotographerPhotos} />
          <Route exact path="/pyourphotos/:id" component={PYourPhotos} />
-         <Route exact path="/purchasedphotoview/:id" component={PurchasedPhotoView} /> 
+         <Route exact path="/purchasedphotoview/:id" component={PurchasedPhotoView} />
+         <Route exact path="/photographerlanding/:id" component={PhotographerLanding} />
+         <Route exact path="/photographermypictures/:id" component={PhotographerMyPictures} /> 
+         <Route exact path="/photographerphotoview/:picId" component={PhotographerPhotoView} />
+         <Route exact path="/photographersales/:id" component={PhotographerSales} />
        </Switch>
      </div>
    </Router>
