@@ -67,7 +67,7 @@ class PViewPhotographerProfile extends Component {
             dateAdded={this.state.dateAdded}
             aboutMe={this.state.aboutMe}
             filePath={this.state.filePath}
-            link={"/photouserpictures/" + this.state.username}
+            link={"/pviewphotographerphotos/" + this.state.username}
           />
 
 

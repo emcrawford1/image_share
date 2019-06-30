@@ -8,6 +8,7 @@ import PurchaseCart from "./pages/PurchaseCart";
 import Checkout from "./pages/Checkout";
 import PostPurchase from "./pages/PostPurchase";
 import MyPurchases from "./pages/MyPurchases";
+import PViewPhotographerPhotos from "./pages/PViewPhotographerPhotos";
 import Login from "./pages/Login";
 import './App.css';
 
@@ -25,6 +26,7 @@ function App() {
          <Route exact path="/checkout/:id" component={Checkout} />
          <Route exact path="/postpurchase/:id" component={PostPurchase} />
          <Route exact path="/mypurchases/:id" component={MyPurchases} />
+         <Route exact path="/pviewphotographerphotos/:id" component={PViewPhotographerPhotos} />
        </Switch>
      </div>
    </Router>
