@@ -23,7 +23,7 @@ function App() {
    <Router>
      <div>
        <Switch>
-         <Route exact path="/" component={PhotographerLanding} />
+         <Route exact path="/" component={Login} />
          <Route exact path="/pcategoryview/:category" component={PCategoryView} />
          <Route exact path="/pspecificpictureview/:id" component={PSpecificPictureView} />
          <Route exact path="/pviewphotographerprofile/:id" component={PViewPhotographerProlile} />
