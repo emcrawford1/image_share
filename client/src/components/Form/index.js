@@ -10,13 +10,20 @@ const loginFormStyle = {
   width: "70%",
   color: "rgba(192, 199, 228, 0.95)"
 }
-const textStyle = {
-  textAlign: "center"
+
+const registerFormStyle = {
+  marginTop: "10%",
+  marginBottom: "15%",
+  width: "70%",
+  color: "rgb(76, 83, 88)"
 }
-const price = {
-  marginRight: "20px",
-  marginLeft: "20px"
-}
+// const textStyle = {
+//   textAlign: "center"
+// }
+// const price = {
+//   marginRight: "20px",
+//   marginLeft: "20px"
+// }
 
 const Btn = {
   width: "45%",
@@ -29,25 +36,83 @@ const Btn = {
 export function LoginForm(props) {
 
   return (
-    <div style={loginFormStyle}><h1 style={{textAlign: "center"}}>Image Share</h1>
-    <form>
-      <div className="form-group row">
-        <label htmlFor="inputEmail3" className="col-sm-2 col-form-label">{props.emailLabel}</label>
-        <div className="col-sm-10">
-          <input type="email" name={props.emailName} onChange={props.onChange} className="form-control" id="inputEmail3" placeholder="Email" />
+    <div style={loginFormStyle}><h1 style={{ textAlign: "center" }}>Image Share</h1>
+      <form>
+        <div className="form-group row">
+          <label htmlFor="inputEmail3" className="col-sm-2 col-form-label">{props.emailLabel}</label>
+          <div className="col-sm-10">
+            <input type="email" name={props.emailName} onChange={props.onChange} className="form-control" id="inputEmail3" placeholder="Email" />
+          </div>
         </div>
-      </div>
-      <div className="form-group row">
-        <label htmlFor="inputPassword3" className="col-sm-2 col-form-label">{props.passwordLabel}</label>
-        <div className="col-sm-10">
-          <input type="password" name={props.passwordName} onChange={props.onChange}  className="form-control" id="inputPassword3" placeholder="Password" />
+        <div className="form-group row">
+          <label htmlFor="inputPassword3" className="col-sm-2 col-form-label">{props.passwordLabel}</label>
+          <div className="col-sm-10">
+            <input type="password" name={props.passwordName} onChange={props.onChange} className="form-control" id="inputPassword3" placeholder="Password" />
+          </div>
         </div>
-      </div>
-      <div  style={{textAlign: "center"}}>
-      <button type="submit" onClick={props.handleRegister} className="btn btn-danger" style={Btn}>{props.RgstrBtnLabel}</button>
-      <button type="submit" onClick={props.handleLogin} className="btn btn-primary" style={Btn}>{props.LgnBtnLabel}</button>
-      </div>
-    </form>
+        <div style={{ textAlign: "center" }}>
+          <button type="submit" onClick={props.handleRegister} className="btn btn-danger" style={Btn}>{props.RgstrBtnLabel}</button>
+          <button type="submit" onClick={props.handleLogin} className="btn btn-primary" style={Btn}>{props.LgnBtnLabel}</button>
+        </div>
+      </form>
+    </div>
+  )
+}
+
+export function RegisterForm(props) {
+
+  return (
+    <div style={registerFormStyle}><h1 style={{ textAlign: "center" }}>Image Share</h1>
+      <form>
+        <div className="form-group row">
+          <label htmlFor="inputEmail" className="col-sm-2 col-form-label">{props.emailLabel}</label>
+          <div className="col-sm-10">
+            <input type="email" name={props.emailName} onChange={props.onChange} className="form-control" id="inputEmail" placeholder="jdoe@email.com" />
+            <small id="emailHelp" className="form-text text-muted">{props.emailMessage}</small>
+          </div>
+        </div>
+        <div className="form-group row">
+          <label htmlFor="inputPassword" className="col-sm-2 col-form-label">{props.passwordLabel}</label>
+          <div className="col-sm-10">
+            <input type="password" name={props.passwordName} onChange={props.onChange} className="form-control" id="inputPassword" placeholder="Password" />
+          </div>
+        </div>
+        <div className="form-group row">
+          <label htmlFor="inputFirstName" className="col-sm-2 col-form-label">{props.firstNameLabel}</label>
+          <div className="col-sm-10">
+            <input type="text" name={props.firstName} onChange={props.onChange} className="form-control" id="inputFirstName" placeholder="John" />
+          </div>
+        </div>
+        <div className="form-group row">
+          <label htmlFor="inputLastName" className="col-sm-2 col-form-label">{props.lastNameLabel}</label>
+          <div className="col-sm-10">
+            <input type="text" name={props.lastName} onChange={props.onChange} className="form-control" id="inputLastName" placeholder="Doe" />
+          </div>
+        </div>
+
+        <div className="form-group row">
+          <label className="col-sm-2 col-form-label" htmlFor="exampleFormControlSelect1">{props.accountTypeLabel}</label>
+          <div className="col-sm-10">
+            <select className="form-control" name={props.accountType} onChange={props.onChange} id="exampleFormControlSelect1" placeholder="Account Type">
+              <option value="2">{props.accountDefault}</option>
+              <option value="0">{props.accountPhotographer}</option>
+              <option value="1">{props.accountPurchaser}</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="form-group row">
+          <label htmlFor="inputAboutMe" className="col-sm-2 col-form-label">{props.aboutMeLabel}</label>
+          <div className="col-sm-10">
+            <textarea className="form-control" name={props.aboutMe} onChange={props.onChange} id="inputAboutMe" rows="3"></textarea>
+          </div>
+        </div>
+
+        <div style={{ textAlign: "center" }}>
+          <button type="submit" onClick={props.handleRegister} className="btn btn-outline-info" style={Btn}>{props.BtnLabel}</button>
+
+        </div>
+      </form>
     </div>
   )
 }

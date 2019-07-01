@@ -35,11 +35,15 @@
 /* body {
   min-height:100%;
   min-width: 100%;
-  /* background:url("/images/city_background.jpg"); */
-  /* background:linear-gradient(0deg,rgba(5, 48, 238, 0.3),rgba(118, 139, 231, 0.3)),url("/images/city_background.jpg");
+  background:url("/images/city_background.jpg");
+  background:linear-gradient(0deg,rgba(5, 48, 238, 0.3),rgba(118, 139, 231, 0.3)),url("/images/city_background.jpg");
   background-size:cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
   color: rgba(192, 199, 228, 0.3);
-  margin-bottom: 100px */
-/* }  */
+  margin-bottom: 100px 
+ }   */
+/* 
+.testing {
+  color: rgb(76, 83, 88)
+} */

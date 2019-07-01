@@ -7,10 +7,14 @@ const navSpacer = {
   marginLeft: "15px"
 }
 
+const imageShareColor = {
+  color: "rgba(192, 199, 228, 0.3)",
+}
+
 export function PurchNav(props) {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
-      [Image Share]
+      <h1 style={imageShareColor}>Image Share</h1>
     <a className="navbar-brand" style={navSpacer} href="/purchaserlandingpage">
         Home
     </a>
@@ -45,7 +49,7 @@ export function PhotoNav(props) {
 
   return(
   <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
-      <h1>[Image Share]</h1>
+      <h1 style={imageShareColor}>Image Share</h1>
     <a className="navbar-brand" style={navSpacer} href={"/photographerlanding/" + props.id}>
         My Profile
     </a>
@@ -62,6 +66,18 @@ export function PhotoNav(props) {
         Logout
     </a>
     
+    </nav>
+  )
+}
+
+export function RegisterNav(props) {
+
+  return(
+  <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+      <h1 style={imageShareColor}>Image Share</h1>
+    <a className="navbar-brand" style={navSpacer} href={"/"}>
+        Login
+    </a>
     </nav>
   )
 }
