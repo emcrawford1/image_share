@@ -26,6 +26,10 @@ class PCategoryView extends Component {
   //     .catch(err => console.log(err));
   // }
 
+  componentWillMount({
+    
+  })
+
 
  nextPage() {
   let path = "/postpurchase/" + this.state.userId;

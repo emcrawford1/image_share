@@ -23,8 +23,6 @@ class PViewPhotographerProfile extends Component {
       firstName: "Wanda",
       lastName: "Denkins",
       dateAdded: "May 4, 2019",
-     
-      businessName: "Wanda's Burgers",
       aboutMe: "Serving up our own rendition of veggie burgers",
       searchVal: ""
   
@@ -63,7 +61,6 @@ class PViewPhotographerProfile extends Component {
             key={this.state.userName}
             fullName={this.state.firstName + " " + this.state.lastName}
             username={this.state.userName}
-            businessName={this.state.businessName}
             dateAdded={this.state.dateAdded}
             aboutMe={this.state.aboutMe}
             filePath={this.state.filePath}

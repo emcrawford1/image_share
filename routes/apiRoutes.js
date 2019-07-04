@@ -13,8 +13,8 @@ const Purchases = models.purchases;
 
 
 // Checkout.js
-router.get('/checkout/:id', (req, res) => {
-  const userId = req.params.id;
+router.get('/checkout/:userId', (req, res) => {
+  const userId = req.params.userId;
   Cart.findAll({
     where: {
       userEmail: userId,
@@ -410,21 +410,21 @@ router.get('/purchasedphotoview/:userId/:picId', (req, res) => {
       attributes: ['description', 'title']
     }]
   })
-  .then(data => {
-    const data1 = JSON.parse(JSON.stringify(data));
-    const responseData = data1.map(item => {
-      return {
-        pictureId: item.pictureId,
-        title: item.picture.title,
-        description: item.picture.description,
-        userName: item.userName,
-        dateAdded: item.dateAdded,
-        purchasePrice: item.purchasePrice
-      }
+    .then(data => {
+      const data1 = JSON.parse(JSON.stringify(data));
+      const responseData = data1.map(item => {
+        return {
+          pictureId: item.pictureId,
+          title: item.picture.title,
+          description: item.picture.description,
+          userName: item.userName,
+          dateAdded: item.dateAdded,
+          purchasePrice: item.purchasePrice
+        }
+      })
+      res.send(responseData)
     })
-    res.send(responseData)
-  })
-  .catch(err => console.log(err))
+    .catch(err => console.log(err))
 })
 
 //PhotographerLanding.js
@@ -439,22 +439,22 @@ router.get('/photographerlanding/:userId', (req, res) => {
       model: UserInfo
     }]
   })
-  .then(data => {
-    const data1 = JSON.parse(JSON.stringify(data));
-    const responseData = data1.map(item => {
-      return {
-        userName: item.email,
-        dateAdded: item.createdAt,
-        firstName: item.user_info.firstName,
-        lastName: item.user_info.lastName,
-        aboutMe: item.user_info.aboutMe,
-        filePath: item.user_info.profilePic
-      
-      }
+    .then(data => {
+      const data1 = JSON.parse(JSON.stringify(data));
+      const responseData = data1.map(item => {
+        return {
+          userName: item.email,
+          dateAdded: item.createdAt,
+          firstName: item.user_info.firstName,
+          lastName: item.user_info.lastName,
+          aboutMe: item.user_info.aboutMe,
+          filePath: item.user_info.profilePic
+
+        }
+      })
+      res.send(responseData)
     })
-    res.send(responseData)
-  })
-  .catch(err => console.log(err))
+    .catch(err => console.log(err))
 })
 
 //PhotographerMyPictures.js
@@ -464,8 +464,8 @@ router.get('/photographermypictures/:userId', (req, res) => {
     where: { userEmail: userId },
     attributes: ['id', 'title', 'filePath']
   })
-  .then(data => res.json(data))
-  .catch(err => console.log(err))
+    .then(data => res.json(data))
+    .catch(err => console.log(err))
 })
 
 //PhotographerPhotoView.js
@@ -474,10 +474,63 @@ router.get('/photographerphotoview/:picId', (req, res) => {
   Picture.findAll({
     where: { id: picId },
     attributes: ['id', 'title', 'filePath', 'price', ['userEmail', 'userName'],
-    ['createdAt', 'dateAdded'], 'description', 'disabled']
+      ['createdAt', 'dateAdded'], 'description', 'disabled']
+  })
+    .then(data => res.json(data))
+    .catch(err => console.log(err))
+})
+
+//PhotographerSales.js
+router.get('/photographersales/:userId', (req, res) => {
+  const userId = req.params.userId;
+
+  Purchases.findAll({
+    attributes: ['userEmail', 'priceAtPurchase', 'pictureId', 'createdAt'],
+    where: { photographerEmail: userId },
+    include: [{
+      model: Picture,
+      attributes: ['title']
+    }]
+  })
+    .then(data => {
+      const data1 = JSON.parse(JSON.stringify(data));
+      const responseData = data1.map(item => {
+        return {
+
+          picId: item.pictureId,
+          price: item.priceAtPurchase,
+          purchaser: item.userEmail,
+          date: item.createdAt,
+          title: item.picture.title
+
+        }
+      })
+      res.send(responseData)
+    })
+})
+
+//PViewPhotographerPhotos.js
+router.get('/pviewphotographerphotos/:userId', (req, res) => {
+  const userId = req.params.userId;
+
+  Picture.findAll({
+    attributes: ['id', 'title', 'filePath'],
+    where: { userEmail: userId }
+  })
+    .then(data => res.json(data))
+    .catch(err => console.log(err))
+})
+
+//PViewPhotographerProfile
+router.get('/pviewphotographerprofile/:userId', (req, res) => {
+  const userId = req.params.userId;
+
+  UserInfo.findAll({
+    attributes: [['userEmail', 'userName'], 'firstName', 'lastName', ['createdAt', 'dateAdded'], 'aboutMe', ['profilePic', 'filePath']]
   })
   .then(data => res.json(data))
   .catch(err => console.log(err))
 })
-module.exports = router;
 
+
+module.exports = router;
