@@ -143,72 +143,109 @@ router.get('/PSpecificPictureView/cart/:userId/:picId', (req, res) => {
 });
 
 //PSpecificPictureView.js - onLoad() - querying picture
-//Finish 7/4/2019
 router.get('/PSpecificPictureView/:picId', (req, res) => {
-  const picId = req.params.picId;
+  const pictId = req.params.picId;
 
   Picture.findAll({
-    attributes: ['id', 'title', ['createdAt', 'dateAdded'], 'description', 'price', 'filePath'],
+    attributes: ['id', 'title', ['createdAt', 'dateAdded'], 'description', 'price', 'filePath', 'userEmail'],
     where: {
-      id = picId
+      id: pictId
     },
     include: {
-      model: UserInfo,
-      attributes: ['firstName', 'lastName'],
-      where: {}
+      model: User,
+      attributes: ['email'],
+      include: {
+        model: UserInfo,
+        attributes: ['firstName', 'lastName']
+      }
     }
+   
   })
+  .then(data => {
+    const data1 = JSON.parse(JSON.stringify(data));
+   
+    const responseData = {
+      id: data1[0].id,
+      title: data1[0].title,
+      dateAdded: data1[0].dateAdded,
+      description: data1[0].description,
+      price: data1[0].price,
+      filePath: data1[0].filePath,
+      userName: data1[0].userEmail,
+      firstName: data1[0].user.user_info.firstName,
+      lastName: data1[0].user.user_info.lastName
+    }
+    console.log(responseData);
+    res.send(responseData);
+  })
+  .catch(err => console.log(err))
 })
 
+//Add to Cart
+router.post('/addtocart/:userId/:picId', (req, res) => {
+  const userId = req.params.userId;
+  const picId = req.params.picId;
+
+  Cart.create({
+    userEmail: userId,
+    pictureId: picId
+  })
+  .then(data => res.send(data))
+  .catch(err => console.log(err))
+});
 
 
-router.get('/', (req, res) =>
-  User.findAll()
-    .then(users => {
-      console.log(users);
-      res.send(users);
+//PYourPhotos.js - get photos by Confirmation Number
+router.get('/pyourphotosconf/:confId', (req, res) => {
+  const confId = req.params.confId;
+  Purchases.findAll({
+    attributes: ['pictureId'],
+    where: { purchaseConfirmationId: confId },
+    include: {
+      model: Picture,
+      attributes: ['title', 'filePath']
+    }
+  })
+  .then(data => {
+    const dataConversion = JSON.parse(JSON.stringify(data));
+    let dataResponse = dataConversion.map(item => {
+      return {
+        id: item.pictureId,
+        title: item.picture.title,
+        filePath: item.picture.filePath
+      }
+
     })
-    .catch(err => console.log(err)));
+    res.send(dataResponse)
+  })
+  .catch(err => console.log(err))
+})
 
-router.get('/pictures', (req, res) =>
-  Picture.findAll()
-    .then(pictures => {
-      console.log(pictures);
-      res.send(pictures);
+//PYourPhotos.js - get photos by userEmail
+router.get('/test/:email', (req, res) => {
+  const emailId = req.params.email;
+  Purchases.findAll({
+    attributes: ['pictureId'],
+    where: { userEmail: emailId },
+    include: {
+      model: Picture,
+      attributes: ['title', 'filePath']
+    }
+  })
+  .then(data => {
+    const dataConversion = JSON.parse(JSON.stringify(data));
+    let dataResponse = dataConversion.map(item => {
+      return {
+        id: item.pictureId,
+        title: item.picture.title,
+        filePath: item.picture.filePath
+      }
+
     })
-    .catch(err => console.log(err)));
+    res.send(dataResponse)
+  })
+  .catch(err => console.log(err))
+})
 
-
-router.get('/', (req, res) =>
-  Cart.findAll()
-    .then(carts => {
-      console.log(carts);
-      res.send(carts);
-    })
-    .catch(err => console.log(err)));
-
-router.get('/', (req, res) =>
-  UserInfo.findAll()
-    .then(info => {
-      console.log(info);
-      res.send(info);
-    })
-    .catch(err => console.log(err)));
-
-router.get('/', (req, res) =>
-  purchConf.findAll()
-    .then(purch => {
-      console.log(purch);
-      res.send(purch);
-    })
-    .catch(err => console.log(err)));
-
-router.get('/', (req, res) =>
-  Purchases.findAll()
-    .then(purch => {
-      console.log(purch);
-      res.send(purch);
-    })
-    .catch(err => console.log(err)));
 
 module.exports = router;
