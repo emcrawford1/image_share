@@ -24,8 +24,7 @@ class PViewPhotographerProfile extends Component {
       firstName: "Wanda",
       lastName: "Denkins",
       dateAdded: "May 4, 2019",
-      aboutMe: "Serving up our own rendition of veggie burgers",
-      searchVal: ""
+      aboutMe: "Serving up our own rendition of veggie burgers"
   
   };
 

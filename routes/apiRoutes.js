@@ -427,5 +427,57 @@ router.get('/purchasedphotoview/:userId/:picId', (req, res) => {
   .catch(err => console.log(err))
 })
 
+//PhotographerLanding.js
+router.get('/photographerlanding/:userId', (req, res) => {
+  const userId = req.params.userId;
+
+  User.findAll({
+    where: {
+      email: userId
+    },
+    include: [{
+      model: UserInfo
+    }]
+  })
+  .then(data => {
+    const data1 = JSON.parse(JSON.stringify(data));
+    const responseData = data1.map(item => {
+      return {
+        userName: item.email,
+        dateAdded: item.createdAt,
+        firstName: item.user_info.firstName,
+        lastName: item.user_info.lastName,
+        aboutMe: item.user_info.aboutMe,
+        filePath: item.user_info.profilePic
+      
+      }
+    })
+    res.send(responseData)
+  })
+  .catch(err => console.log(err))
+})
+
+//PhotographerMyPictures.js
+router.get('/photographermypictures/:userId', (req, res) => {
+  const userId = req.params.userId;
+  Picture.findAll({
+    where: { userEmail: userId },
+    attributes: ['id', 'title', 'filePath']
+  })
+  .then(data => res.json(data))
+  .catch(err => console.log(err))
+})
+
+//PhotographerPhotoView.js
+router.get('/photographerphotoview/:picId', (req, res) => {
+  const picId = req.params.picId;
+  Picture.findAll({
+    where: { id: picId },
+    attributes: ['id', 'title', 'filePath', 'price', ['userEmail', 'userName'],
+    ['createdAt', 'dateAdded'], 'description', 'disabled']
+  })
+  .then(data => res.json(data))
+  .catch(err => console.log(err))
+})
 module.exports = router;
 
