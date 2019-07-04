@@ -1,24 +1,26 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
+const app = express();
+const PORT = process.env.PORT || 3001;
 
 //Database
 const db = require('./models');
 
-
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 //Test DB
 // db.authenticate()
 //   .then(() => console.log('Database connected....'))
 //   .catch(err => console.log('Error: ' + err));
 
-const app = express();
+
 
 app.get('/', (req, res) => res.send('Howdy World'))
 
 //API routes
 app.use('/api', require('./routes/apiRoutes'));
 
-const PORT = process.env.PORT || 3001;
 
 // app.listen(PORT, console.log(`Server started on port ${PORT}`));
 

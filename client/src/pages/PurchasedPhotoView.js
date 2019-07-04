@@ -22,7 +22,7 @@ class PViewPhotographerProfile extends Component {
       pictureId: this.props.match.params.id,
       title: "Beautiful picture",
       userName: "leroy4545@gmail.com",
-      confirmationNumber: "23214",
+      description: "A crazy beautiful picture of a sunset at a beach.",
       dateAdded: "May 17, 2019",
       purchasePrice: "35",
      
@@ -64,7 +64,7 @@ class PViewPhotographerProfile extends Component {
             key={this.state.userName}
             title={this.state.title}
             username={this.state.userName}
-            confirmationNumber={"Confirmation Number: #" + this.state.confirmationNumber}
+            description={"Description: " + this.state.description}
             dateAdded={"Purchase Date: " + this.state.dateAdded}
             purchasePrice={"Amount Paid: $" + this.state.purchasePrice}
             filePath={this.state.filePath}

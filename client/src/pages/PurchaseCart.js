@@ -20,41 +20,41 @@ class PurchaseCart extends Component {
 
     cartItems: [
       {
+        cartId: '1',
         purchaserId: "10",
         pictureId: "32",
         title: "Just a Beautiful Photograph",
-        firstName: "Wanda",
-        lastName: "Denkins",
+        userName: "wdenkins",
         price: "40",
         filePath: "/images/picture5.jpg",
       },
 
       {
-        purchaserId: "11",
+        cartId: '1',
+        purchaserId: "10",
         pictureId: "33",
         title: "Inspiring",
-        firstName: "George",
-        lastName: "Thormul",
+        userName: "wdenkins",
         price: "4103",
         filePath: "/images/picture5.jpg",
       },
 
       {
-        purchaserId: "12",
+        cartId: '1',
+        purchaserId: "10",
         pictureId: "34",
         title: "You've Got an Error",
-        firstName: "Percy",
-        lastName: "Moravin",
+        userName: "wdenkins",
         price: "404",
         filePath: "/images/picture8.jpg",
       },
 
       {
-        purchaserId: "13",
+        cartId: '1',
+        purchaserId: "10",
         pictureId: "35",
         title: "Leet",
-        firstName: "m3lvIn",
-        lastName: "t03h@7g@r",
+        userName: "wdenkins",
         price: "1337",
         filePath: "/images/picture5.jpg",
       }
@@ -153,7 +153,7 @@ class PurchaseCart extends Component {
             <ViewCart
               key={index}
               title={item.title}
-              fullName={item.firstName + " " + item.lastName}
+              fullName={item.userName}
               price={item.price}
               image={item.filePath}
               onClick={() => this.removeFromCart(index)}

@@ -81,7 +81,7 @@ export function ViewYourPhoto(props) {
           <h2 className="card-title">{props.title}</h2>
           <small className="text-muted">{" (" + props.username + ")"}</small>
           <p className="card-text">{props.dateAdded}</p>
-          <p className="card-text">{props.confirmationNumber}</p>
+          <p className="card-text">{props.description}</p>
           <p className="card-text">{props.purchasePrice}</p>
         </div>
       </div>
