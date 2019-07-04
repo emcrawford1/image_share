@@ -14,7 +14,7 @@ const flexContainer = {
 
 //Button styling
 const BtnStyle = "btn btn-outline-danger";
-const BtnText = "Delete";
+const BtnText = "Disable";
  
 class PhotographerPhotoView extends Component {
 
@@ -29,7 +29,7 @@ class PhotographerPhotoView extends Component {
       price: "400",
       title: "Taking a walk in the snow",
       description: "I decided to take this picture one day when it was bright and snowy out.",
-      
+      disabled: "false",
       searchVal: ""
   
   };
@@ -50,15 +50,16 @@ class PhotographerPhotoView extends Component {
 
   //This will need to call the delete photo method and then take the user back to
   //their photos
-  deletePhoto(){
+  disablePhoto(){
   
-    let path = "/photographermypictures/" + this.state.userId;
-    this.props.history.push(path)
+    this.setState({ disabled: "true"});
+    
   }
 
   render() {
-
+    const disablePic = this.state.disabled === 'true';
     return (
+      
       <div className="wrapper">
         <PhotoNav 
         id={this.state.userId}
@@ -74,8 +75,8 @@ class PhotographerPhotoView extends Component {
             filePath={this.state.filePath}
             BtnClass={BtnStyle}
             BtnName={BtnText}
-           
-            onClick={() => this.deletePhoto()}
+            disabled={disablePic}
+            onClick={() => this.disablePhoto()}
           />
 
 

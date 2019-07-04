@@ -22,6 +22,7 @@ class PSpecificPictureView extends Component {
     userId: "1",
     id: this.props.match.params.id,
     picture: {
+      id: "1",
       title: "My Veggie Burger Recipe",
       firstName: "Wanda",
       lastName: "Denkins",
@@ -50,7 +51,7 @@ class PSpecificPictureView extends Component {
   // }
 
   //Testing
-  addToCart(lol){
+  addToCart(){
   
     this.setState({disabled: "true"});
     console.log(this.state.disabled);
@@ -78,7 +79,7 @@ class PSpecificPictureView extends Component {
             BtnClass={BtnStyle}
             BtnName={BtnText}
             // onClick={() => this.addToCart(this.state.picture.id, this.state.userId)}
-            onClick={() => this.addToCart(this.state.disabled)}
+            onClick={() => this.addToCart()}
           />
 
 

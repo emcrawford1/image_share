@@ -112,15 +112,15 @@ class PurchaseCart extends Component {
   clearCart() {
     //Clear the whole thing.
 
-    const newthing =  [{
-      purchaserId: "13",
-      pictureId: "35",
-      title: "Leet",
-      firstName: "m3lvIn",
-      lastName: "t03h@7g@r",
-      price: "1337",
-      filePath: "/images/picture5.jpg",
-    }]
+    // const newthing =  [{
+    //   purchaserId: "13",
+    //   pictureId: "35",
+    //   title: "Leet",
+    //   firstName: "m3lvIn",
+    //   lastName: "t03h@7g@r",
+    //   price: "1337",
+    //   filePath: "/images/picture5.jpg",
+    // }]
     this.setState({ cartItems: []})
   }
 

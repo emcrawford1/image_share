@@ -1,10 +1,10 @@
 module.exports = function(sequelize, DataTypes) {
   let Picture = sequelize.define("picture", {
-    id: {
-     autoIncrement: true,  
-     primaryKey: true,
-     type: DataTypes.INTEGER
-    },
+    // id: {
+    //  autoIncrement: true,  
+    //  primaryKey: true,
+    //  type: DataTypes.INTEGER
+    // },
 
     title: {
       type: DataTypes.STRING
@@ -28,12 +28,7 @@ module.exports = function(sequelize, DataTypes) {
   });
 
   Picture.associate = function(models) {
-    Picture.belongsTo(models.category, 
-      {
-        as: 'Category',
-        foreignKey: 'categoryPic',
-        constraints: false
-      });
+    Picture.belongsTo(models.category);
 
       Picture.belongsTo(models.user, {
         onDelete: 'CASCADE'

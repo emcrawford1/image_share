@@ -22,7 +22,7 @@ const PORT = process.env.PORT || 3001;
 
 // app.listen(PORT, console.log(`Server started on port ${PORT}`));
 
-db.sequelize.sync( {force: true}).then(function() {
+db.sequelize.sync( {force: false}).then(function() {
   app.listen(PORT, function() {
     console.log(
       "==> 🌎  Listening on port %s. Visit http://localhost:%s/ in your browser.",

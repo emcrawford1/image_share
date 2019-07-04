@@ -24,11 +24,11 @@ module.exports = function(sequelize, DataTypes) {
 
 
   User.associate = function(models) {
-    User.hasOne(models.user_info, {
-      as: 'Category',
-      foreignKey: 'categoryPic',
-      constraints: false
-    });
+    // User.hasOne(models.user_info, {
+    //   as: 'Category',
+    //   foreignKey: 'categoryPic',
+    //   constraints: false
+    // });
 
     User.hasMany(models.purchase_confirmation)
   }

@@ -16,10 +16,12 @@ class PurchaserLanding extends Component {
   state = {
     userId: "29",
     pictures: [{
+      id: "1",
       category: "Weddings",
       filePath: "/images/picture8.jpg"
     },
   {
+    id: "2",
     category: "Urban",
     filePath: "/images/picture5.jpg"
   }],
@@ -44,7 +46,7 @@ class PurchaserLanding extends Component {
         {this.state.pictures.map ((pic, index) => (
           <PicGrid 
           key={index}
-          link={"pcategoryview/" + pic.category}
+          link={"pcategoryview/" + pic.id}
           filePath={pic.filePath}
           name={pic.category}
           />

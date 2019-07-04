@@ -58,7 +58,6 @@ export function PUserProfile(props) {
       <div className="col-lg-6">
         <div className="card-body">
           <h2 className="card-title">{props.fullName} <small className="text-muted">{" (" + props.username + ")"}</small></h2>
-          <p className="card-text">Business Name: {" " + props.businessName}</p>
           <p className="card-text">Member Since: {" " + props.dateAdded}</p>
           <p className="card-text">About Me: {" " + props.aboutMe}</p>
           <a href={props.link}><div className="card-text">{props.linkDesc}</div></a>
@@ -79,7 +78,8 @@ export function ViewYourPhoto(props) {
       </div>
       <div className="col-lg-6">
         <div className="card-body">
-          <h2 className="card-title">{props.fullName} <small className="text-muted">{" (" + props.username + ")"}</small></h2>
+          <h2 className="card-title">{props.title}</h2>
+          <small className="text-muted">{" (" + props.username + ")"}</small>
           <p className="card-text">{props.dateAdded}</p>
           <p className="card-text">{props.confirmationNumber}</p>
           <p className="card-text">{props.purchasePrice}</p>

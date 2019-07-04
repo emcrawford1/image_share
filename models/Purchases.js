@@ -17,6 +17,10 @@ module.exports = function(sequelize, DataTypes) {
     Purchases.belongsTo(models.purchase_confirmation);
     Purchases.belongsTo(models.picture);
     Purchases.belongsTo(models.user);
+    Purchases.belongsTo(models.user, {
+      as: "email",
+      foreignKey: "photographerEmail"
+    });
   }
 
   return Purchases;

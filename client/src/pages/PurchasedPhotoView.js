@@ -20,8 +20,7 @@ class PViewPhotographerProfile extends Component {
      filePath: "/images/picture2.jpg",
       
       pictureId: this.props.match.params.id,
-      firstName: "Wanda",
-      lastName: "Denkins",
+      title: "Beautiful picture",
       userName: "leroy4545@gmail.com",
       confirmationNumber: "23214",
       dateAdded: "May 17, 2019",
@@ -63,10 +62,10 @@ class PViewPhotographerProfile extends Component {
         <div style={flexContainer}>
           <ViewYourPhoto
             key={this.state.userName}
-            fullName={this.state.firstName + " " + this.state.lastName}
+            title={this.state.title}
             username={this.state.userName}
             confirmationNumber={"Confirmation Number: #" + this.state.confirmationNumber}
-            dateAdded={"Date Photo was Added: " + this.state.dateAdded}
+            dateAdded={"Purchase Date: " + this.state.dateAdded}
             purchasePrice={"Amount Paid: $" + this.state.purchasePrice}
             filePath={this.state.filePath}
           />
