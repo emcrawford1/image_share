@@ -150,7 +150,7 @@ export function CheckoutForm(props) {
           <div className="form-group col-md-4">
             {/* <label for="inputState">State</label> */}
             <select id="inputState" className="form-control">
-              <option selected>State</option>
+              <option defaultValue>State</option>
               <option>...</option>
             </select>
           </div>
@@ -179,7 +179,7 @@ export function CheckoutForm(props) {
       </fieldset>
 
       {/* <div className="form-row"> */}
-      <button type="button" onClick={props.nextPage} class="btn btn-primary">Place Order</button>
+      <button type="button" onClick={props.nextPage} className="btn btn-primary">Place Order</button>
       {/* </div> */}
       <div style={formMargin}>
         <h4>{props.totalPrice}</h4>

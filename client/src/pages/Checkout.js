@@ -14,27 +14,61 @@ const flexContainer = {
 class PCategoryView extends Component {
 
   state = {
-    userId: "10",
-    totalPrice: "75.00",
-    searchVal: ""
-  };
-
-  //This will need to get the total price of the user's orders and update the totalPrice property
-  // componentWillMount() {
-  //   API.getPictures(this.props.match.params.userId)
-  //     .then(res => this.setState({pictures: res.data, searchValue: "" }))
-  //     .catch(err => console.log(err));
-  // }
-
-  componentWillMount({
-    
-  })
+    userId: this.props.match.params.id,
+    totalPrice: "0",
+    purchaseConfirmation: "10",
+    cartItems: []
+  }
 
 
- nextPage() {
-  let path = "/postpurchase/" + this.state.userId;
-  this.props.history.push(path);
-}
+  componentWillMount() {
+    API.getTotalCost(this.state.userId)
+      .then(cost =>
+        this.setState({ totalPrice: cost.data.totalPrice, userId: this.props.match.params.id }))
+      .catch(err => console.log(err));
+    API.getCartItems(this.state.userId)
+      .then(cart => {
+        this.setState({ cartItems: cart.data })
+        console.log(this.state)
+      })
+      .catch(err => console.log(err))
+  }
+
+
+  //Post new entry in the purchase_confirmations and purchases table, clear the cart, and 
+  //send user to next page
+  nextPage() {
+    let path = "/postpurchase/" + this.state.userId;
+    let tempCart = this.state.cartItems;
+
+    API.placeOrder(this.state.userId)
+      .then(orderData => {
+        
+        let Cart = tempCart.map(item => {
+          return {
+            priceAtPurchase: item.priceAtPurchase,
+            pictureId: item.pictureId,
+            userEmail: item.userEmail,
+            photographerEmail: item.photographerEmail,
+            purchaseConfirmationId: orderData.data.id
+          }
+        })
+
+        API.makePurchase(Cart)
+          .then(purchData => {
+            console.log(purchData)
+
+            API.clearCart(this.state.userId)
+              .then(status => {
+                console.log(status);
+                this.props.history.push(path);
+              })
+              .catch(err => console.log(err))
+          })
+          .catch(err => console.log(err))
+      })
+      .catch(err => console.log(err))
+  }
 
   render() {
     return (

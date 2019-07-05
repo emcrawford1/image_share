@@ -26,7 +26,7 @@ router.get('/checkout/:userId', (req, res) => {
   })
     .then(cart => {
       if (cart.length < 2) {
-        res.send(cart);
+        res.json(cart);
       }
 
       else {
@@ -36,7 +36,7 @@ router.get('/checkout/:userId', (req, res) => {
           totalPrice: checkOutItems.reduce(reducer)
         }
         console.log(priceObject);
-        res.send(priceObject);
+        res.json(priceObject);
       }
     })
     .catch(err => console.log(err))
@@ -65,7 +65,7 @@ router.get('/getpurchaseitems/:userId', (req, res) => {
           photographerEmail: item.picture.photographerEmail
         }
       });
-      res.send(responseData);
+      res.json(responseData);
     })
     .catch(err => console.log(err))
 })
@@ -94,7 +94,7 @@ router.get('/getlastorder/:userId', (req, res) => {
 
 //Post to purchases
 router.post('/purchasepost', (req, res) => {
-  const purchasePost = req.body.pictures;
+  const purchasePost = req.body;
   console.log(req.body);
   Purchases.bulkCreate(purchasePost)
     .then(data => {
