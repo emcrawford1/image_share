@@ -19,8 +19,8 @@ const BtnText = "Add to Cart";
 class PSpecificPictureView extends Component {
 
   state = {
-    userId: "1",
-    id: this.props.match.params.id,
+    userId: this.props.match.params.userId,
+    picId: this.props.match.params.picId,
     picture: {
       id: "1",
       title: "My Veggie Burger Recipe",
@@ -32,38 +32,55 @@ class PSpecificPictureView extends Component {
       price: "100.00",
       filePath: "/images/picture8.jpg"
     },
-    searchVal: "",
     disabled: "false"
   };
 
-  //This needs to be uncommented when ORM is set up
-  // componentWillMount() {
-  //   API.getPictures(this.props.match.params.id)
-  //     .then(res => this.setState({pictures: res.data, searchValue: "" }))
-  //     .catch(err => console.log(err));
-  // }
+  // This needs to be uncommented when ORM is set up
+  componentWillMount() {
+    API.loadSpecificPicture(this.state.picId)
+      .then(picData => {
+        console.log(picData)
+        this.setState({ picture: picData.data })
 
-  //This needs to be uncommented when the ORM is set up
-  // addToCart(picId, purchaserId) {
-  //   API.addToCart(picId, purchaserId)
-  //   .then(this.setState({disabled: true}))
-  //   .catch(err => console.log(err));
-  // }
+        API.checkCart(this.state.userId, this.state.picId)
+          .then(cartData => {
+            console.log(cartData.data)
 
-  //Testing
-  addToCart(){
-  
-    this.setState({disabled: "true"});
-    console.log(this.state.disabled);
+            if (cartData.data.length > 0) {
+              this.setState({ disabled: "true" })
+            }
+
+            else {
+              API.checkPurchases(this.state.userId, this.state.picId)
+                .then(purchData => {
+                  if (purchData.data.length > 0) {
+                    this.setState({ disabled: "true" })
+                  }
+                })
+            }
+          })
+          .catch(err => console.log(err))
+      })
+      .catch(err => console.log(err));
+  }
+
+  // This needs to be uncommented when the ORM is set up
+  addToCart(userId, picId) {
+    API.addToCart(userId, picId)
+      .then(cartData => {
+        console.log(cartData.data)
+        this.setState({ disabled: "true" })
+      })
+      .catch(err => console.log(err));
   }
 
   render() {
     const addCartDisabled = this.state.disabled === "true";
-    console.log(addCartDisabled);
+
     return (
       <div className="wrapper">
-        <PurchNav 
-        id={this.state.userId}/>
+        <PurchNav
+          id={this.state.userId} />
         <div style={flexContainer}>
           <PSpecificPic
             key={this.state.picture.userName}
@@ -74,12 +91,12 @@ class PSpecificPictureView extends Component {
             description={"Description: " + this.state.picture.description}
             price={"Price: $" + this.state.picture.price}
             filePath={this.state.picture.filePath}
-            link={"/pviewphotographerprofile/" + this.state.picture.userName}
+            link={"/pviewphotographerprofile/" + this.state.userId + "/" + this.state.picture.userName}
             disabled={addCartDisabled}
             BtnClass={BtnStyle}
             BtnName={BtnText}
             // onClick={() => this.addToCart(this.state.picture.id, this.state.userId)}
-            onClick={() => this.addToCart()}
+            onClick={() => this.addToCart(this.state.userId, this.state.picture.id)}
           />
 
 

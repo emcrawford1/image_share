@@ -185,7 +185,7 @@ router.get('/PSpecificPictureView/cart/:userId/:picId', (req, res) => {
 });
 
 //PSpecificPictureView.js - onLoad() - querying purchases
-router.get('/PSpecificPictureView/cart/:userId/:picId', (req, res) => {
+router.get('/PSpecificPictureView/purchases/:userId/:picId', (req, res) => {
   const userId = req.params.userId;
   const picId = req.params.picId;
 
@@ -310,7 +310,7 @@ router.get('/pyourphotosemail/:email', (req, res) => {
 
 
 //PurchaseCart.js
-router.get("/puchasecart/:id", (req, res) => {
+router.get("/purchasecart/:id", (req, res) => {
   const userId = req.params.id;
   Cart.findAll({
     attributes: [['id', 'cartId'], ['userEmail', 'purchaserId']],
@@ -362,7 +362,6 @@ router.delete('/clearcart/:userId', (req, res) => {
 
 
 //PostPurchase.js
-
 router.get('/postpurchase/:userId', (req, res) => {
   const userId = req.params.userId;
   purchConf.findAll({
@@ -407,7 +406,7 @@ router.get('/purchasedphotoview/:userId/:picId', (req, res) => {
     },
     include: [{
       model: Picture,
-      attributes: ['description', 'title']
+      attributes: ['description', 'title', 'filePath']
     }]
   })
     .then(data => {
@@ -419,7 +418,8 @@ router.get('/purchasedphotoview/:userId/:picId', (req, res) => {
           description: item.picture.description,
           userName: item.userName,
           dateAdded: item.dateAdded,
-          purchasePrice: item.purchasePrice
+          purchasePrice: item.purchasePrice,
+          filePath: item.picture.filePath
         }
       })
       res.send(responseData)
@@ -468,7 +468,7 @@ router.get('/photographermypictures/:userId', (req, res) => {
     .catch(err => console.log(err))
 })
 
-//PhotographerPhotoView.js
+//PhotographerPhotoView.js - onLoad()
 router.get('/photographerphotoview/:picId', (req, res) => {
   const picId = req.params.picId;
   Picture.findAll({
@@ -479,6 +479,18 @@ router.get('/photographerphotoview/:picId', (req, res) => {
     .then(data => res.json(data))
     .catch(err => console.log(err))
 })
+
+//PhotographerPhotoview.js - Disable photo
+router.put('/setdisable/:picId', (req, res) => {
+  const picId = req.params.picId;
+  Picture.update(
+    {disabled: "true"},
+    {where: {id: picId} }
+  )
+  .then(status => res.json(status))
+  .catch(err => console.log(err))
+})
+
 
 //PhotographerSales.js
 router.get('/photographersales/:userId', (req, res) => {

@@ -14,7 +14,7 @@ const flexContainer = {
 class PCategoryView extends Component {
 
   state = {
-    userId: this.props.match.params.id,
+    userId: this.props.match.params.userId,
     totalPrice: "0",
     purchaseConfirmation: "10",
     cartItems: []

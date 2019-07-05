@@ -14,49 +14,27 @@ const flexContainer = {
 class MyPurchases extends Component {
 
   state = {
-    userId: "10",
+    userId: this.props.match.params.userId,
 
     purchases: [{
       confirmationNumber: "31",
       date: "March 3, 2019",
       totalPrice: "45"
-    },
-
-    {
-      confirmationNumber: "32",
-      date: "March 8, 2019",
-      totalPrice: "70"
-    },
-
-    {
-      confirmationNumber: "35",
-      date: "May 21, 2019",
-      totalPrice: "40"
-    },
-
-    {
-      confirmationNumber: "45",
-      date: "June 8, 2019",
-      totalPrice: "20"
-    },
-
-    {
-      confirmationNumber: "100",
-      date: "June 13, 2019",
-      totalPrice: "367"
-    },
-
-    ],
+    }],
 
 
   };
 
   //This needs to be uncommented when ORM is set up
-  // componentWillMount() {
-  //   API.getPictures(this.props.match.params.category)
-  //     .then(res => this.setState({pictures: res.data, searchValue: "" }))
-  //     .catch(err => console.log(err));
-  // }
+  componentWillMount() {
+    API.getPurchases(this.state.userId)
+    .then(purchData => { 
+      console.log(purchData)
+      this.setState({ purchases: purchData.data})
+    })
+      // .then(purchData => this.setState({pictures: purchData.data}))
+      .catch(err => console.log(err));
+  }
 
   render() {
 
@@ -86,7 +64,7 @@ class MyPurchases extends Component {
               key={index}
               confirmationNumber={"Confirmation Number: " + purchase.confirmationNumber}
               date={"Purchase Date: " + purchase.date}
-              link={"/pyourphotos/" + purchase.confirmationNumber}
+              link={"/pyourphotos/" + this.state.userId +"/" + purchase.confirmationNumber}
               totalPrice={"Total price: $" + purchase.totalPrice}
             />
           ))}

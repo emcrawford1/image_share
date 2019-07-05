@@ -14,7 +14,7 @@ const flexContainer = {
 class PhotographerMyPictures extends Component {
 
   state = {
-    userId: "10",
+    userId: this.props.match.params.userId,
     pictures: [{
       id: "27",
       title: "Just a Beauty",
@@ -35,15 +35,15 @@ class PhotographerMyPictures extends Component {
       title: "Another Nice Picture",
       filePath: "/images/picture8.jpg"
     }],
-    searchVal: ""
+   
   };
 
-  //This needs to be uncommented when ORM is set up
-  // componentWillMount() {
-  //   API.getPictures(this.props.match.params.category)
-  //     .then(res => this.setState({pictures: res.data, searchValue: "" }))
-  //     .catch(err => console.log(err));
-  // }
+  // This needs to be uncommented when ORM is set up
+  componentWillMount() {
+    API.getPhotographerPhotos(this.state.userId)
+      .then(photoData => this.setState({pictures: photoData.data}))
+      .catch(err => console.log(err));
+  }
 
   render() {
     return (
@@ -55,7 +55,7 @@ class PhotographerMyPictures extends Component {
           {this.state.pictures.map((pic, index) => (
             <PicGrid
               key={index}
-              link={"photographerphotoview/" + pic.id}
+              link={"photographerphotoview/" + this.state.userId + "/" + pic.id}
               filePath={pic.filePath}
               name={pic.title}
             />

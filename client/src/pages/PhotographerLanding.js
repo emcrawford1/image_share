@@ -11,64 +11,59 @@ const flexContainer = {
   justifyContent: 'center',
 };
 
- 
+
 class PViewPhotographerProfile extends Component {
 
   state = {
 
-     userId: "27",
-     filePath: "/images/picture5.jpg",
-      
-      id: this.props.match.params.id,
-      userName: "wdenkins",
-      firstName: "Wanda",
-      lastName: "Denkins",
-      dateAdded: "May 4, 2019",
-      aboutMe: "Serving up our own rendition of veggie burgers"
-  
+    userId: this.props.match.params.userId,
+
+    profile: [{
+    filePath: "/images/picture5.jpg",
+    userName: "wdenkins",
+    firstName: "Wanda",
+    lastName: "Denkins",
+    dateAdded: "May 4, 2019",
+    aboutMe: "Serving up our own rendition of veggie burgers"
+    }]
+
   };
 
-  //This needs to be uncommented when ORM is set up
-  // componentWillMount() {
-  //   API.getPhotographerProfile(this.props.match.params.id)
-  //     .then(res => this.setState({pictures: res.data, searchValue: "" }))
-  //     .catch(err => console.log(err));
-  // }
-
-  //This needs to be uncommented when the ORM is set up
-  // addToCart(picId, purchaserId) {
-  //   API.addToCart(picId, purchaserId)
-  //   .then(this.setState({disabled: true}))
-  //   .catch(err => console.log(err));
-  // }
-
-  //Testing
-  addToCart(lol){
-  
-    this.setState({disabled: "true"});
-    console.log(this.state.disabled);
+  // This needs to be uncommented when ORM is set up
+  componentWillMount() {
+    const userId = this.state.userId;
+    API.getPhotographerProfile(userId)
+      .then(profileData => {
+        console.log(profileData);
+        this.setState({ profile: profileData.data })
+        console.log(this.state.profile)
+      })
+      .catch(err => console.log(err));
   }
 
   render() {
 
     return (
       <div className="wrapper">
-        <PhotoNav 
-        id={this.state.userId}
+        <PhotoNav
+          id={this.state.userId}
         />
+        {
+          this.state.profile.map(item => (
         <div style={flexContainer}>
           <PUserProfile
-            key={this.state.userName}
-            fullName={this.state.firstName + " " + this.state.lastName}
-            username={this.state.userName}
-            dateAdded={this.state.dateAdded}
-            aboutMe={this.state.aboutMe}
-            filePath={this.state.filePath}
-            
+            key={item.userName}
+            fullName={item.firstName + " " + item.lastName}
+            username={item.userName}
+            dateAdded={item.dateAdded}
+            aboutMe={item.aboutMe}
+            filePath={item.filePath}
+
           />
 
 
         </div>
+        ))}
         <Footer />
       </div>
     )

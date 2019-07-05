@@ -21,27 +21,78 @@ export default {
 
   clearCart: function(userId) {
     return axios.delete("/api/clearcart/" + userId)
-  }
+  },
+
+  //PostPurchase.js
+  displayConf: userId => axios.get("/api/postpurchase/" + userId),
+
+  //MyPurchases.js
+  getPurchases: userId => axios.get("/api/mypurchases/" + userId),
+
+  //PurchaserLandingPage.js
+  loadCategories: () => axios.get("/api/categories"),
+
+  //PCategoryView.js
+  loadSpecificCategory: catId => axios.get("/api/specificcategoryview/" + catId),
+
+
+
+  //PSpecificPictureView.js
+
+  //Load picture
+  loadSpecificPicture: picId => axios.get("/api/PSpecificPictureView/" + picId),
+
+  //Check cart to see if user has already added to cart
+  checkCart: (userId, picId) => axios.get("/api/PSpecificPictureView/cart/" + userId + "/" + picId),
+
+  //Check to see if user has already purchased photo
+  checkPurchases: (userId, picId) => axios.get("/api/PSpecificPictureView/purchases/" + userId + "/" + picId),
+
+  //Add to cart
+  addToCart: (userId, picId) => axios.post("/api/addtocart/" + userId + "/" + picId),
+
+
+  //PYourPhotos.js
+
+  //Get photos by confirmation number
+  getByConf: confId => axios.get('/api/pyourphotosconf/' + confId),
+
+  //Get photos by email
+  getByEmail: userId => axios.get('/api/pyourphotosemail/' + userId),
+
+  
+  //PurchaseCart.js
+
+  //Get cart items
+  getPurchaseCart: userId => axios.get('/api/purchasecart/' + userId),
+
+  //Delete one cart item
+  removeFromCart: picId => axios.delete('/api/removeitem/' + picId),
+
+
+  //PurchasedPhotoView.js
+  displayPurchasedPhoto: (userId, picId) => axios.get("/api/purchasedphotoview/" + userId + "/" + picId),
+
+
+  //PhotographerLanding.js
+  getPhotographerProfile: (userId) => axios.get("/api/photographerlanding/" + userId),
+
+
+  //PhotographerMyPictures.js
+  getPhotographerPhotos: (userId) => axios.get('/api/photographermypictures/' + userId),
+
+
+  //PhotographerPhotoView.js
+
+  //Onload
+  checkOwnPhoto: (picId) => axios.get('/api/photographerphotoview/' + picId),
+
+  //Disable pic
+  disablePhoto: (picId) => axios.put('/api/setdisable/' + picId),
+
+
+  //PhotographerSales.js
+  getSales: userId => axios.get('/api/photographersales/' + userId)
+
 }
 
-
-// import axios from "axios";
-
-// export default {
-//   // Gets all books
-//   getBooks: function() {
-//     return axios.get("/api/books");
-//   },
-//   // Gets the book with the given id
-//   getBook: function(id) {
-//     return axios.get("/api/books/" + id);
-//   },
-//   // Deletes the book with the given id
-//   deleteBook: function(id) {
-//     return axios.delete("/api/books/" + id);
-//   },
-//   // Saves a book to the database
-//   saveBook: function(bookData) {
-//     return axios.post("/api/books", bookData);
-//   }
-// };

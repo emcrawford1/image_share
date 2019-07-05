@@ -16,54 +16,21 @@ class PurchaseCart extends Component {
   state = {
 
     totalPrice: "",
-    userId: this.props.match.params.id,
+    userId: this.props.match.params.userId,
 
-    cartItems: [
-      {
-        cartId: '1',
-        purchaserId: "10",
-        pictureId: "32",
-        title: "Just a Beautiful Photograph",
-        userName: "wdenkins",
-        price: "40",
-        filePath: "/images/picture5.jpg",
-      },
-
-      {
-        cartId: '1',
-        purchaserId: "10",
-        pictureId: "33",
-        title: "Inspiring",
-        userName: "wdenkins",
-        price: "4103",
-        filePath: "/images/picture5.jpg",
-      },
-
-      {
-        cartId: '1',
-        purchaserId: "10",
-        pictureId: "34",
-        title: "You've Got an Error",
-        userName: "wdenkins",
-        price: "404",
-        filePath: "/images/picture8.jpg",
-      },
-
-      {
-        cartId: '1',
-        purchaserId: "10",
-        pictureId: "35",
-        title: "Leet",
-        userName: "wdenkins",
-        price: "1337",
-        filePath: "/images/picture5.jpg",
-      }
-    ]
+    cartItems: []
 
   };
 
   componentWillMount() {
-    this.getTotalPrice();
+    API.getPurchaseCart(this.state.userId)
+      .then(cartData => {
+        console.log(cartData)
+        this.setState({ cartItems: cartData.data })
+        this.getTotalPrice();
+      })
+      .catch(err => console.log(err));
+
     console.log(this.state.totalPrice);
   }
 
@@ -77,30 +44,17 @@ class PurchaseCart extends Component {
     this.setState({ totalPrice: newPrice });
     console.log(this.state.totalPrice);
   }
-  //This needs to be uncommented when ORM is set up.  This is probably going to need more ORM logic to call
-  //the database for each picture in the user's cart.  May need to try to set up an index
-  // componentWillMount() {
-  //   API.getCartItems(this.props.match.params.id)
-  //     .then(res => this.setState({pictures: res.data, searchValue: "" }))
-  //     .catch(err => console.log(err));
-  // }
 
-  //This needs to be uncommented when the ORM is set up
-  // addToCart(picId, purchaserId) {
-  //   API.addToCart(picId, purchaserId)
-  //   .then(this.setState({disabled: true}))
-  //   .catch(err => console.log(err));
-  // }
+  
 
   //Testing - This will actually need to call the ORM with the 
-  removeFromCart(index) {
-
-    console.log("Removing: " + this.state.cartItems[index]);
-
-    let newCart = this.state.cartItems;
-    newCart.splice(index, 1);
-    this.setState({ cartItems: newCart });
-    this.getTotalPrice();
+  removeFromCart(cartItem) {
+    API.removeFromCart(cartItem)
+    .then(cartData => {
+      console.log(cartData);
+      window.location.reload();
+    })
+    .catch(err => console.log(err))
 
   }
 
@@ -108,20 +62,15 @@ class PurchaseCart extends Component {
    let path = "/checkout/" + this.state.userId;
    this.props.history.push(path)
  }
+
   //Testing - this will need to actually call one of the ORM functions above.
   clearCart() {
-    //Clear the whole thing.
-
-    // const newthing =  [{
-    //   purchaserId: "13",
-    //   pictureId: "35",
-    //   title: "Leet",
-    //   firstName: "m3lvIn",
-    //   lastName: "t03h@7g@r",
-    //   price: "1337",
-    //   filePath: "/images/picture5.jpg",
-    // }]
-    this.setState({ cartItems: []})
+    API.clearCart(this.state.userId)
+    .then(cartData => {
+      console.log(cartData);
+      window.location.reload();
+    })
+    .catch(err => console.log(err))
   }
 
   render() {
@@ -151,12 +100,12 @@ class PurchaseCart extends Component {
 
           {this.state.cartItems.map((item, index) =>
             <ViewCart
-              key={index}
+              key={item.cartId}
               title={item.title}
               fullName={item.userName}
               price={item.price}
               image={item.filePath}
-              onClick={() => this.removeFromCart(index)}
+              onClick={() => this.removeFromCart(item.cartId)}
             />
 
           )}

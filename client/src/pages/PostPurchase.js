@@ -14,18 +14,18 @@ const flexContainer = {
 class PostPurchase extends Component {
 
   state = {
-    userId: "10",
+    userId: this.props.match.params.userId,
     firstName: "Danithon",
     confirmationNumber: "34",
-    searchVal: ""
+   
   };
 
-  //This needs to be uncommented when ORM is set up
-  // componentWillMount() {
-  //   API.getPictures(this.props.match.params.category)
-  //     .then(res => this.setState({pictures: res.data, searchValue: "" }))
-  //     .catch(err => console.log(err));
-  // }
+  // This needs to be uncommented when ORM is set up
+  componentWillMount() {
+    API.displayConf(this.state.userId)
+      .then(confData => this.setState(confData.data[0]))
+      .catch(err => console.log(err));
+  }
 
   render() {
     return (

@@ -26,21 +26,21 @@ function App() {
        <Switch>
          <Route exact path="/" component={Login} />
          <Route exact path="/register" component={Register} />
-         <Route exact path="/pcategoryview/:category" component={PCategoryView} />
-         <Route exact path="/pspecificpictureview/:id" component={PSpecificPictureView} />
-         <Route exact path="/pviewphotographerprofile/:id" component={PViewPhotographerProlile} />
-         <Route exact path="/purchasecart/:id" component={PurchaseCart} />
-         <Route exact path="/purchaserlandingpage" component={PurchaserLandingPage} />
-         <Route exact path="/checkout/:id" component={Checkout} />
-         <Route exact path="/postpurchase/:id" component={PostPurchase} />
-         <Route exact path="/mypurchases/:id" component={MyPurchases} />
-         <Route exact path="/pviewphotographerphotos/:id" component={PViewPhotographerPhotos} />
-         <Route exact path="/pyourphotos/:id" component={PYourPhotos} />
-         <Route exact path="/purchasedphotoview/:id" component={PurchasedPhotoView} />
-         <Route exact path="/photographerlanding/:id" component={PhotographerLanding} />
-         <Route exact path="/photographermypictures/:id" component={PhotographerMyPictures} /> 
-         <Route exact path="/photographerphotoview/:picId" component={PhotographerPhotoView} />
-         <Route exact path="/photographersales/:id" component={PhotographerSales} />
+         <Route exact path="/pcategoryview/:userId/:catId" component={PCategoryView} />
+         <Route exact path="/pspecificpictureview/userId/:picId" component={PSpecificPictureView} />
+         <Route exact path="/pviewphotographerprofile/:userId/:photographerId" component={PViewPhotographerProlile} />
+         <Route exact path="/purchasecart/:userId" component={PurchaseCart} />
+         <Route exact path="/purchaserlandingpage/:userId" component={PurchaserLandingPage} />
+         <Route exact path="/checkout/:userId" component={Checkout} />
+         <Route exact path="/postpurchase/:userId" component={PostPurchase} />
+         <Route exact path="/mypurchases/:userId" component={MyPurchases} />
+         <Route exact path="/pviewphotographerphotos/:userId" component={PViewPhotographerPhotos} />
+         <Route exact path="/pyourphotos/:userId/:confId" component={PYourPhotos} />
+         <Route exact path="/purchasedphotoview/:userId/:picId" component={PurchasedPhotoView} />
+         <Route exact path="/photographerlanding/:userId" component={PhotographerLanding} />
+         <Route exact path="/photographermypictures/:userId" component={PhotographerMyPictures} /> 
+         <Route exact path="/photographerphotoview/:userId/:picId" component={PhotographerPhotoView} />
+         <Route exact path="/photographersales/:userId" component={PhotographerSales} />
        </Switch>
      </div>
    </Router>

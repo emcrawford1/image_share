@@ -14,7 +14,8 @@ const flexContainer = {
 class PViewPhotographerPhotos extends Component {
 
   state = {
-    userId: "10",
+    userId: this.props.match.params.userId,
+    
     pictures: [{
       id: "27",
       title: "Nice Picture",
@@ -65,7 +66,7 @@ class PViewPhotographerPhotos extends Component {
           {this.state.pictures.map((pic, index) => (
             <PicGrid
               key={index}
-              link={"PSpecificPictureView/" + pic.id}
+              link={"PSpecificPictureView/" + this.state.userId + "/" + pic.id}
               filePath={pic.filePath}
               name={pic.title}
             />

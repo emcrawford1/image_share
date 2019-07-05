@@ -15,13 +15,13 @@ export function PurchNav(props) {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
       <h1 style={imageShareColor}>Image Share</h1>
-    <a className="navbar-brand" style={navSpacer} href="/purchaserlandingpage">
+    <a className="navbar-brand" style={navSpacer} href={"/purchaserlandingpage/" + props.id}>
         Home
     </a>
     <a className="navbar-brand" style={navSpacer} href={"/mypurchases/" + props.id}>
         My Purchases
     </a>
-    <a className="navbar-brand" style={navSpacer} href={"/pyourphotos/" + props.id}>
+    <a className="navbar-brand" style={navSpacer} href={"/pyourphotos/" + props.id + "/0"}>
         My Photos
     </a>
       <a className="navbar-brand" style={navSpacer} href="/logout">

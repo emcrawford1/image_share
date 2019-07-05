@@ -14,45 +14,64 @@ const flexContainer = {
 class PCategoryView extends Component {
 
   state = {
-    userId: "10",
+    catId: this.props.match.params.catId,
+    userId: this.props.match.params.userId,
     pictures: [{
       id: "27",
       title: "Nice Picture",
       filePath: "/images/picture8.jpg"
     },
-  {
-    id: "28",
-    title: "Another Nice Picture",
-    filePath: "/images/picture5.jpg"
-  }],
-    searchVal: ""
+    {
+      id: "28",
+      title: "Another Nice Picture",
+      filePath: "/images/picture5.jpg"
+    }],
+    
   };
 
-//This needs to be uncommented when ORM is set up
-  // componentWillMount() {
-  //   API.getPictures(this.props.match.params.category)
-  //     .then(res => this.setState({pictures: res.data, searchValue: "" }))
-  //     .catch(err => console.log(err));
-  // }
+  // This needs to be uncommented when ORM is set up
+  componentWillMount() {
+  
+    API.loadSpecificCategory(this.state.catId)
+      .then(catData => {
+        console.log(catData)
+        this.setState({ pictures: catData.data })
+      })
+      .catch(err => console.log(err));
+  }
 
   render() {
+
+    if (this.state.pictures.length === 0) {
+      return (
+        <div className="wrapper">
+          <PurchNav
+            id={this.state.userId}
+          />
+          <div className="container">
+            <h2>There are no images in this category.</h2>
+          </div>
+          <Footer />
+        </div>
+      )
+    }
     return (
       <div className="wrapper">
-      <PurchNav 
-      id={this.state.userId}
-      />
-      <div style={flexContainer}>
-        {this.state.pictures.map ((pic, index) => (
-          <PicGrid 
-          key={index}
-          link={"PSpecificPictureView/" + pic.id}
-          filePath={pic.filePath}
-          name={pic.title}
-          />
-        )
+        <PurchNav
+        
+        />
+        <div style={flexContainer}>
+          {this.state.pictures.map((pic, index) => (
+            <PicGrid
+              key={index}
+              link={"PSpecificPictureView/" + this.state.userId + "/" + pic.id}
+              filePath={pic.filePath}
+              name={pic.title}
+            />
+          )
           )}
-      </div>
-      <Footer />
+        </div>
+        <Footer />
       </div>
     )
   }

@@ -14,7 +14,7 @@ const flexContainer = {
 class PhotographerSales extends Component {
 
   state = {
-    userId: "10",
+    userId: this.props.match.params.userId,
 
     sales: [{
       picId: "35",
@@ -53,11 +53,15 @@ class PhotographerSales extends Component {
   };
 
   //This needs to be uncommented when ORM is set up
-  // componentWillMount() {
-  //   API.getPictures(this.props.match.params.category)
-  //     .then(res => this.setState({pictures: res.data, searchValue: "" }))
-  //     .catch(err => console.log(err));
-  // }
+  componentWillMount() {
+    const userId = this.state.userId;
+    API.getSales(userId)
+      .then(salesData => {
+        console.log(salesData)
+        this.setState({ sales: salesData.data })
+      })
+      .catch(err => console.log(err));
+  }
 
   render() {
 
@@ -88,7 +92,7 @@ class PhotographerSales extends Component {
               title={sale.title}
               purchaser={sale.purchaser}
               date={"Purchase Date: " + sale.date}
-              link={"/photographerphotoview/" + sale.picId}
+              link={"/photographerphotoview/" + this.state.userId + "/" + sale.picId}
               price={"Amount Charged: $" + sale.price}
             />
           ))}

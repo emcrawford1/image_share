@@ -16,7 +16,7 @@ class PViewPhotographerProfile extends Component {
 
   state = {
 
-     userId: "27",
+     userId: this.props.match.params.userId,
      filePath: "/images/picture5.jpg",
       
       userName: this.props.match.params.id,
@@ -64,7 +64,7 @@ class PViewPhotographerProfile extends Component {
             dateAdded={this.state.dateAdded}
             aboutMe={this.state.aboutMe}
             filePath={this.state.filePath}
-            link={"/pviewphotographerphotos/" + this.state.userName}
+            link={"/pviewphotographerphotos/" + this.state.userId + "/" + this.state.userName}
             linkDesc={"View Photos"}
           />
 
