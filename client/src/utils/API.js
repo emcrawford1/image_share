@@ -92,7 +92,11 @@ export default {
 
 
   //PhotographerSales.js
-  getSales: userId => axios.get('/api/photographersales/' + userId)
+  getSales: userId => axios.get('/api/photographersales/' + userId),
+
+
+  //PViewPhotographerPhotos.js
+  viewPhotographerPhotos: userId => axios.get('/api/pviewphotographerphotos/' + userId)
 
 }
 

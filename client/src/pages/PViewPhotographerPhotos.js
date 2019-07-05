@@ -15,6 +15,7 @@ class PViewPhotographerPhotos extends Component {
 
   state = {
     userId: this.props.match.params.userId,
+    photographerId: this.props.match.params.photographerId,
     
     pictures: [{
       id: "27",
@@ -50,11 +51,12 @@ class PViewPhotographerPhotos extends Component {
   };
 
   //This needs to be uncommented when ORM is set up
-  // componentWillMount() {
-  //   API.getPictures(this.props.match.params.category)
-  //     .then(res => this.setState({pictures: res.data, searchValue: "" }))
-  //     .catch(err => console.log(err));
-  // }
+  componentWillMount() {
+    const photographerId = this.state.photographerId;
+    API.viewPhotographerPhotos(this.props.match.params.category)
+      .then(res => this.setState({pictures: res.data, searchValue: "" }))
+      .catch(err => console.log(err));
+  }
 
   render() {
     return (

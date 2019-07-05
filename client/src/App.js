@@ -27,7 +27,7 @@ function App() {
          <Route exact path="/" component={Login} />
          <Route exact path="/register" component={Register} />
          <Route exact path="/pcategoryview/:userId/:catId" component={PCategoryView} />
-         <Route exact path="/pspecificpictureview/userId/:picId" component={PSpecificPictureView} />
+         <Route exact path="/pspecificpictureview/:userId/:picId" component={PSpecificPictureView} />
          <Route exact path="/pviewphotographerprofile/:userId/:photographerId" component={PViewPhotographerProlile} />
          <Route exact path="/purchasecart/:userId" component={PurchaseCart} />
          <Route exact path="/purchaserlandingpage/:userId" component={PurchaserLandingPage} />
