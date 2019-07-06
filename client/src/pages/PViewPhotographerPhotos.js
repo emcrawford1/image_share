@@ -47,14 +47,17 @@ class PViewPhotographerPhotos extends Component {
       title: "Another Nice Picture",
       filePath: "/images/picture8.jpg"
     }],
-    searchVal: ""
+    
   };
 
   //This needs to be uncommented when ORM is set up
   componentWillMount() {
     const photographerId = this.state.photographerId;
-    API.viewPhotographerPhotos(this.props.match.params.category)
-      .then(res => this.setState({pictures: res.data, searchValue: "" }))
+    API.viewPhotographerPhotos(photographerId)
+      .then(photoData => { 
+        console.log(photoData);
+        this.setState({pictures: photoData.data})
+      })
       .catch(err => console.log(err));
   }
 

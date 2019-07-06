@@ -25,7 +25,8 @@ module.exports = function(sequelize, DataTypes) {
     userType: {
       type: DataTypes.INTEGER,
       validate: {
-        is: [0,1]
+        min: 0,
+        max: 1
       }
     },
 

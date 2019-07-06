@@ -1,6 +1,7 @@
 const express = require('express');
 const Sequelize = require('sequelize');
 const router = express.Router();
+const passport = require('passport');
 const db = require('../config/connection');
 const models = require('../models');
 const Category = models.category;
@@ -25,7 +26,7 @@ router.get('/checkout/:userId', (req, res) => {
     }]
   })
     .then(cart => {
-      if (cart.length < 2) {
+      if (cart.length < 1) {
         res.json(cart);
       }
 
@@ -484,11 +485,11 @@ router.get('/photographerphotoview/:picId', (req, res) => {
 router.put('/setdisable/:picId', (req, res) => {
   const picId = req.params.picId;
   Picture.update(
-    {disabled: "true"},
-    {where: {id: picId} }
+    { disabled: "true" },
+    { where: { id: picId } }
   )
-  .then(status => res.json(status))
-  .catch(err => console.log(err))
+    .then(status => res.json(status))
+    .catch(err => console.log(err))
 })
 
 
@@ -519,6 +520,7 @@ router.get('/photographersales/:userId', (req, res) => {
       })
       res.send(responseData)
     })
+    .catch(err => console.log(err))
 })
 
 //PViewPhotographerPhotos.js
@@ -527,7 +529,10 @@ router.get('/pviewphotographerphotos/:userId', (req, res) => {
 
   Picture.findAll({
     attributes: ['id', 'title', 'filePath'],
-    where: { userEmail: userId }
+    where: {
+      userEmail: userId,
+      disabled: '0'
+    }
   })
     .then(data => res.json(data))
     .catch(err => console.log(err))
@@ -537,12 +542,64 @@ router.get('/pviewphotographerphotos/:userId', (req, res) => {
 router.get('/pviewphotographerprofile/:userId', (req, res) => {
   const userId = req.params.userId;
 
-  UserInfo.findAll({
-    attributes: [['userEmail', 'userName'], 'firstName', 'lastName', ['createdAt', 'dateAdded'], 'aboutMe', ['profilePic', 'filePath']]
+  User.findOne({
+    attributes: ['email'],
+    where: { email: userId },
+    include: [{
+      model: UserInfo,
+      attributes: ['firstName', 'lastName', ['createdAt', 'dateAdded'], 'aboutMe', ['profilePic', 'filePath']]
+
+    }]
   })
-  .then(data => res.json(data))
-  .catch(err => console.log(err))
+    .then(data => {
+      const data1 = JSON.parse(JSON.stringify(data));
+      const responseData = {
+        userName: data1.email,
+        firstName: data1.user_info.firstName,
+        lastName: data1.user_info.lastName,
+        dateAdded: data1.user_info.dateAdded,
+        aboutMe: data1.user_info.aboutMe,
+        filePath: data1.user_info.filePath
+      };
+      res.json(responseData)
+    })
+    .catch(err => console.log(err))
 })
 
+//Register - populate user table
+router.post('/register', (req, res) => {
+  const { email, password, firstName,
+    lastName, accountType, aboutMe } = req.body;
+
+  User.create({
+    email: email,
+    password: password
+  })
+    .then(data => {
+      UserInfo.create({
+        firstName: firstName,
+        lastName: lastName,
+        aboutMe: aboutMe,
+        userType: accountType,
+        userEmail: email
+      })
+      .then(data => res.json(data))
+      .catch( err => console.log(err))
+    })
+    .catch(err => console.log(err))
+})
+
+
+//Login Handle
+router.post('/login', (req, res, next) => {
+  passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: "/login"
+  })(req, res, next);
+})
+
+router.get('/logout', (req, res) => {
+  req.logout();
+})
 
 module.exports = router;

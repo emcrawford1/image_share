@@ -24,7 +24,7 @@ function App() {
    <Router>
      <div>
        <Switch>
-         <Route exact path="/" component={Login} />
+         <Route exact path="/" component={PhotographerLanding} />
          <Route exact path="/register" component={Register} />
          <Route exact path="/pcategoryview/:userId/:catId" component={PCategoryView} />
          <Route exact path="/pspecificpictureview/:userId/:picId" component={PSpecificPictureView} />
@@ -34,7 +34,7 @@ function App() {
          <Route exact path="/checkout/:userId" component={Checkout} />
          <Route exact path="/postpurchase/:userId" component={PostPurchase} />
          <Route exact path="/mypurchases/:userId" component={MyPurchases} />
-         <Route exact path="/pviewphotographerphotos/:userId" component={PViewPhotographerPhotos} />
+         <Route exact path="/pviewphotographerphotos/:userId/:photographerId" component={PViewPhotographerPhotos} />
          <Route exact path="/pyourphotos/:userId/:confId" component={PYourPhotos} />
          <Route exact path="/purchasedphotoview/:userId/:picId" component={PurchasedPhotoView} />
          <Route exact path="/photographerlanding/:userId" component={PhotographerLanding} />

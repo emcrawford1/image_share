@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {PurchNav} from "../components/Nav";
+import { PurchNav } from "../components/Nav";
 import Footer from "../components/Footer";
 import { PUserProfile } from "../components/Card";
 import API from "../utils/API";
@@ -11,65 +11,61 @@ const flexContainer = {
   justifyContent: 'center',
 };
 
- 
+
 class PViewPhotographerProfile extends Component {
 
   state = {
 
-     userId: this.props.match.params.userId,
-     filePath: "/images/picture5.jpg",
-      
-      userName: this.props.match.params.id,
+    userId: this.props.match.params.userId,
+    userName: this.props.match.params.photographerId,
+
+    profile: [{
+      userName: "",
+      filePath: "/images/picture5.jpg",
       firstName: "Wanda",
       lastName: "Denkins",
       dateAdded: "May 4, 2019",
-      aboutMe: "Serving up our own rendition of veggie burgers",
-      searchVal: ""
-  
+      aboutMe: "Serving up our own rendition of veggie burgers"
+    }]
+
   };
 
-  //This needs to be uncommented when ORM is set up
-  // componentWillMount() {
-  //   API.getPhotographerProfile(this.props.match.params.id)
-  //     .then(res => this.setState({pictures: res.data, searchValue: "" }))
-  //     .catch(err => console.log(err));
-  // }
-
-  //This needs to be uncommented when the ORM is set up
-  // addToCart(picId, purchaserId) {
-  //   API.addToCart(picId, purchaserId)
-  //   .then(this.setState({disabled: true}))
-  //   .catch(err => console.log(err));
-  // }
-
-  //Testing
-  addToCart(lol){
-  
-    this.setState({disabled: "true"});
-    console.log(this.state.disabled);
+  // This needs to be uncommented when ORM is set up
+  componentWillMount() {
+    API.viewPhotographerProfile(this.state.userName)
+      .then(profileData => {
+        console.log(profileData)
+        this.setState({ profile: [profileData.data]})
+      })
+      .catch(err => console.log(err));
   }
+
+
 
   render() {
 
     return (
       <div className="wrapper">
-        <PurchNav 
-        id={this.state.userId}
+        <PurchNav
+          id={this.state.userId}
         />
-        <div style={flexContainer}>
+        {this.state.profile.map((item, index) => (
+        <div style={flexContainer}
+        key={index + "s"}>
           <PUserProfile
-            key={this.state.userName}
-            fullName={this.state.firstName + " " + this.state.lastName}
-            username={this.state.userName}
-            dateAdded={this.state.dateAdded}
-            aboutMe={this.state.aboutMe}
-            filePath={this.state.filePath}
-            link={"/pviewphotographerphotos/" + this.state.userId + "/" + this.state.userName}
+            key={index}
+            fullName={item.firstName + " " + item.lastName}
+            username={item.userName}
+            dateAdded={item.dateAdded}
+            aboutMe={item.aboutMe}
+            filePath={item.filePath}
+            link={"/pviewphotographerphotos/" + this.state.userId + "/" + item.userName}
             linkDesc={"View Photos"}
           />
 
 
         </div>
+        ))}
         <Footer />
       </div>
     )

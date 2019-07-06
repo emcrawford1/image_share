@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt');
+const saltRounds = 12;
 
 module.exports = function(sequelize, DataTypes) {
   let User = sequelize.define("user", {
@@ -25,10 +27,14 @@ module.exports = function(sequelize, DataTypes) {
 
   User.associate = function(models) {
     User.hasOne(models.user_info);
-
     User.hasMany(models.purchase_confirmation)
   }
 
+  User.beforeCreate((user) => {
+     user.password = "password";
+    //  user.save();
+  
+  });
   
 
   return User;

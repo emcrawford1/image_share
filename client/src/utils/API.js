@@ -96,7 +96,14 @@ export default {
 
 
   //PViewPhotographerPhotos.js
-  viewPhotographerPhotos: userId => axios.get('/api/pviewphotographerphotos/' + userId)
+  viewPhotographerPhotos: userId => axios.get('/api/pviewphotographerphotos/' + userId),
+
+  //PviewPhotographerProfile.js
+  viewPhotographerProfile: photographerId => axios.get('/api/pviewphotographerprofile/' + photographerId),
+
+  //Register
+  registerUser: userInfo => axios.post('/api/register', userInfo),
+
 
 }
 

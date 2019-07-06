@@ -23,8 +23,10 @@ class PCategoryView extends Component {
 
   componentWillMount() {
     API.getTotalCost(this.state.userId)
-      .then(cost =>
-        this.setState({ totalPrice: cost.data.totalPrice, userId: this.props.match.params.id }))
+      .then(cost => {
+        console.log(cost)
+        this.setState({ totalPrice: cost.data.totalPrice })
+      })
       .catch(err => console.log(err));
     API.getCartItems(this.state.userId)
       .then(cart => {

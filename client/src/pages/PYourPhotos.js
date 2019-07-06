@@ -62,6 +62,20 @@ class PYourPhotos extends Component {
   }
 
   render() {
+    if (this.state.pictures.length === 0) {
+      return (
+        <div className="wrapper">
+          <PurchNav
+            id={this.state.userId}
+          />
+          <div className="container">
+            <h2>You have not purchased any photos yet.</h2>
+          </div>
+          <Footer />
+        </div>
+      )
+    }
+
     return (
       <div className="wrapper">
         <PurchNav

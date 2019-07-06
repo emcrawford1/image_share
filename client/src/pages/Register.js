@@ -32,12 +32,12 @@ const backgroundImage = {
 class PostPurchase extends Component {
 
   state = {
-    userId: "10",
     email: "",
     password: "",
     aboutMe: "",
     accountType: "",
-    searchVal: ""
+    firstName: "",
+    lastName: ""
   };
 
   //This needs to be uncommented when ORM is set up
@@ -49,15 +49,14 @@ class PostPurchase extends Component {
 
   registerUser = event => {
     event.preventDefault();
-    
-    console.log(this.state)
+    API.registerUser(this.state)
+    .then(registerData => {
+      console.log(registerData);
+    })
+    .catch(err => console.log(err))
   }
 
-  createAccount = event => {
-    event.preventDefault();
-    console.log(this.state.email)
-  }
-
+  
   handleInputChange = event => {
     const { name, value } = event.target;
     this.setState({
