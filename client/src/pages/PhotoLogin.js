@@ -11,32 +11,39 @@ const flexContainer = {
   display: 'flex',
   flexWrap: 'wrap',
   justifyContent: 'center',
-
+  
 };
 
 //Not currently working.  Might need to add react-native-linear-gradient
 const backgroundImage = {
-
-  minHeight: "100%",
-  minWidth: "100%",
-  background: "linearGradient(0deg,rgba(5, 48, 238, 0.3),rgba(118, 139, 231, 0.3)),url(/images/city_background.jpg)",
-  backgroundSize: "cover",
-  backgroundRepeat: "no-repeat",
-  backgroundAttachment: "fixed",
-  color: "rgba(192, 199, 228, 0.3)",
-  marginBottom: "100px"
-
-
+   
+    minHeight: "100%",
+    minWidth: "100%",
+    background: "linearGradient(0deg,rgba(5, 48, 238, 0.3),rgba(118, 139, 231, 0.3)),url(/images/city_background.jpg)",
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    backgroundAttachment: "fixed",
+    color: "rgba(192, 199, 228, 0.3)",
+    marginBottom: "100px"
+   
+  
 }
 
 class PostPurchase extends Component {
 
   state = {
+    userId: "10",
     email: "",
     password: "",
-    accountType: "",  
+    searchVal: ""
   };
 
+  //This needs to be uncommented when ORM is set up
+  // componentWillMount() {
+  //   API.getPictures(this.props.match.params.category)
+  //     .then(res => this.setState({pictures: res.data, searchValue: "" }))
+  //     .catch(err => console.log(err));
+  // }
 
   registerUser() {
     let path = "/register";
@@ -45,16 +52,9 @@ class PostPurchase extends Component {
 
   loginUser = event => {
     event.preventDefault();
-    // console.log(this.state);
-
-    API.loginUser(this.state)
-      .then(loginRes => {
-        localStorage.setItem('is-jwt', loginRes.data);
-        console.log(loginRes.data);
-        // let path = "/purchaserlandingpage/" + this.state.email;
-        // this.props.history.push(path)
-      })
-      .catch(err => console.log(err));
+    console.log(this.state.email)
+    let path = "/photographerlanding/" + this.state.email;
+   this.props.history.push(path)
   }
 
   handleInputChange = event => {
@@ -69,7 +69,7 @@ class PostPurchase extends Component {
     return (
       <div style={backgroundImage}>
         <div className="container" style={flexContainer}>
-
+        
           <LoginForm
             BtnLabel={"Submit"}
             emailLabel={"Email:"}
@@ -84,12 +84,10 @@ class PostPurchase extends Component {
             handleLogin={this.loginUser}
           />
         </div>
-      </div>
-
+        </div>
+        
     )
   }
 }
 
 export default PostPurchase;
-
-

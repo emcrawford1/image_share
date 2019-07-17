@@ -21,14 +21,6 @@ module.exports = function(sequelize, DataTypes) {
     aboutMe: {
       type: DataTypes.STRING
     },
-    
-    userType: {
-      type: DataTypes.INTEGER,
-      validate: {
-        min: 0,
-        max: 1
-      }
-    },
 
     profilePic: {
       type: DataTypes.STRING

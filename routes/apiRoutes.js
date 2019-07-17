@@ -3,6 +3,7 @@ const Sequelize = require('sequelize');
 const router = express.Router();
 const passport = require('passport');
 const db = require('../config/connection');
+const bcrypt = require('bcrypt');
 const models = require('../models');
 const Category = models.category;
 const User = models.user;
@@ -13,7 +14,7 @@ const purchConf = models.purchase_confirmation;
 const Purchases = models.purchases;
 
 
-// Checkout.js
+// Checkout.js - Purchaser
 router.get('/checkout/:userId', (req, res) => {
   const userId = req.params.userId;
   Cart.findAll({
@@ -43,7 +44,7 @@ router.get('/checkout/:userId', (req, res) => {
     .catch(err => console.log(err))
 });
 
-//Checkout - Query cart for items that will be posted to purchases
+//Checkout - Query cart for items that will be posted to purchases - Purchaser
 router.get('/getpurchaseitems/:userId', (req, res) => {
   const userId = req.params.userId;
 
@@ -71,7 +72,7 @@ router.get('/getpurchaseitems/:userId', (req, res) => {
     .catch(err => console.log(err))
 })
 
-//Checkout - Place Order
+//Checkout - Place Order = Purchaser
 router.post('/placeorder/:userId', (req, res) => {
   const userId = req.params.userId;
   purchConf.create({
@@ -81,7 +82,7 @@ router.post('/placeorder/:userId', (req, res) => {
     .catch(err => console.log(err))
 })
 
-//Get last purchase confirmation
+//Get last purchase confirmation = Purchaser
 router.get('/getlastorder/:userId', (req, res) => {
   const userId = req.params.userId;
   purchConf.findAll({
@@ -93,7 +94,7 @@ router.get('/getlastorder/:userId', (req, res) => {
     .catch(err => console.log(err))
 })
 
-//Post to purchases
+//Post to purchases = Purchaser
 router.post('/purchasepost', (req, res) => {
   const purchasePost = req.body;
   console.log(req.body);
@@ -105,7 +106,7 @@ router.post('/purchasepost', (req, res) => {
     .catch(err => console.log(err))
 })
 
-//MyPurchases.js
+//MyPurchases.js = Purchaser
 router.get('/mypurchases/:id', (req, res) => {
   const userId = req.params.id;
   purchConf.findAll({
@@ -136,7 +137,7 @@ router.get('/mypurchases/:id', (req, res) => {
 
 
 
-//PurchaserLandingPage.js
+//PurchaserLandingPage.js = Purchaser
 router.get('/categories', (req, res) =>
   Category.findAll({
     attributes: ['id', ['name', 'category'], ['pic', 'filePath']]
@@ -148,7 +149,7 @@ router.get('/categories', (req, res) =>
     .catch(err => console.log(err))
 );
 
-//PCategoryView.js
+//PCategoryView.js = Authenticated
 router.get('/specificcategoryview/:id', (req, res) => {
   const categorySearch = req.params.id;
   console.log(categorySearch);
@@ -166,7 +167,7 @@ router.get('/specificcategoryview/:id', (req, res) => {
 );
 
 
-//PSpecificPictureView.js - onLoad() - querying cart
+//PSpecificPictureView.js - onLoad() - querying cart - Purchaser
 router.get('/PSpecificPictureView/cart/:userId/:picId', (req, res) => {
   const userId = req.params.userId;
   const picId = req.params.picId;
@@ -185,7 +186,7 @@ router.get('/PSpecificPictureView/cart/:userId/:picId', (req, res) => {
     .catch(err => console.log(err));
 });
 
-//PSpecificPictureView.js - onLoad() - querying purchases
+//PSpecificPictureView.js - onLoad() - querying purchases - Purchaser
 router.get('/PSpecificPictureView/purchases/:userId/:picId', (req, res) => {
   const userId = req.params.userId;
   const picId = req.params.picId;
@@ -204,7 +205,7 @@ router.get('/PSpecificPictureView/purchases/:userId/:picId', (req, res) => {
     .catch(err => console.log(err));
 });
 
-//PSpecificPictureView.js - onLoad() - querying picture
+//PSpecificPictureView.js - onLoad() - querying picture - Purchaser
 router.get('/PSpecificPictureView/:picId', (req, res) => {
   const pictId = req.params.picId;
 
@@ -243,7 +244,7 @@ router.get('/PSpecificPictureView/:picId', (req, res) => {
     .catch(err => console.log(err))
 })
 
-//Add to Cart
+//Add to Cart = Purchaser
 router.post('/addtocart/:userId/:picId', (req, res) => {
   const userId = req.params.userId;
   const picId = req.params.picId;
@@ -257,7 +258,7 @@ router.post('/addtocart/:userId/:picId', (req, res) => {
 });
 
 
-//PYourPhotos.js - get photos by Confirmation Number
+//PYourPhotos.js - get photos by Confirmation Number = Purchaser
 router.get('/pyourphotosconf/:confId', (req, res) => {
   const confId = req.params.confId;
   Purchases.findAll({
@@ -283,7 +284,7 @@ router.get('/pyourphotosconf/:confId', (req, res) => {
     .catch(err => console.log(err))
 })
 
-//PYourPhotos.js - get photos by userEmail
+//PYourPhotos.js - get photos by userEmail = Purchaser
 router.get('/pyourphotosemail/:email', (req, res) => {
   const emailId = req.params.email;
   Purchases.findAll({
@@ -310,7 +311,7 @@ router.get('/pyourphotosemail/:email', (req, res) => {
 })
 
 
-//PurchaseCart.js
+//PurchaseCart.js = Purchaser
 router.get("/purchasecart/:id", (req, res) => {
   const userId = req.params.id;
   Cart.findAll({
@@ -341,7 +342,7 @@ router.get("/purchasecart/:id", (req, res) => {
 })
 
 
-//Delete item from cart
+//Delete item from cart = Purchaser
 router.delete('/removeitem/:id', (req, res) => {
   const cartItem = req.params.id;
   Cart.destroy({
@@ -351,7 +352,7 @@ router.delete('/removeitem/:id', (req, res) => {
     .catch(err => console.log(err))
 })
 
-//Clear cart for user
+//Clear cart for user = Purchaser
 router.delete('/clearcart/:userId', (req, res) => {
   const userId = req.params.userId;
   Cart.destroy({
@@ -362,7 +363,7 @@ router.delete('/clearcart/:userId', (req, res) => {
 })
 
 
-//PostPurchase.js
+//PostPurchase.js = Purchaser
 router.get('/postpurchase/:userId', (req, res) => {
   const userId = req.params.userId;
   purchConf.findAll({
@@ -393,7 +394,7 @@ router.get('/postpurchase/:userId', (req, res) => {
     .catch(err => console.log(err))
 })
 
-//PurchasedPhotoView.js
+//PurchasedPhotoView.js = Purchaser
 router.get('/purchasedphotoview/:userId/:picId', (req, res) => {
   const picId = req.params.picId;
   const userId = req.params.userId;
@@ -428,7 +429,7 @@ router.get('/purchasedphotoview/:userId/:picId', (req, res) => {
     .catch(err => console.log(err))
 })
 
-//PhotographerLanding.js
+//PhotographerLanding.js = Photographer
 router.get('/photographerlanding/:userId', (req, res) => {
   const userId = req.params.userId;
 
@@ -458,7 +459,7 @@ router.get('/photographerlanding/:userId', (req, res) => {
     .catch(err => console.log(err))
 })
 
-//PhotographerMyPictures.js
+//PhotographerMyPictures.js = Photographer
 router.get('/photographermypictures/:userId', (req, res) => {
   const userId = req.params.userId;
   Picture.findAll({
@@ -469,7 +470,7 @@ router.get('/photographermypictures/:userId', (req, res) => {
     .catch(err => console.log(err))
 })
 
-//PhotographerPhotoView.js - onLoad()
+//PhotographerPhotoView.js - onLoad() = Photographer
 router.get('/photographerphotoview/:picId', (req, res) => {
   const picId = req.params.picId;
   Picture.findAll({
@@ -481,7 +482,8 @@ router.get('/photographerphotoview/:picId', (req, res) => {
     .catch(err => console.log(err))
 })
 
-//PhotographerPhotoview.js - Disable photo
+//PhotographerPhotoview.js - Disable photo = Photographer (add ability for only owner of photo to 
+//disable)
 router.put('/setdisable/:picId', (req, res) => {
   const picId = req.params.picId;
   Picture.update(
@@ -493,7 +495,7 @@ router.put('/setdisable/:picId', (req, res) => {
 })
 
 
-//PhotographerSales.js
+//PhotographerSales.js = Photographer
 router.get('/photographersales/:userId', (req, res) => {
   const userId = req.params.userId;
 
@@ -523,7 +525,7 @@ router.get('/photographersales/:userId', (req, res) => {
     .catch(err => console.log(err))
 })
 
-//PViewPhotographerPhotos.js
+//PViewPhotographerPhotos.js = Purchaser
 router.get('/pviewphotographerphotos/:userId', (req, res) => {
   const userId = req.params.userId;
 
@@ -538,7 +540,7 @@ router.get('/pviewphotographerphotos/:userId', (req, res) => {
     .catch(err => console.log(err))
 })
 
-//PViewPhotographerProfile
+//PViewPhotographerProfile = Purchaser
 router.get('/pviewphotographerprofile/:userId', (req, res) => {
   const userId = req.params.userId;
 
@@ -566,38 +568,72 @@ router.get('/pviewphotographerprofile/:userId', (req, res) => {
     .catch(err => console.log(err))
 })
 
-//Register - populate user table
+
+//Register - populate user table = Unprotected
 router.post('/register', (req, res) => {
   const { email, password, firstName,
     lastName, accountType, aboutMe } = req.body;
 
   User.create({
     email: email,
-    password: password
+    password: password,
+    accountType: accountType
   })
     .then(data => {
       UserInfo.create({
         firstName: firstName,
         lastName: lastName,
         aboutMe: aboutMe,
-        userType: accountType,
         userEmail: email
       })
-      .then(data => res.json(data))
+      .then(data => {
+        console.log("hi");
+        res.sendStatus(200)
+      })
       .catch( err => console.log(err))
     })
     .catch(err => console.log(err))
 })
 
 
-//Login Handle
+//Login Handle = Unprotected
 router.post('/login', (req, res, next) => {
-  passport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: "/login"
-  })(req, res, next);
+  console.log(req.body)
+  User.findOne({
+    where: { email: req.body.email }
+  }
+    )
+  .then( user => {
+    if( user === null || user.length < 1 ) {
+      return res.status(404).json({
+        message: 'Authorization failed'
+      });
+    }
+    console.log(user.password)
+    bcrypt.compare(req.body.password, user.password, (err, result) => {
+      if(err) {
+        console.log(err)
+          return res.status(401).json({
+            message: "Authorization failed"
+          });
+
+      }
+      if(!result) {
+        return res.status(401).json({
+          message: "Authorization failed"
+        })
+      }
+      if(result) {
+        return res.status(200).json({
+          message: "Authorization successful"
+        })
+      }
+    })
+  })
 })
 
+
+//Need to figure this out
 router.get('/logout', (req, res) => {
   req.logout();
 })

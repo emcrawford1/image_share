@@ -24,7 +24,7 @@ export function PurchNav(props) {
     <a className="navbar-brand" style={navSpacer} href={"/pyourphotos/" + props.id + "/0"}>
         My Photos
     </a>
-      <a className="navbar-brand" style={navSpacer} href="/logout">
+      <a className="navbar-brand" style={navSpacer} href="/login">
         Logout
     </a>
     <a className="navbar-brand" style={navSpacer} href={"/purchasecart/" + props.id}>
@@ -62,7 +62,7 @@ export function PhotoNav(props) {
     <a className="navbar-brand" style={navSpacer} href={"/photographermypictures/" + props.id}>
         My Photos
     </a>
-    <a className="navbar-brand" style={navSpacer} href={"/logout"}>
+    <a className="navbar-brand" style={navSpacer} href={"/"}>
         Logout
     </a>
     

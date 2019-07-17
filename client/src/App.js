@@ -16,6 +16,7 @@ import PhotographerMyPictures from "./pages/PhotographerMyPictures";
 import PhotographerPhotoView from "./pages/PhotographerPhotoView";
 import PhotographerSales from "./pages/PhotographerSales";
 import Login from "./pages/Login";
+import PhotoLogin from "./pages/PhotoLogin";
 import Register from "./pages/Register";
 import './App.css';
 
@@ -24,7 +25,8 @@ function App() {
    <Router>
      <div>
        <Switch>
-         <Route exact path="/" component={PhotographerLanding} />
+         <Route exact path="/" component={Login} />
+         <Route exact path="/login" component={PhotoLogin} />
          <Route exact path="/register" component={Register} />
          <Route exact path="/pcategoryview/:userId/:catId" component={PCategoryView} />
          <Route exact path="/pspecificpictureview/:userId/:picId" component={PSpecificPictureView} />

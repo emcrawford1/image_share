@@ -104,6 +104,10 @@ export default {
   //Register
   registerUser: userInfo => axios.post('/api/register', userInfo),
 
+  
+  //Login
+  loginUser: userInfo => axios.post('/api/login', userInfo)
+
 
 }
 

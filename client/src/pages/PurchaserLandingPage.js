@@ -14,7 +14,7 @@ const flexContainer = {
 class PurchaserLanding extends Component {
 
   state = {
-    userId: "td@email.com",
+    userId: this.props.match.params.userId,
     pictures: [{
       id: "1",
       category: "Weddings",

@@ -58,7 +58,7 @@ class PCategoryView extends Component {
     return (
       <div className="wrapper">
         <PurchNav
-        
+        id={this.state.userId}
         />
         <div style={flexContainer}>
           {this.state.pictures.map((pic, index) => (
