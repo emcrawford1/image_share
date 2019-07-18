@@ -13,11 +13,11 @@ const Purchases = models.purchases;
 
 
 // Checkout.js - Purchaser
-router.get('/checkout/:userId', (req, res) => {
-  const userId = req.params.userId;
+router.get('/checkout', (req, res) => {
+  const email = req.user.email;
   Cart.findAll({
     where: {
-      userEmail: userId,
+      userEmail: email,
     },
     include: [{
       model: Picture,
@@ -44,12 +44,12 @@ router.get('/checkout/:userId', (req, res) => {
 
 
 //Checkout - Query cart for items that will be posted to purchases - Purchaser
-router.get('/getpurchaseitems/:userId', (req, res) => {
-  const userId = req.params.userId;
+router.get('/getpurchaseitems', (req, res) => {
+  const email = req.user.email;
 
   Cart.findAll({
     attributes: ['pictureId', 'userEmail'],
-    where: { userEmail: userId },
+    where: { userEmail: email },
     include: [{
       model: Picture,
       attributes: ['price', ['userEmail', 'photographerEmail']]
@@ -73,21 +73,21 @@ router.get('/getpurchaseitems/:userId', (req, res) => {
 
 
 //Checkout - Place Order = Purchaser
-router.post('/placeorder/:userId', (req, res) => {
-  const userId = req.params.userId;
+router.post('/placeorder', (req, res) => {
+  const email = req.user.email;
   purchConf.create({
-    userEmail: userId,
+    userEmail: email,
   })
     .then(status => res.json(status))
     .catch(err => console.log(err))
 })
 
 //Get last purchase confirmation = Purchaser
-router.get('/getlastorder/:userId', (req, res) => {
-  const userId = req.params.userId;
+router.get('/getlastorder', (req, res) => {
+  const email = req.user.email;
   purchConf.findAll({
     limit: 1,
-    where: { userEmail: userId },
+    where: { userEmail: email },
     order: [['createdAt', 'DESC']]
   })
     .then(data => res.send(data))
@@ -108,12 +108,12 @@ router.post('/purchasepost', (req, res) => {
 })
 
 //MyPurchases.js = Purchaser
-router.get('/mypurchases/:id', (req, res) => {
-  const userId = req.params.id;
+router.get('/mypurchases', (req, res) => {
+  const email = req.user.email;
   purchConf.findAll({
     attributes: [['id', 'confirmationNumber'], ['createdAt', 'date']],
     where: {
-      userEmail: userId
+      userEmail: email
     },
     include: [{
       model: Purchases,
@@ -166,14 +166,14 @@ router.get('/specificcategoryview/:id', (req, res) => {
 
 
 //PSpecificPictureView.js - onLoad() - querying cart - Purchaser
-router.get('/PSpecificPictureView/cart/:userId/:picId', (req, res) => {
-  const userId = req.params.userId;
+router.get('/PSpecificPictureView/cart/:picId', (req, res) => {
+  const email = req.user.email;
   const picId = req.params.picId;
 
   Cart.findAll({
     attributes: ['id'],
     where: {
-      userEmail: userId,
+      userEmail: email,
       pictureId: picId
     }
   })
@@ -185,14 +185,14 @@ router.get('/PSpecificPictureView/cart/:userId/:picId', (req, res) => {
 });
 
 //PSpecificPictureView.js - onLoad() - querying purchases - Purchaser
-router.get('/PSpecificPictureView/purchases/:userId/:picId', (req, res) => {
-  const userId = req.params.userId;
+router.get('/PSpecificPictureView/purchases/:picId', (req, res) => {
+  const email = req.user.email;
   const picId = req.params.picId;
 
   Purchases.findAll({
     attributes: ['id'],
     where: {
-      userEmail: userId,
+      userEmail: email,
       pictureId: picId
     }
   })
@@ -245,12 +245,12 @@ router.get('/PSpecificPictureView/:picId', (req, res) => {
 
 
 //Add to Cart = Purchaser
-router.post('/addtocart/:userId/:picId', (req, res) => {
-  const userId = req.params.userId;
+router.post('/addtocart/:picId', (req, res) => {
+  const email = req.user.email;
   const picId = req.params.picId;
 
   Cart.create({
-    userEmail: userId,
+    userEmail: email,
     pictureId: picId
   })
     .then(data => res.send(data))
@@ -284,11 +284,11 @@ router.get('/pyourphotosconf/:confId', (req, res) => {
 })
 
 //PYourPhotos.js - get photos by userEmail = Purchaser
-router.get('/pyourphotosemail/:email', (req, res) => {
-  const emailId = req.params.email;
+router.get('/pyourphotosemail', (req, res) => {
+  const email = req.user.email;
   Purchases.findAll({
     attributes: ['pictureId'],
-    where: { userEmail: emailId },
+    where: { userEmail: email },
     include: {
       model: Picture,
       attributes: ['title', 'filePath']
@@ -310,11 +310,11 @@ router.get('/pyourphotosemail/:email', (req, res) => {
 })
 
 //PurchaseCart.js = Purchaser
-router.get("/purchasecart/:id", (req, res) => {
-  const userId = req.params.id;
+router.get("/purchasecart", (req, res) => {
+  const email = req.user.email;
   Cart.findAll({
     attributes: [['id', 'cartId'], ['userEmail', 'purchaserId']],
-    where: { userEmail: userId },
+    where: { userEmail: email },
     include: {
       model: Picture,
       attributes: ['id', 'title', 'price', 'filePath', 'userEmail']
@@ -350,21 +350,21 @@ router.delete('/removeitem/:id', (req, res) => {
 })
 
 //Clear cart for user = Purchaser
-router.delete('/clearcart/:userId', (req, res) => {
-  const userId = req.params.userId;
+router.delete('/clearcart', (req, res) => {
+  const email = req.user.email;
   Cart.destroy({
-    where: { userEmail: userId }
+    where: { userEmail: email }
   })
     .then(deletedCart => res.json(deletedCart))
     .catch(err => console.log(err))
 })
 
 //PostPurchase.js = Purchaser
-router.get('/postpurchase/:userId', (req, res) => {
-  const userId = req.params.userId;
+router.get('/postpurchase', (req, res) => {
+  const email = req.user.email;
   purchConf.findAll({
     limit: 1,
-    where: { userEmail: userId },
+    where: { userEmail: email },
     order: [['createdAt', 'DESC']],
     include: [{
       model: User,
@@ -391,15 +391,15 @@ router.get('/postpurchase/:userId', (req, res) => {
 })
 
 //PurchasedPhotoView.js = Purchaser
-router.get('/purchasedphotoview/:userId/:picId', (req, res) => {
+router.get('/purchasedphotoview/:picId', (req, res) => {
   const picId = req.params.picId;
-  const userId = req.params.userId;
+  const email = req.user.email;
 
   Purchases.findAll({
     limit: 1,
     attributes: ['id', 'pictureId', ['photographerEmail', 'userName'], ['createdAt', 'dateAdded'], ['priceAtPurchase', 'purchasePrice']],
     where: {
-      userEmail: userId,
+      userEmail: email,
       pictureId: picId
     },
     include: [{
@@ -426,13 +426,13 @@ router.get('/purchasedphotoview/:userId/:picId', (req, res) => {
 })
 
 //PViewPhotographerPhotos.js = Purchaser
-router.get('/pviewphotographerphotos/:userId', (req, res) => {
-  const userId = req.params.userId;
+router.get('/pviewphotographerphotos', (req, res) => {
+  const email = req.user.email;
 
   Picture.findAll({
     attributes: ['id', 'title', 'filePath'],
     where: {
-      userEmail: userId,
+      userEmail: email,
       disabled: '0'
     }
   })

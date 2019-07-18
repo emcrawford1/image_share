@@ -3,12 +3,9 @@ const Sequelize = require('sequelize');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const models = require('../models');
-const Category = models.category;
 const User = models.user;
 const Picture = models.picture;
-const Cart = models.cart;
 const UserInfo = models.user_info;
-const purchConf = models.purchase_confirmation;
 const Purchases = models.purchases;
 
 //PhotographerLanding.js = Photographer
@@ -42,10 +39,10 @@ router.get('/photographerlanding', (req, res) => {
 })
 
 //PhotographerMyPictures.js = Photographer
-router.get('/photographermypictures/:userId', (req, res) => {
-  const userId = req.params.userId;
+router.get('/photographermypictures/', (req, res) => {
+  const email = req.user.email;
   Picture.findAll({
-    where: { userEmail: userId },
+    where: { userEmail: email },
     attributes: ['id', 'title', 'filePath']
   })
     .then(data => res.json(data))
@@ -77,12 +74,12 @@ router.put('/setdisable/:picId', (req, res) => {
 })
 
 //PhotographerSales.js = Photographer
-router.get('/photographersales/:userId', (req, res) => {
-  const userId = req.params.userId;
+router.get('/photographersales/', (req, res) => {
+  const email = req.user.email;
 
   Purchases.findAll({
     attributes: ['userEmail', 'priceAtPurchase', 'pictureId', 'createdAt'],
-    where: { photographerEmail: userId },
+    where: { photographerEmail: email },
     include: [{
       model: Picture,
       attributes: ['title']

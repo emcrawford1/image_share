@@ -1,7 +1,5 @@
 //Custom authorization middleware (authMW) for account based 
 
-
-const passport = require('passport');
 const authMW = {
 
   authPurchaser: (req, res, next) => {
