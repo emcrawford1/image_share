@@ -50,16 +50,16 @@ export function PhotoNav(props) {
   return(
   <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
       <h1 style={imageShareColor}>Image Share</h1>
-    <a className="navbar-brand" style={navSpacer} href={"/photographerlanding/" + props.id}>
+    <a className="navbar-brand" style={navSpacer} href={"/photographerlandingpage/"}>
         My Profile
     </a>
-    <a className="navbar-brand" style={navSpacer} href={"/addphoto/" + props.id}>
+    <a className="navbar-brand" style={navSpacer} href={"/addphoto/" }>
         Add Photo
     </a>
-      <a className="navbar-brand" style={navSpacer} href={"/photographersales/" + props.id}>
+      <a className="navbar-brand" style={navSpacer} href={"/photographersales/"}>
         My Sales
     </a>
-    <a className="navbar-brand" style={navSpacer} href={"/photographermypictures/" + props.id}>
+    <a className="navbar-brand" style={navSpacer} href={"/photographermypictures/"}>
         My Photos
     </a>
     <a className="navbar-brand" style={navSpacer} href={"/"}>

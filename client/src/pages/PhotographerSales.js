@@ -14,7 +14,6 @@ const flexContainer = {
 class PhotographerSales extends Component {
 
   state = {
-    userId: this.props.match.params.userId,
 
     sales: [{
       picId: "35",
@@ -54,8 +53,7 @@ class PhotographerSales extends Component {
 
   //This needs to be uncommented when ORM is set up
   componentWillMount() {
-    const userId = this.state.userId;
-    API.getSales(userId)
+    API.getSales()
       .then(salesData => {
         console.log(salesData)
         this.setState({ sales: salesData.data })
@@ -81,7 +79,6 @@ class PhotographerSales extends Component {
     return (
       <div className="wrapper">
         <PhotoNav
-          id={this.state.userId}
         />
         <div className="container" >
           <h1>Your Sales:</h1>
@@ -92,7 +89,7 @@ class PhotographerSales extends Component {
               title={sale.title}
               purchaser={sale.purchaser}
               date={"Purchase Date: " + sale.date}
-              link={"/photographerphotoview/" + this.state.userId + "/" + sale.picId}
+              link={"/photographerphotoview/" + sale.picId}
               price={"Amount Charged: $" + sale.price}
             />
           ))}

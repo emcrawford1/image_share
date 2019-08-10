@@ -15,7 +15,6 @@ class PCategoryView extends Component {
 
   state = {
     catId: this.props.match.params.catId,
-    userId: this.props.match.params.userId,
     pictures: [{
       id: "27",
       title: "Nice Picture",
@@ -29,7 +28,7 @@ class PCategoryView extends Component {
     
   };
 
-  // This needs to be uncommented when ORM is set up
+  //Calling API to set state to pictures
   componentWillMount() {
   
     API.loadSpecificCategory(this.state.catId)
@@ -64,7 +63,7 @@ class PCategoryView extends Component {
           {this.state.pictures.map((pic, index) => (
             <PicGrid
               key={index}
-              link={"PSpecificPictureView/" + this.state.userId + "/" + pic.id}
+              link={"PSpecificPictureView/" + pic.id}
               filePath={pic.filePath}
               name={pic.title}
             />

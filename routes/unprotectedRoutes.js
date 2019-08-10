@@ -41,6 +41,7 @@ router.post('/register', (req, res) => {
 })
 
 router.post('/login', (req, res ) => {
+  console.log(req.body)
   if(!req.body.email || !req.body.password){
     return res.status(401).send("Fields not sent");
   }
@@ -82,43 +83,5 @@ router.post('/login', (req, res ) => {
       return res.status(401).send({ err: err})
     })
   })
-
-//Login Handle = Unprotected
-// router.post('/login', (req, res, next) => {
-//   console.log(req.body)
-//   User.findOne({
-//     where: { email: req.body.email }
-//   }
-//     )
-//   .then( user => {
-//     if( user === null || user.length < 1 ) {
-//       return res.status(404).json({
-//         message: 'Authorization failed'
-//       });
-//     }
-//     console.log(user.password)
-//     bcrypt.compare(req.body.password, user.password, (err, result) => {
-//       if(err) {
-//         console.log(err)
-//           return res.status(401).json({
-//             message: "Authorization failed"
-//           });
-
-//       }
-//       if(!result) {
-//         return res.status(401).json({
-//           message: "Authorization failed"
-//         })
-//       }
-//       if(result) {
-//         return res.status(200).json({
-//           message: "Authorization successful"
-//         })
-//       }
-//     })
-//   })
-// })
-
-
 
 module.exports = router;

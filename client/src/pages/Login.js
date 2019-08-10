@@ -3,6 +3,7 @@ import { LoginForm } from "../components/Form";
 import { PurchNav } from "../components/Nav";
 import Footer from "../components/Footer";
 import { PostPurchaseGrid } from "../components/Grid";
+import { Redirect } from 'react-router-dom';
 import API from "../utils/API";
 
 
@@ -29,7 +30,7 @@ const backgroundImage = {
 
 }
 
-class PostPurchase extends Component {
+class Login extends Component {
 
   state = {
     email: "",
@@ -45,14 +46,25 @@ class PostPurchase extends Component {
 
   loginUser = event => {
     event.preventDefault();
-    // console.log(this.state);
+    const purchPath = "/purchaserlandingpage";
+    // const photoPath = "/photographerlanding";
+    const photoPath = "/photographerlandingpage";
 
     API.loginUser(this.state)
       .then(loginRes => {
-        localStorage.setItem('is-jwt', loginRes.data);
-        console.log(loginRes.data);
-        // let path = "/purchaserlandingpage/" + this.state.email;
-        // this.props.history.push(path)
+        localStorage.setItem('ImageShare-jwt', loginRes.data.token);
+        this.setState({accountType: loginRes.data.accountType})
+      
+        if(this.state.accountType === 0) {
+          console.log(photoPath)
+          // return (<Redirect to='/photographerlandingpage' />)
+          this.props.history.push(photoPath)
+          
+        }
+        if(this.state.accountType === 1) {
+     
+          this.props.history.push(purchPath)
+        }
       })
       .catch(err => console.log(err));
   }
@@ -90,6 +102,6 @@ class PostPurchase extends Component {
   }
 }
 
-export default PostPurchase;
+export default Login;
 
 

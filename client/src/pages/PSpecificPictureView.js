@@ -19,7 +19,6 @@ const BtnText = "Add to Cart";
 class PSpecificPictureView extends Component {
 
   state = {
-    userId: this.props.match.params.userId,
     picId: this.props.match.params.picId,
     picture: {
       id: "1",
@@ -35,14 +34,15 @@ class PSpecificPictureView extends Component {
     disabled: "false"
   };
 
-  // This needs to be uncommented when ORM is set up
+  // Loading a specific picture and then searching the Cart and Purchases table for this picture.  If the picture is found
+  //the Add button will be disabled.
   componentWillMount() {
     API.loadSpecificPicture(this.state.picId)
       .then(picData => {
         console.log(picData)
         this.setState({ picture: picData.data })
 
-        API.checkCart(this.state.userId, this.state.picId)
+        API.checkCart(this.state.picId)
           .then(cartData => {
             console.log(cartData.data)
 
@@ -51,7 +51,7 @@ class PSpecificPictureView extends Component {
             }
 
             else {
-              API.checkPurchases(this.state.userId, this.state.picId)
+              API.checkPurchases(this.state.picId)
                 .then(purchData => {
                   if (purchData.data.length > 0) {
                     this.setState({ disabled: "true" })
@@ -65,8 +65,8 @@ class PSpecificPictureView extends Component {
   }
 
   // This needs to be uncommented when the ORM is set up
-  addToCart(userId, picId) {
-    API.addToCart(userId, picId)
+  addToCart(picId) {
+    API.addToCart(picId)
       .then(cartData => {
         console.log(cartData.data)
         this.setState({ disabled: "true" })
@@ -80,7 +80,7 @@ class PSpecificPictureView extends Component {
     return (
       <div className="wrapper">
         <PurchNav
-          id={this.state.userId} />
+          id={this.state.picture.id} />
         <div style={flexContainer}>
           <PSpecificPic
             key={this.state.picture.userName}
@@ -91,12 +91,11 @@ class PSpecificPictureView extends Component {
             description={"Description: " + this.state.picture.description}
             price={"Price: $" + this.state.picture.price}
             filePath={this.state.picture.filePath}
-            link={"/pviewphotographerprofile/" + this.state.userId + "/" + this.state.picture.userName}
+            link={"/pviewphotographerprofile/" + this.state.picture.userName}
             disabled={addCartDisabled}
             BtnClass={BtnStyle}
             BtnName={BtnText}
-            // onClick={() => this.addToCart(this.state.picture.id, this.state.userId)}
-            onClick={() => this.addToCart(this.state.userId, this.state.picture.id)}
+            onClick={() => this.addToCart(this.state.picture.id)}
           />
 
 

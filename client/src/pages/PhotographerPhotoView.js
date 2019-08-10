@@ -5,7 +5,7 @@ import { PSpecificPic } from "../components/Card";
 import API from "../utils/API";
 import { connect } from "net";
 
-//Styling
+//General styling
 const flexContainer = {
   display: 'flex',
   flexWrap: 'wrap',
@@ -20,8 +20,6 @@ const BtnText = "Disable";
 class PhotographerPhotoView extends Component {
 
   state = {
-
-    userId: this.props.match.params.userId,
     picId: this.props.match.params.picId,
     picture: [{
       filePath: "/images/picture5.jpg",
@@ -36,62 +34,52 @@ class PhotographerPhotoView extends Component {
 
   };
 
-  // This needs to be uncommented when ORM is set up
+  //Loads user's specific photo
   componentWillMount() {
     const picId = this.state.picId;
     API.checkOwnPhoto(picId)
       .then(photoData => {
         console.log(photoData)
-        this.setState({ picture: photoData.data })})
+        this.setState({ picture: photoData.data })
+      })
       .catch(err => console.log(err));
   }
 
-  //This needs to be uncommented when the ORM is set up
-  // addToCart(picId, purchaserId) {
-  //   API.addToCart(picId, purchaserId)
-  //   .then(this.setState({disabled: true}))
-  //   .catch(err => console.log(err));
-  // }
-
-  //This will need to call the delete photo method and then take the user back to
-  //their photos
+  //This allows the user to disable photos that they no longer want to sell
   disablePhoto(picId) {
 
     API.disablePhoto(picId)
-    .then(disableData => {
-      console.log(disableData);
-      window.location.reload();
-    })
-    .catch(err => console.log(err))
-    
+      .then(disableData => {
+        console.log(disableData);
+        window.location.reload();
+      })
+      .catch(err => console.log(err))
+
 
   }
 
   render() {
-   
+
     return (
 
       <div className="wrapper">
         <PhotoNav
-          id={this.state.userId}
         />
-        { this.state.picture.map((item, index) => (
-        <div style={flexContainer}>
-          <PSpecificPic
-            key={index}
-            fullName={item.title}
-            dateAdded={"Date Added: " + item.dateAdded}
-            description={"Description: " + item.description}
-            price={"Price: $" + item.price}
-            filePath={item.filePath}
-            BtnClass={BtnStyle}
-            BtnName={BtnText}
-            disabled={item.disabled}
-            onClick={() => this.disablePhoto(item.id)}
-          />
-
-
-        </div>
+        {this.state.picture.map((item, index) => (
+          <div style={flexContainer}>
+            <PSpecificPic
+              key={index}
+              fullName={item.title}
+              dateAdded={"Date Added: " + item.dateAdded}
+              description={"Description: " + item.description}
+              price={"Price: $" + item.price}
+              filePath={item.filePath}
+              BtnClass={BtnStyle}
+              BtnName={BtnText}
+              disabled={item.disabled}
+              onClick={() => this.disablePhoto(item.id)}
+            />
+          </div>
         ))}
         <Footer />
       </div>

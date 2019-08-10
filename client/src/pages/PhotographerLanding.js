@@ -3,6 +3,8 @@ import { PhotoNav } from "../components/Nav";
 import Footer from "../components/Footer";
 import { PUserProfile } from "../components/Card";
 import API from "../utils/API";
+import { getJwt } from "../helpers/jwt";
+import { Redirect } from "react-router-dom";
 
 //Styling
 const flexContainer = {
@@ -15,59 +17,78 @@ const flexContainer = {
 class PViewPhotographerProfile extends Component {
 
   state = {
-
-    userId: this.props.match.params.userId,
-
+    jwt: "",
     profile: [{
-    filePath: "/images/picture5.jpg",
-    userName: "wdenkins",
-    firstName: "Wanda",
-    lastName: "Denkins",
-    dateAdded: "May 4, 2019",
-    aboutMe: "Serving up our own rendition of veggie burgers"
-    }]
+    }],
+    loading: true,
+    isAuthenticated: false
 
   };
 
-  // This needs to be uncommented when ORM is set up
-  componentWillMount() {
-    const userId = this.state.userId;
-    API.getPhotographerProfile(userId)
-      .then(profileData => {
-        console.log(profileData);
-        this.setState({ profile: profileData.data })
-        console.log(this.state.profile)
-      })
-      .catch(err => console.log(err));
+
+
+  componentDidMount() {
+    this.setState({ jwt: getJwt() }, () => {
+
+      API.getPhotographerProfile(this.state.jwt)
+        .then(profileData => {
+          console.log(profileData);
+          this.setState({
+            profile: profileData.data,
+            loading: false,
+            isAuthenticated: true
+          })
+          console.log(this.state.profile)
+        })
+        .catch(err => {
+          console.log(err)
+          this.setState({
+            loading: false,
+            isAuthenticated: false
+          })
+        });
+    });
   }
+
 
   render() {
+    if (this.state.loading === true && this.state.isAuthenticated === false) {
+      return (
+        <div>Loading.....</div>
+      )
+    }
 
-    return (
-      <div className="wrapper">
-        <PhotoNav
-          id={this.state.userId}
-        />
-        {
-          this.state.profile.map(item => (
-        <div style={flexContainer}>
-          <PUserProfile
-            key={item.userName}
-            fullName={item.firstName + " " + item.lastName}
-            username={item.userName}
-            dateAdded={item.dateAdded}
-            aboutMe={item.aboutMe}
-            filePath={item.filePath}
+    if (this.state.loading === false && this.state.isAuthenticated === false) {
+      return (
+           <Redirect to='/' />
+      )
+    }
 
+    if (this.state.loading === false && this.state.isAuthenticated === true) {
+      return (
+        <div className="wrapper">
+          <PhotoNav
+            id={this.state.profile.userName}
           />
-
-
+          {
+            this.state.profile.map(item => (
+              <div style={flexContainer}>
+                <PUserProfile
+                  key={item.userName}
+                  fullName={item.firstName + " " + item.lastName}
+                  username={item.userName}
+                  dateAdded={item.dateAdded}
+                  aboutMe={item.aboutMe}
+                  filePath={item.filePath}
+                />
+              </div>
+            ))}
+          <Footer />
         </div>
-        ))}
-        <Footer />
-      </div>
-    )
+      )
+    }
   }
 }
+
 
 export default PViewPhotographerProfile;
