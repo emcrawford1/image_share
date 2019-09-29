@@ -245,9 +245,10 @@ router.get('/PSpecificPictureView/:picId', (req, res) => {
 
 
 //Add to Cart = Purchaser
-router.post('/addtocart/:picId', (req, res) => {
+router.post('/addtocart/', (req, res) => {
   const email = req.user.email;
-  const picId = req.params.picId;
+  const picId = req.body.picId;
+  console.log("hey")
 
   Cart.create({
     userEmail: email,

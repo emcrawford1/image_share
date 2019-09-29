@@ -57,7 +57,6 @@ class App extends Component {
           });
           console.log(this.state);
 
-
         })
         .catch(err => {
           console.log(err);
@@ -67,44 +66,28 @@ class App extends Component {
   }
 
   render() {
-    // if(this.state.loggedIn === false) {
-    //   return (
-    //     <Router>
-    //       <div>
-    //         <Switch>
-    //           <Route exact path="/" component={Login} />
-    //           <Route exact path="/register" component={Register} />
-    //           <Route exact path="*" component={Login} />
-    //         </Switch>
-    //       </div>
-    //     </Router>
-    //   )
-    // }
-
+  
     return (
       <Router>
         <div>
           <Switch>
-            {/* <PurchaseAuthenticated exact path="/login" accountType={this.state.accountType} component={PhotoLogin} />  */}
             <Route exact path="/" component={Login} />
             <Route exact path="/register" component={Register} />
             <PurchaseAuthenticated exact path="/pcategoryview/:catId" accountType={this.state.accountType} component={PCategoryView} />
-            <PurchaseAuthenticated exact path="/pspecificpictureview/:userId/:picId" accountType={this.state.accountType} component={PSpecificPictureView} />
+            <PurchaseAuthenticated exact path="/pspecificpictureview/:picId" accountType={this.state.accountType} component={PSpecificPictureView} />
             <PurchaseAuthenticated exact path="/pviewphotographerprofile/:photographerId" accountType={this.state.accountType} component={PViewPhotographerProlile} />
             <PurchaseAuthenticated exact path="/purchasecart/:userId" accountType={this.state.accountType} component={PurchaseCart} />
-            <PurchaseAuthenticated exact path="/purchaserlandingpage/:userId" accountType={this.state.accountType} component={PurchaserLandingPage} />
+            <PurchaseAuthenticated exact path="/purchaserlandingpage" accountType={this.state.accountType} component={PurchaserLandingPage} />
             <PurchaseAuthenticated exact path="/checkout/:userId" accountType={this.state.accountType} component={Checkout} />
             <PurchaseAuthenticated exact path="/postpurchase/:userId" accountType={this.state.accountType} component={PostPurchase} />
             <PurchaseAuthenticated exact path="/mypurchases/:userId" accountType={this.state.accountType} component={MyPurchases} />
             <PurchaseAuthenticated exact path="/pviewphotographerphotos/:userId/:photographerId" accountType={this.state.accountType} component={PViewPhotographerPhotos} />
             <PurchaseAuthenticated exact path="/pyourphotos/:userId/:confId" accountType={this.state.accountType} component={PYourPhotos} />
             <PurchaseAuthenticated exact path="/purchasedphotoview/:userId/:picId" accountType={this.state.accountType} component={PurchasedPhotoView} />
-            <PhotoAuthenticated path="/photographerlandingpage" accountType={this.state.accountType} JWT={this.state.jwt} component={PhotographerLanding} />
+            <PhotoAuthenticated exact path="/photographerlandingpage" accountType={this.state.accountType} JWT={this.state.jwt} component={PhotographerLanding} />
             <PhotoAuthenticated exact path="/photographermypictures" accountType={this.state.accountType} component={PhotographerMyPictures} />
             <PhotoAuthenticated exact path="/photographerphotoview/:picId" accountType={this.state.accountType} component={PhotographerPhotoView} />
             <PhotoAuthenticated exact path="/photographersales/" accountType={this.state.accountType} component={PhotographerSales} />
-            {/* <Route exact path="/login" component={PhotoLogin} /> */}
-
           </Switch>
         </div>
       </Router>

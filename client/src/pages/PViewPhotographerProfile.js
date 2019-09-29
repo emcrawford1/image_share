@@ -30,7 +30,7 @@ class PViewPhotographerProfile extends Component {
 
   };
 
-  // This needs to be uncommented when ORM is set up
+ 
   componentWillMount() {
     API.viewPhotographerProfile(this.state.userName)
       .then(profileData => {

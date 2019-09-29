@@ -3,6 +3,9 @@ import { PurchNav } from "../components/Nav";
 import Footer from "../components/Footer";
 import { PSpecificPic } from "../components/Card";
 import API from "../utils/API";
+import { Redirect } from "react-router-dom";
+import { getJwt } from "../helpers/jwt";
+import { noItems } from "../helpers/noItems";
 
 //Styling
 const flexContainer = {
@@ -20,55 +23,70 @@ class PSpecificPictureView extends Component {
 
   state = {
     picId: this.props.match.params.picId,
-    picture: {
-      id: "1",
-      title: "My Veggie Burger Recipe",
-      firstName: "Wanda",
-      lastName: "Denkins",
-      userName: "wandadenkins79",
-      dateAdded: "May 4, 2019",
-      description: "It's not the best veggie burger I've ever had, but I can get that ground beef real close.",
-      price: "100.00",
-      filePath: "/images/picture8.jpg"
-    },
-    disabled: "false"
+    picture: {},
+    disabled: "false",
+    loading: true,
+    isAuthenticated: false,
+    jwt: ""    
   };
 
   // Loading a specific picture and then searching the Cart and Purchases table for this picture.  If the picture is found
   //the Add button will be disabled.
-  componentWillMount() {
-    API.loadSpecificPicture(this.state.picId)
+  componentDidMount() {
+   
+    this.setState({ jwt: getJwt() }, () => {
+      
+    API.loadSpecificPicture(this.state.jwt, this.state.picId)
       .then(picData => {
-        console.log(picData)
         this.setState({ picture: picData.data })
-
-        API.checkCart(this.state.picId)
+        console.log(this.state)
+        API.checkCart(this.state.jwt, this.state.picId)
           .then(cartData => {
-            console.log(cartData.data)
-
+            console.log(cartData);
             if (cartData.data.length > 0) {
-              this.setState({ disabled: "true" })
+              this.setState({ 
+                disabled: "true",
+                loading: false,
+                isAuthenticated: true 
+              })
             }
 
             else {
-              API.checkPurchases(this.state.picId)
+              API.checkPurchases(this.state.jwt, this.state.picId)
                 .then(purchData => {
+                  
                   if (purchData.data.length > 0) {
                     this.setState({ disabled: "true" })
                   }
+                  this.setState({ 
+                    loading: false,
+                    isAuthenticated: true
+                  })
                 })
             }
           })
-          .catch(err => console.log(err))
+          .catch(err => {
+            console.log(err)
+            this.setState({ loading: false })
+          })
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err)
+        this.setState({ loading: false })
+      });
+    })
   }
 
-  // This needs to be uncommented when the ORM is set up
+ //Add to cart method
   addToCart(picId) {
-    API.addToCart(picId)
+    console.log(picId)
+    console.log(this.state.jwt)
+    const picObject = {
+      picId
+    }
+    API.addToCart(this.state.jwt, picObject)
       .then(cartData => {
-        console.log(cartData.data)
+        console.log(cartData)
         this.setState({ disabled: "true" })
       })
       .catch(err => console.log(err));
@@ -76,6 +94,18 @@ class PSpecificPictureView extends Component {
 
   render() {
     const addCartDisabled = this.state.disabled === "true";
+
+    if (this.state.loading === true && this.state.isAuthenticated === false) {
+      return (
+        <h1>Loading......</h1>
+      )
+    }
+
+    if (this.state.loading === false && this.state.isAuthenticated === false) {
+      return (
+           <Redirect to='/' />
+      )
+    }
 
     return (
       <div className="wrapper">
@@ -95,7 +125,7 @@ class PSpecificPictureView extends Component {
             disabled={addCartDisabled}
             BtnClass={BtnStyle}
             BtnName={BtnText}
-            onClick={() => this.addToCart(this.state.picture.id)}
+            onClick={() => this.addToCart(this.state.picId)}
           />
 
 

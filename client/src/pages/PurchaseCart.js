@@ -3,10 +3,10 @@ import {PurchNav} from "../components/Nav";
 import Footer from "../components/Footer";
 import { ViewCart } from "../components/Card";
 import { BtnSet } from "../components/Grid";
+import { getJwt } from "../helpers/jwt";
 import API from "../utils/API";
 
 //Styling
-
 const cartContainer = {
   marginTop: "25px"
 }
@@ -17,12 +17,14 @@ class PurchaseCart extends Component {
 
     totalPrice: "",
     userId: this.props.match.params.userId,
-
-    cartItems: []
+    cartItems: [],
+    loading: true,
+    isAuthenticated: false,
+    jwt: ""
 
   };
 
-  componentWillMount() {
+  componentDidMount() {
     API.getPurchaseCart(this.state.userId)
       .then(cartData => {
         console.log(cartData)
@@ -45,9 +47,8 @@ class PurchaseCart extends Component {
     console.log(this.state.totalPrice);
   }
 
-  
 
-  //Testing - This will actually need to call the ORM with the 
+  //Remove a single item from the cart
   removeFromCart(cartItem) {
     API.removeFromCart(cartItem)
     .then(cartData => {
@@ -58,6 +59,7 @@ class PurchaseCart extends Component {
 
   }
 
+//Navigate the user to the next page
  nextPage() {
    let path = "/checkout/" + this.state.userId;
    this.props.history.push(path)

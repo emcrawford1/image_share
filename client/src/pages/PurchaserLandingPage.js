@@ -2,7 +2,10 @@ import React, { Component } from "react";
 import { PurchNav } from "../components/Nav";
 import Footer from "../components/Footer";
 import { PicGrid } from "../components/Grid";
+import { getJwt } from "../helpers/jwt";
 import API from "../utils/API";
+import { Redirect } from "react-router-dom";
+import { PhotoNav } from "../components/Nav";
 
 //Styling
 const flexContainer = {
@@ -14,41 +17,74 @@ const flexContainer = {
 class PurchaserLanding extends Component {
 
   state = {
-    userId: this.props.match.params.userId,
-    pictures: [{
-      id: "1",
-      category: "Weddings",
-      filePath: "/images/picture8.jpg"
-    },
-    {
-      id: "2",
-      category: "Urban",
-      filePath: "/images/picture5.jpg"
-    }],
+    pictures: [],
+    loading: true,
+    isAuthenticated: false,
+    jwt: ""
     
   };
 
-  componentWillMount() {
-    API.loadCategories()
-      .then(catData => {
-        console.log(catData);
-        this.setState({ pictures: catData.data })
-      }
-      )
-      .catch(err => console.log(err));
-  };
+
+  componentDidMount() {
+    this.setState({ jwt: getJwt() }, () => {
+
+      API.loadCategories(this.state.jwt)
+        .then(categoryData => {
+          console.log(categoryData);
+          this.setState({
+            pictures: categoryData.data,
+            loading: false,
+            isAuthenticated: true
+          })
+          console.log(this.state)
+        })
+        .catch(err => {
+          console.log(err)
+          this.setState({
+            loading: false,
+            isAuthenticated: false
+          })
+        });
+    });
+  }
+
+
 
   render() {
+
+    if (this.state.loading === true && this.state.isAuthenticated === false) {
+      return (
+        <noItems
+          message="Loading...."
+          />
+      )
+    }
+
+    if (this.state.loading === false && this.state.isAuthenticated === false) {
+      return (
+           <Redirect to='/' />
+      )
+    }
+
+    if (this.state.pictures.length === 0) {
+      return (
+        <div className="wrapper">
+          <PhotoNav
+            id={this.state.userId}
+          />
+            <h4>There are not any categories available....</h4>
+          <Footer />
+        </div>
+      )
+    }
     return (
       <div className="wrapper">
-        <PurchNav
-          id={this.state.userId}
-        />
+        <PurchNav/>
         <div style={flexContainer}>
           {this.state.pictures.map((pic, index) => (
             <PicGrid
               key={index}
-              link={"pcategoryview/" + this.state.userId + "/" + pic.id}
+              link={"pcategoryview/" + pic.id}
               filePath={pic.filePath}
               name={pic.category}
             />

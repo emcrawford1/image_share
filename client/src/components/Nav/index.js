@@ -1,4 +1,5 @@
 import React from "react";
+import { removeJwt } from "../../helpers/jwt";
 
 //This could probably be refactored into one Nav bar.
 
@@ -15,19 +16,19 @@ export function PurchNav(props) {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
       <h1 style={imageShareColor}>Image Share</h1>
-    <a className="navbar-brand" style={navSpacer} href={"/purchaserlandingpage/" + props.id}>
+    <a className="navbar-brand" style={navSpacer} href={"/purchaserlandingpage/"}>
         Home
     </a>
-    <a className="navbar-brand" style={navSpacer} href={"/mypurchases/" + props.id}>
+    <a className="navbar-brand" style={navSpacer} href={"/mypurchases/" }>
         My Purchases
     </a>
-    <a className="navbar-brand" style={navSpacer} href={"/pyourphotos/" + props.id + "/0"}>
+    <a className="navbar-brand" style={navSpacer} href={"/pyourphotos/"}>
         My Photos
     </a>
-      <a className="navbar-brand" style={navSpacer} href="/login">
+      <a className="navbar-brand" style={navSpacer} onClick={removeJwt} href="/">
         Logout
     </a>
-    <a className="navbar-brand" style={navSpacer} href={"/purchasecart/" + props.id}>
+    <a className="navbar-brand" style={navSpacer} href={"/purchasecart/" }>
         View Cart
     </a>
     {/* <div className="container">
@@ -62,7 +63,7 @@ export function PhotoNav(props) {
     <a className="navbar-brand" style={navSpacer} href={"/photographermypictures/"}>
         My Photos
     </a>
-    <a className="navbar-brand" style={navSpacer} href={"/"}>
+    <a className="navbar-brand" style={navSpacer} onClick={removeJwt} href={"/"}>
         Logout
     </a>
     

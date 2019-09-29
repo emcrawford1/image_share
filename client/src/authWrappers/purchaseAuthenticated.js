@@ -15,40 +15,26 @@ export const PhotoAuthenticated = (props) => (
   />
 )
 
-export const PurchaseAuthenticated = ({ component: Component, accountType: AccountType, ...rest }) => (
-  AccountType !== null ? 
-    <Route {...rest} render={props =>
-      AccountType === 1
-        ? <Component {...props} />
-        // : <Redirect to='/' />
-        : <div>You are not authorized to view this page.</div>
-
-    }
-    />
-    : <di>Loading..</di>
+export const PurchaseAuthenticated = (props) => (
+  <Route {...props} render={(rest) => (
+    props.accountType === 1
+    ? <props.component {...rest} {...props} />
+    :<div>You are not authorized to view this page</div>
+  )}
+  />
 )
 
-// export const PhotoAuthenticated = ({ component: Component, accountType: AccountType, ...rest }) => (
-//   AccountType !== null ?
+// export const PurchaseAuthenticated = ({ component: Component, accountType: AccountType, ...rest }) => (
+//   AccountType !== null ? 
 //     <Route {...rest} render={props =>
-//       AccountType === 0
+//       AccountType === 1
 //         ? <Component {...props} />
 //         // : <Redirect to='/' />
 //         : <div>You are not authorized to view this page.</div>
+
 //     }
 //     />
-//     : <di>Loading..</di>
-// )
-// export const PhotoAuthenticated = ({component: Component, ...props}) => (
-//   // <div>{console.log(props)}</div>
-//   <Route render={routeProps => (
-//     props.accountType === 0
-//       ? <Component {...routeProps} {...props} />
-//       // : <Redirect to='/' />
-//       :<div>You are not authorized to view this page.{console.log("The props are: " + props.accountType)}</div>
-//   )}
-//   />
-
+//     : <div>Loading...</div>
 // )
 
 

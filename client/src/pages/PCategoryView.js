@@ -3,6 +3,7 @@ import { PurchNav } from "../components/Nav";
 import Footer from "../components/Footer";
 import { PicGrid } from "../components/Grid";
 import API from "../utils/API";
+import { getJwt } from "../helpers/jwt";
 
 //Styling
 const flexContainer = {
@@ -15,28 +16,25 @@ class PCategoryView extends Component {
 
   state = {
     catId: this.props.match.params.catId,
-    pictures: [{
-      id: "27",
-      title: "Nice Picture",
-      filePath: "/images/picture8.jpg"
-    },
-    {
-      id: "28",
-      title: "Another Nice Picture",
-      filePath: "/images/picture5.jpg"
-    }],
-    
+    pictures: [],
+    loading: true,
+    isAuthenticated: false,
+    jwt: ""
+
   };
 
   //Calling API to set state to pictures
-  componentWillMount() {
-  
-    API.loadSpecificCategory(this.state.catId)
+  componentDidMount() {
+
+    this.setState({ jwt: getJwt()}, () => {
+
+    API.loadSpecificCategory(this.state.jwt, this.state.catId)
       .then(catData => {
-        console.log(catData)
+        console.log("Category Data: " + catData)
         this.setState({ pictures: catData.data })
       })
       .catch(err => console.log(err));
+    });
   }
 
   render() {
@@ -57,7 +55,7 @@ class PCategoryView extends Component {
     return (
       <div className="wrapper">
         <PurchNav
-        id={this.state.userId}
+          id={this.state.userId}
         />
         <div style={flexContainer}>
           {this.state.pictures.map((pic, index) => (

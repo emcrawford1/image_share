@@ -21,26 +21,26 @@ export default {
   getPurchases: () => axios.get("/api/purchaserRoutes/mypurchases/"),
 
   //PurchaserLandingPage.js
-  loadCategories: () => axios.get("/api/purchaserRoutes/categories"),
+  loadCategories: token => axios.get("/api/purchaserRoutes/categories", { headers: { Authorization: `Bearer ${token}`} }),
 
   //PCategoryView.js
-  loadSpecificCategory: catId => axios.get("/api/purchaserRoutes/specificcategoryview/" + catId),
+  loadSpecificCategory: (token, catId) => axios.get("/api/purchaserRoutes/specificcategoryview/" + catId, { headers: { Authorization: `Bearer ${token}`}}),
 
 
 
   //PSpecificPictureView.js
 
   //Load picture
-  loadSpecificPicture: picId => axios.get("/api/purchaserRoutes/PSpecificPictureView/" + picId),
+  loadSpecificPicture: (token, picId) => axios.get("/api/purchaserRoutes/PSpecificPictureView/" + picId, { headers: { Authorization: `Bearer ${token}`}}),
 
   //Check cart to see if user has already added to cart
-  checkCart: picId => axios.get("/api/purchaserRoutes/PSpecificPictureView/cart/" + picId),
+  checkCart: (token, picId) => axios.get("/api/purchaserRoutes/PSpecificPictureView/cart/" + picId, { headers: { Authorization: `Bearer ${token}`}}),
 
   //Check to see if user has already purchased photo
-  checkPurchases: picId => axios.get("/api/purchaserRoutes/PSpecificPictureView/purchases/" + picId),
+  checkPurchases: (token, picId) => axios.get("/api/purchaserRoutes/PSpecificPictureView/purchases/" + picId, { headers: { Authorization: `Bearer ${token}`}}),
 
   //Add to cart
-  addToCart: picId => axios.post("/api/purchaserRoutes/addtocart/" + picId),
+  addToCart: (token, picId) => axios.post("/api/purchaserRoutes/addtocart/", picId, { headers: { Authorization: `Bearer ${token}`}}),
 
 
   //PYourPhotos.js
@@ -72,7 +72,7 @@ export default {
 
 
   //PhotographerMyPictures.js
-  getPhotographerPhotos: () => axios.get('/api/photographerRoutes/photographermypictures/'),
+  getPhotographerPhotos: (token) => axios.get('/api/photographerRoutes/photographermypictures/', { headers: { Authorization: `Bearer ${token}`} }),
 
 
   //PhotographerPhotoView.js
@@ -85,7 +85,7 @@ export default {
 
 
   //PhotographerSales.js
-  getSales: () => axios.get('/api/photographerRoutes/photographersales/'),
+  getSales: token => axios.get('/api/photographerRoutes/photographersales/', { headers: { Authorization: `Bearer ${token}`} }),
 
 
   //PViewPhotographerPhotos.js

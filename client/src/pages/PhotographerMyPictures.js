@@ -2,7 +2,11 @@ import React, { Component } from "react";
 import { PhotoNav } from "../components/Nav";
 import Footer from "../components/Footer";
 import { PicGrid } from "../components/Grid";
+import { getJwt } from "../helpers/jwt";
+import { noItems } from "../helpers/noItems";
 import API from "../utils/API";
+import { Redirect } from "react-router-dom";
+import { timingSafeEqual } from "crypto";
 
 //Styling
 const flexContainer = {
@@ -15,37 +19,64 @@ class PhotographerMyPictures extends Component {
 
   state = {
  
-    pictures: [{
-      id: "27",
-      title: "Just a Beauty",
-      filePath: "/images/picture2.jpg"
-    },
-    {
-      id: "28",
-      title: "Wedding Day",
-      filePath: "/images/picture3.jpg"
-    },
-    {
-      id: "28",
-      title: "Starry Night",
-      filePath: "/images/picture1.jpg"
-    },
-    {
-      id: "28",
-      title: "Another Nice Picture",
-      filePath: "/images/picture8.jpg"
-    }],
+  pictures: [],
+  loading: true,
+  isAuthenticated: false,
+  jwt: ""
    
   };
 
-  // This needs to be uncommented when ORM is set up
-  componentWillMount() {
-    API.getPhotographerPhotos()
-      .then(photoData => this.setState({pictures: photoData.data}))
-      .catch(err => console.log(err));
+
+  componentDidMount() {
+    this.setState({ jwt: getJwt() }, () => {
+
+      API.getPhotographerPhotos(this.state.jwt)
+        .then(pictureData => {
+          console.log(pictureData);
+          this.setState({
+            pictures: pictureData.data,
+            loading: false,
+            isAuthenticated: true
+          })
+          console.log(this.state)
+        })
+        .catch(err => {
+          console.log(err)
+          this.setState({
+            loading: false,
+            isAuthenticated: false
+          })
+        });
+    });
   }
 
   render() {
+
+    if (this.state.loading === true && this.state.isAuthenticated === false) {
+      return (
+        <noItems
+          message="Loading...."
+          />
+      )
+    }
+
+    if (this.state.loading === false && this.state.isAuthenticated === false) {
+      return (
+           <Redirect to='/' />
+      )
+    }
+
+    if (this.state.pictures.length === 0) {
+      return (
+        <div className="wrapper">
+          <PhotoNav
+            id={this.state.userId}
+          />
+            <h4>You have not uploaded any pictures yet....</h4>
+          <Footer />
+        </div>
+      )
+    }
     return (
       <div className="wrapper">
         <PhotoNav
