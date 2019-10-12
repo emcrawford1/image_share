@@ -78,7 +78,7 @@ router.post('/placeorder', (req, res) => {
   purchConf.create({
     userEmail: email,
   })
-    .then(status => res.json(status))
+    .then(data => res.json(data))
     .catch(err => console.log(err))
 })
 

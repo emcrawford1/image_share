@@ -6,6 +6,7 @@ import { getJwt } from "../helpers/jwt";
 import API from "../utils/API";
 import { Redirect } from "react-router-dom";
 import { PhotoNav } from "../components/Nav";
+import { NoItems } from "../helpers/noItems";
 
 //Styling
 const flexContainer = {
@@ -54,7 +55,7 @@ class PurchaserLanding extends Component {
 
     if (this.state.loading === true && this.state.isAuthenticated === false) {
       return (
-        <noItems
+        <NoItems
           message="Loading...."
           />
       )

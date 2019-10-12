@@ -3,6 +3,9 @@ import { PurchNav } from "../components/Nav";
 import Footer from "../components/Footer";
 import { CheckoutForm } from "../components/Form";
 import API from "../utils/API";
+import { getJwt } from "../helpers/jwt";
+import { NoItems } from "../helpers/noItems";
+import { Redirect } from "react-router-dom";
 
 //Styling
 const flexContainer = {
@@ -17,35 +20,57 @@ class PCategoryView extends Component {
     userId: this.props.match.params.userId,
     totalPrice: "0",
     purchaseConfirmation: "10",
-    cartItems: []
+    cartItems: [],
+    loading: true,
+    isAuthenticated: false,
+    jwt: ""
   }
 
 
-  componentWillMount() {
-    API.getTotalCost(this.state.userId)
+  componentDidMount() {
+    this.setState({jwt: getJwt() }, () => {
+    API.getTotalCost(this.state.jwt)
       .then(cost => {
         console.log(cost)
         this.setState({ totalPrice: cost.data.totalPrice })
       })
-      .catch(err => console.log(err));
-    API.getCartItems(this.state.userId)
+      .catch(err => {
+        console.log(err)
+        this.setState({
+          loading: false,
+          isAuthenticated: false
+        })
+      });
+    API.getCartItems(this.state.jwt)
       .then(cart => {
-        this.setState({ cartItems: cart.data })
+        this.setState({ 
+          cartItems: cart.data,
+          loading: false,
+          isAuthenticated: true
+        })
         console.log(this.state)
       })
-      .catch(err => console.log(err))
+      .catch(err => {
+        console.log(err)
+        this.setState({
+          loading: false,
+          isAuthenticated: false
+        })
+      })
+      })
   }
 
 
   //Post new entry in the purchase_confirmations and purchases table, clear the cart, and 
   //send user to next page
   nextPage() {
-    let path = "/postpurchase/" + this.state.userId;
+    let path = "/postpurchase";
     let tempCart = this.state.cartItems;
+    let orderObj = {};
 
-    API.placeOrder(this.state.userId)
+    API.placeOrder(orderObj, this.state.jwt)
       .then(orderData => {
-        
+        console.log("Order Data: " + tempCart)
         let Cart = tempCart.map(item => {
           return {
             priceAtPurchase: item.priceAtPurchase,
@@ -56,11 +81,11 @@ class PCategoryView extends Component {
           }
         })
 
-        API.makePurchase(Cart)
+        API.makePurchase(Cart, this.state.jwt)
           .then(purchData => {
             console.log(purchData)
 
-            API.clearCart(this.state.userId)
+            API.clearCart(this.state.jwt)
               .then(status => {
                 console.log(status);
                 this.props.history.push(path);
@@ -73,6 +98,19 @@ class PCategoryView extends Component {
   }
 
   render() {
+    if (this.state.loading === true && this.state.isAuthenticated === false) {
+      return (
+        <NoItems
+          message="Loading...."
+          />
+      )
+    }
+
+    if (this.state.loading === false && this.state.isAuthenticated === false) {
+      return (
+           <Redirect to='/' />
+      )
+    }
     return (
       <div className="wrapper">
         <PurchNav

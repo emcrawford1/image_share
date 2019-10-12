@@ -3,6 +3,9 @@ import { PurchNav } from "../components/Nav";
 import Footer from "../components/Footer";
 import { PostPurchaseGrid, MyPurchasesGrid } from "../components/Grid";
 import API from "../utils/API";
+import { getJwt, removeJwt } from "../helpers/jwt";
+import { NoItems } from "../helpers/noItems";
+import { Redirect } from "react-router-dom";
 
 //Styling
 const flexContainer = {
@@ -14,35 +17,55 @@ const flexContainer = {
 class MyPurchases extends Component {
 
   state = {
-    userId: this.props.match.params.userId,
-
-    purchases: [{
-      confirmationNumber: "31",
-      date: "March 3, 2019",
-      totalPrice: "45"
-    }],
-
-
+    purchases: [],
+    loading: true,
+    isAuthenticated: false,
+    jwt: ""
   };
 
   //This needs to be uncommented when ORM is set up
-  componentWillMount() {
-    API.getPurchases(this.state.userId)
+  componentDidMount() {
+    this.setState({ jwt: getJwt() }, () => {
+    API.getPurchases(this.state.jwt)
     .then(purchData => { 
       console.log(purchData)
-      this.setState({ purchases: purchData.data})
+      this.setState({ 
+        purchases: purchData.data,
+        loading: false,
+        isAuthenticated: true
+      })
     })
-      // .then(purchData => this.setState({pictures: purchData.data}))
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err)
+        this.setState({
+          loading: false,
+          isAuthenticated: false
+        })
+      });
+    })
   }
 
   render() {
 
+    if (this.state.loading === true && this.state.isAuthenticated === false) {
+      return (
+        <NoItems
+          message="Loading...."
+          />
+      )
+    }
+
+    if (this.state.loading === false && this.state.isAuthenticated === false) {
+      removeJwt()
+      return (
+           <Redirect to='/' />
+      )
+    }
     if (this.state.purchases.length === 0) {
       return (
         <div className="wrapper">
           <PurchNav
-            id={this.state.userId}
+            // id={this.state.userId}
           />
           <div className="container">
             <h2>You have not made any purchases.</h2>
@@ -54,7 +77,7 @@ class MyPurchases extends Component {
     return (
       <div className="wrapper">
         <PurchNav
-          id={this.state.userId}
+          // id={this.state.userId}
         />
         <div className="container" >
           <h1>Your Purchases:</h1>
@@ -64,7 +87,7 @@ class MyPurchases extends Component {
               key={index}
               confirmationNumber={"Confirmation Number: " + purchase.confirmationNumber}
               date={"Purchase Date: " + purchase.date}
-              link={"/pyourphotos/" + this.state.userId +"/" + purchase.confirmationNumber}
+              link={"/pyourphotos/" + purchase.confirmationNumber}
               totalPrice={"Total price: $" + purchase.totalPrice}
             />
           ))}

@@ -76,13 +76,13 @@ class App extends Component {
             <PurchaseAuthenticated exact path="/pcategoryview/:catId" accountType={this.state.accountType} component={PCategoryView} />
             <PurchaseAuthenticated exact path="/pspecificpictureview/:picId" accountType={this.state.accountType} component={PSpecificPictureView} />
             <PurchaseAuthenticated exact path="/pviewphotographerprofile/:photographerId" accountType={this.state.accountType} component={PViewPhotographerProlile} />
-            <PurchaseAuthenticated exact path="/purchasecart/:userId" accountType={this.state.accountType} component={PurchaseCart} />
+            <PurchaseAuthenticated exact path="/purchasecart" accountType={this.state.accountType} component={PurchaseCart} />
             <PurchaseAuthenticated exact path="/purchaserlandingpage" accountType={this.state.accountType} component={PurchaserLandingPage} />
-            <PurchaseAuthenticated exact path="/checkout/:userId" accountType={this.state.accountType} component={Checkout} />
-            <PurchaseAuthenticated exact path="/postpurchase/:userId" accountType={this.state.accountType} component={PostPurchase} />
-            <PurchaseAuthenticated exact path="/mypurchases/:userId" accountType={this.state.accountType} component={MyPurchases} />
+            <PurchaseAuthenticated exact path="/checkout" accountType={this.state.accountType} component={Checkout} />
+            <PurchaseAuthenticated exact path="/postpurchase/" accountType={this.state.accountType} component={PostPurchase} />
+            <PurchaseAuthenticated exact path="/mypurchases" accountType={this.state.accountType} component={MyPurchases} />
             <PurchaseAuthenticated exact path="/pviewphotographerphotos/:userId/:photographerId" accountType={this.state.accountType} component={PViewPhotographerPhotos} />
-            <PurchaseAuthenticated exact path="/pyourphotos/:userId/:confId" accountType={this.state.accountType} component={PYourPhotos} />
+            <PurchaseAuthenticated exact path="/pyourphotos/:confId" accountType={this.state.accountType} component={PYourPhotos} />
             <PurchaseAuthenticated exact path="/purchasedphotoview/:userId/:picId" accountType={this.state.accountType} component={PurchasedPhotoView} />
             <PhotoAuthenticated exact path="/photographerlandingpage" accountType={this.state.accountType} JWT={this.state.jwt} component={PhotographerLanding} />
             <PhotoAuthenticated exact path="/photographermypictures" accountType={this.state.accountType} component={PhotographerMyPictures} />

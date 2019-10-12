@@ -1,6 +1,6 @@
 import React from 'react';
 
-export function noItems(props) {
+export function NoItems(props) {
   return (
     <h1>{props.message}</h1>)
  

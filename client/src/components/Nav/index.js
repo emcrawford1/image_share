@@ -19,16 +19,16 @@ export function PurchNav(props) {
     <a className="navbar-brand" style={navSpacer} href={"/purchaserlandingpage/"}>
         Home
     </a>
-    <a className="navbar-brand" style={navSpacer} href={"/mypurchases/" }>
+    <a className="navbar-brand" style={navSpacer} href={"/mypurchases" }>
         My Purchases
     </a>
-    <a className="navbar-brand" style={navSpacer} href={"/pyourphotos/"}>
+    <a className="navbar-brand" style={navSpacer} href={"/pyourphotos/0"}>
         My Photos
     </a>
       <a className="navbar-brand" style={navSpacer} onClick={removeJwt} href="/">
         Logout
     </a>
-    <a className="navbar-brand" style={navSpacer} href={"/purchasecart/" }>
+    <a className="navbar-brand" style={navSpacer} href={"/purchasecart" }>
         View Cart
     </a>
     {/* <div className="container">

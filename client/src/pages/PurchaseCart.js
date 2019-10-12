@@ -4,6 +4,8 @@ import Footer from "../components/Footer";
 import { ViewCart } from "../components/Card";
 import { BtnSet } from "../components/Grid";
 import { getJwt } from "../helpers/jwt";
+import { NoItems } from "../helpers/noItems";
+import { Redirect } from "react-router-dom";
 import API from "../utils/API";
 
 //Styling
@@ -16,7 +18,6 @@ class PurchaseCart extends Component {
   state = {
 
     totalPrice: "",
-    userId: this.props.match.params.userId,
     cartItems: [],
     loading: true,
     isAuthenticated: false,
@@ -24,18 +25,34 @@ class PurchaseCart extends Component {
 
   };
 
+//After component has mounted, the user's purchase cart will be obtained by passing the user's jwt to the getPurchaseCart 
+//method.  
   componentDidMount() {
-    API.getPurchaseCart(this.state.userId)
+    this.setState({ jwt: getJwt() }, () => {
+    API.getPurchaseCart(this.state.jwt)
       .then(cartData => {
         console.log(cartData)
         this.setState({ cartItems: cartData.data })
         this.getTotalPrice();
+        this.setState({
+          loading: false,
+          isAuthenticated: true
+        })
       })
-      .catch(err => console.log(err));
+      .catch(err => 
+        {
+          console.log(err);
+          this.setState({
+            loading: false,
+            isAuthenticated: false
+          })
+        });
 
     console.log(this.state.totalPrice);
+     })
   }
 
+  //This function calculates the total price of the cart items.  
   getTotalPrice() {
 
     const priceArray = this.state.cartItems.map(item => parseInt(item.price));
@@ -50,7 +67,7 @@ class PurchaseCart extends Component {
 
   //Remove a single item from the cart
   removeFromCart(cartItem) {
-    API.removeFromCart(cartItem)
+    API.removeFromCart(cartItem, this.state.jwt)
     .then(cartData => {
       console.log(cartData);
       window.location.reload();
@@ -61,13 +78,13 @@ class PurchaseCart extends Component {
 
 //Navigate the user to the next page
  nextPage() {
-   let path = "/checkout/" + this.state.userId;
+   let path = "/checkout";
    this.props.history.push(path)
  }
 
   //Testing - this will need to actually call one of the ORM functions above.
   clearCart() {
-    API.clearCart(this.state.userId)
+    API.clearCart(this.state.jwt)
     .then(cartData => {
       console.log(cartData);
       window.location.reload();
@@ -76,12 +93,24 @@ class PurchaseCart extends Component {
   }
 
   render() {
+    if (this.state.loading === true && this.state.isAuthenticated === false) {
+      return (
+        <NoItems
+          message="Loading...."
+          />
+      )
+    }
 
+    if (this.state.loading === false && this.state.isAuthenticated === false) {
+      return (
+           <Redirect to='/' />
+      )
+    }
     if (this.state.cartItems.length === 0) {
       return (
         <div className="wrapper">
           <PurchNav
-            id={this.state.userId}
+            // id={this.state.userId}
           />
           <div className="container">
             <h2>There are no items in your cart.</h2>
@@ -95,7 +124,7 @@ class PurchaseCart extends Component {
       <div className="wrapper">
 
         <PurchNav
-          id={this.state.userId}
+          // id={this.state.userId}
         />
 
         <div className="container" style={cartContainer}>
