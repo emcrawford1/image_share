@@ -24,7 +24,8 @@ class PYourPhotos extends Component {
     jwt: ""
   };
 
-  // This needs to be uncommented when ORM is set up
+//Check to see if the confNum is greater than 0.  If so, display the pictures associated with that specific confirmation 
+//number.  If the confNum is less than 0, display all the user's purchased photos.
   componentDidMount() {
     this.setState({ jwt: getJwt() }, () => {
       const confNum = this.state.confId;

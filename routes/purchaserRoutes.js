@@ -72,13 +72,42 @@ router.get('/getpurchaseitems', (req, res) => {
 })
 
 
-//Checkout - Place Order = Purchaser
+//Checkout - Place Order = Purchaser.  A purchase confirmation is created, then the Cart is queried
+//to obtain the data necessary for entry into the purchases table.  After the Cart has been queried
+//a new entry is created in the Purchases table.
 router.post('/placeorder', (req, res) => {
   const email = req.user.email;
   purchConf.create({
     userEmail: email,
   })
-    .then(data => res.json(data))
+    .then(data => {
+      const confId = data.id;
+      Cart.findAll({
+        attributes: ['pictureId', 'userEmail'],
+        where: { userEmail: email },
+        include: [{
+          model: Picture,
+          attributes: ['price', ['userEmail', 'photographerEmail']]
+        }]
+      })
+        .then(responseData => {
+          const dataHolder = JSON.parse(JSON.stringify(responseData));
+          let cartData = dataHolder.map(item => {
+            return {
+              pictureId: item.pictureId,
+              userEmail: email,
+              priceAtPurchase: item.picture.price,
+              purchaseConfirmationId: confId,
+              photographerEmail: item.picture.photographerEmail
+            }
+          })
+          Purchases.bulkCreate(cartData)
+            .then(purchData => {
+              res.json(purchData)
+            })
+        })
+        .catch(err => console.log(err))
+    })
     .catch(err => console.log(err))
 })
 
@@ -249,21 +278,33 @@ router.post('/addtocart/', (req, res) => {
   const email = req.user.email;
   const picId = req.body.picId;
   console.log("hey")
-
-  Cart.create({
-    userEmail: email,
-    pictureId: picId
+  Picture.findAll({
+    where: { id: picId }
   })
-    .then(data => res.send(data))
+    .then(picData => {
+      Cart.create({
+        userEmail: email,
+        pictureId: picId,
+        photographerEmail: picData[0].userEmail
+
+      })
+        .then(data => res.json(picData[0].userEmail))
+        .catch(err => console.log(err))
+    })
     .catch(err => console.log(err))
 });
 
 //PYourPhotos.js - get photos by Confirmation Number = Purchaser
 router.get('/pyourphotosconf/:confId', (req, res) => {
   const confId = req.params.confId;
+  const userName = req.user.email;
   Purchases.findAll({
     attributes: ['pictureId'],
-    where: { purchaseConfirmationId: confId },
+    where: { 
+      purchaseConfirmationId: confId,
+      userEmail: userName
+
+      },
     include: [{
       model: Picture,
       attributes: ['title', 'filePath']
@@ -409,6 +450,7 @@ router.get('/purchasedphotoview/:picId', (req, res) => {
     }]
   })
     .then(data => {
+      console.log("Data: ", data)
       const data1 = JSON.parse(JSON.stringify(data));
       const responseData = data1.map(item => {
         return {
@@ -427,13 +469,13 @@ router.get('/purchasedphotoview/:picId', (req, res) => {
 })
 
 //PViewPhotographerPhotos.js = Purchaser
-router.get('/pviewphotographerphotos', (req, res) => {
-  const email = req.user.email;
+router.get('/pviewphotographerphotos/:photographerId', (req, res) => {
+  const photographerId = req.params.photographerId;
 
   Picture.findAll({
     attributes: ['id', 'title', 'filePath'],
     where: {
-      userEmail: email,
+      userEmail: photographerId,
       disabled: '0'
     }
   })

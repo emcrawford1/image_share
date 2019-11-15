@@ -54,7 +54,7 @@ export function PhotoNav(props) {
     <a className="navbar-brand" style={navSpacer} href={"/photographerlandingpage/"}>
         My Profile
     </a>
-    <a className="navbar-brand" style={navSpacer} href={"/addphoto/" }>
+    <a className="navbar-brand" style={navSpacer} href={"/photographeraddphoto/" }>
         Add Photo
     </a>
       <a className="navbar-brand" style={navSpacer} href={"/photographersales/"}>

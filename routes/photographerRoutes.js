@@ -7,6 +7,7 @@ const User = models.user;
 const Picture = models.picture;
 const UserInfo = models.user_info;
 const Purchases = models.purchases;
+const Categories = models.category;
 
 //PhotographerLanding.js = Photographer
 router.get('/photographerlanding', (req, res) => {
@@ -101,6 +102,23 @@ router.get('/photographersales/', (req, res) => {
       res.send(responseData)
     })
     .catch(err => console.log(err))
+})
+
+router.get('/addPhoto/', (req, res) => {
+  const authObj = {
+    isAuthenticated: true
+  }
+  res.send(authObj)
+})
+
+router.get('/getCategories/', (req, res) => {
+  Categories.findAll({
+    attributes: ['name'],
+  })
+  .then(catData => {
+    res.send(catData)
+  })
+  .catch(err => console.log(err))
 })
 
 module.exports = router;

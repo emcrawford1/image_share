@@ -3,6 +3,10 @@ import { PurchNav } from "../components/Nav";
 import Footer from "../components/Footer";
 import { ViewYourPhoto } from "../components/Card";
 import API from "../utils/API";
+import { getJwt, removeJwt } from "../helpers/jwt";
+import { NoItems } from "../helpers/noItems";
+import { Redirect } from "react-router-dom";
+
 
 //Styling
 const flexContainer = {
@@ -15,67 +19,68 @@ const flexContainer = {
 class PViewPhotographerProfile extends Component {
 
   state = {
-
-    userId: this.props.match.params.userId,
     pictureId: this.props.match.params.picId,
-
-    picture: [{
-      pictureId: '5',
-      filePath: "/images/picture2.jpg",
-      title: "Beautiful picture",
-      userName: "leroy4545@gmail.com",
-      description: "A crazy beautiful picture of a sunset at a beach.",
-      dateAdded: "May 17, 2019",
-      purchasePrice: "35"
-    }],
-
-
-
-
-
+    picture: [],
+    loading: true,
+    isAuthenticated: false,
+    jwt: ""
   };
 
   //This needs to be uncommented when ORM is set up
-  componentWillMount() {
-    const userId = this.state.userId;
+  componentDidMount() {
     const picId = this.state.pictureId;
-    API.displayPurchasedPhoto(userId, picId)
-      .then(pictureData => {
-        console.log(pictureData.data)
-        this.setState({ picture: pictureData.data })
-      })
-      .catch(err => console.log(err));
+    this.setState({ jwt: getJwt() }, () => {
+      API.displayPurchasedPhoto(picId, this.state.jwt)
+        .then(pictureData => {
+          console.log("Picture Data: ", pictureData.data)
+          this.setState({
+            picture: pictureData.data,
+            loading: false,
+            isAuthenticated: true
+          })
+        })
+        .catch(err => {
+          console.log(err)
+          this.setState({
+            loading: false,
+            isAuthenticated: false
+          })
+        });
+    });
   }
-
-  //This needs to be uncommented when the ORM is set up
-  // addToCart(picId, purchaserId) {
-  //   API.addToCart(picId, purchaserId)
-  //   .then(this.setState({disabled: true}))
-  //   .catch(err => console.log(err));
-  // }
 
 
   render() {
 
+    if (this.state.loading === true && this.state.isAuthenticated === false) {
+      return (
+        <NoItems
+          message="Loading...."
+        />
+      )
+    }
+
+    if (this.state.loading === false && this.state.isAuthenticated === false) {
+      removeJwt()
+      return (
+        <Redirect to='/' />
+      )
+    }
     return (
       <div className="wrapper">
-        <PurchNav
-          id={this.state.userId}
-        />
+        <PurchNav />
         {this.state.picture.map(pic => (
           < div style={flexContainer}>
-          <ViewYourPhoto
-          key={pic.id}
-          title={pic.title}
-          username={pic.userName}
-          description={"Description: " + pic.description}
-          dateAdded={"Purchase Date: " + pic.dateAdded}
-          purchasePrice={"Amount Paid: $" + pic.purchasePrice}
-          filePath={pic.filePath}
-        />
-
-
-      </div>
+            <ViewYourPhoto
+              key={pic.id}
+              title={pic.title}
+              username={pic.userName}
+              description={"Description: " + pic.description}
+              dateAdded={"Purchase Date: " + pic.dateAdded}
+              purchasePrice={"Amount Paid: $" + pic.purchasePrice}
+              filePath={pic.filePath}
+            />
+          </div>
         ))}
         <Footer />
       </div >

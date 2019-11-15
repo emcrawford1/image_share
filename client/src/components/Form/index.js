@@ -190,3 +190,139 @@ export function CheckoutForm(props) {
   )
 }
 
+// export function AddPhotos(props) {
+//   return (
+//     <div className="card text-center mx-auto" style={registerFormStyle}>
+//       <div className="card-header">
+//         Upload Image
+//       </div>
+//       <div className="card-body">
+//         <img src="https://via.placeholder.com/700x250" class="align-middle" alt="..." />
+//         <div className="input-group">
+//           <div className="custom-file">
+//             <input type="file" class="custom-file-input" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" />
+//             <label class="custom-file-label" for="inputGroupFile04">Choose file</label>
+//           </div>
+//           <div class="input-group-append">
+//             <button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04">Button</button>
+//           </div>
+//         </div>
+//       </div>
+//       <div class="input-group mb-3">
+//   <div class="input-group-prepend">
+//     <label class="input-group-text" for="inputGroupSelect01">Options</label>
+//   </div>
+//   <select class="custom-select" id="inputGroupSelect01">
+//     <option value="1">{props.picProfile}</option>
+//     <option value="2">{props.picForSale}</option>
+//   </select>
+// </div>
+//     </div>
+//   )
+// }
+
+//Function to populate the list of categories in the AddPhotos form below.
+ function CategoryView(props){
+  const categoryList = props.categories;
+  console.log("Category List: " + categoryList)
+  const categoryOptions = props.categories.map((x) => {
+   return(<option key={x} value={x}>{x}</option>)
+  })
+  if(categoryList === null){
+    return(
+      <option value='N/A'>N/A</option>
+    )
+  }
+  else{
+    return(
+    categoryOptions
+    )
+  }
+}
+
+//->Need fix "Image Description" input
+//->Need add "Image Upload" option 
+
+export function AddPhotos(props) {
+
+  return (
+    <div style={registerFormStyle}><h1 style={{ textAlign: "center" }}>Upload an Image</h1>
+      <form>
+
+        <div className="form-group row">
+          <div className="col-sm-3">
+            <label htmlFor="inputFirstName" className="col-form-label">{props.nameLabel}</label>
+          </div>
+          <div className="col-sm-9">
+            <input type="text" name={props.name} onChange={props.onChange} className="form-control" id="inputFirstName" placeholder={props.imageNamePlaceholder} />
+          </div>
+        </div>
+
+        <div className="form-group row">
+          <div className="col-sm-3">
+            <label htmlFor="description" className="col-form-label">{props.descriptionLabel}</label>
+          </div>
+          <div className="col-sm-9">
+            <textarea type="text" name={props.description} onChange={props.onChange} className="form-control" rows="3" id="inputDescription" placeholder={props.descriptionPlaceholder}></textarea>
+          </div>
+        </div>
+
+        <div className="form-group row">
+          <div className="col-sm-3">
+            <label className="col-form-label" htmlFor="inputPicPurpose">{props.picTypeLabel}</label>
+          </div>
+          <div className="col-sm-9">
+            <select className="form-control" name={props.picType} onChange={props.onChange} id="exampleFormControlSelect1" placeholder="Account Type">
+              <option value="0">{props.picProfile}</option>
+              <option value="1">{props.picForSale}</option>
+            </select>
+          </div>
+        </div>
+
+
+        <div className="form-group row">
+          <div className="col-sm-3">
+            <label className="col-form-label" htmlFor="inputPicPurpose">{props.picTypeLabel}</label>
+          </div>
+          <div className="col-sm-9">
+            <select className="form-control" name={props.picType} onChange={props.onChange} id="exampleFormControlSelect1" placeholder="Account Type">
+              <CategoryView
+              categories={props.categories}
+              />
+            </select>
+          </div>
+        </div>
+
+
+        <div class="input-group mb-3">
+          <div className="col-sm-3">
+            <label className="col-form-label" htmlFor="price">{props.priceLabel}</label>
+          </div>
+          <div className="input-group-prepend">
+            <span className="input-group-text">$</span>
+          </div>
+          <input type="text" name={props.price} onChange={props.onChange} className="form-control" aria-label="Amount (to the nearest dollar)" />
+          <div className="input-group-append">
+            <span className="input-group-text">.00</span>
+          </div>
+        </div>
+
+        <div className="input-group">
+          <div className="col-sm-3">
+            <label className="col-form-label" htmlFor="chooseFile">{props.uploadLabel}</label>
+          </div>
+          <div className="col-sm-9 custom-file">
+            <input type="file" name={props.fileName} onChange={props.fileUpload} class="custom-file-input" id="fileInput" aria-describedby="inputGroupFileAddon04" />
+            <label className="custom-file-label" htmlFor="fileInput">{props.uploadMessage}</label>
+          </div>
+        </div>
+
+
+        <div style={{ textAlign: "center" }}>
+          <button type="submit" onClick={props.fileUpload} className="btn btn-outline-info" style={Btn}>{props.BtnLabel}</button>
+
+        </div>
+      </form>
+    </div>
+  )
+}

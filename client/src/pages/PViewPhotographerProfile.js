@@ -3,6 +3,9 @@ import { PurchNav } from "../components/Nav";
 import Footer from "../components/Footer";
 import { PUserProfile } from "../components/Card";
 import API from "../utils/API";
+import { getJwt, removeJwt } from "../helpers/jwt";
+import { NoItems } from "../helpers/noItems";
+import { Redirect } from "react-router-dom";
 
 //Styling
 const flexContainer = {
@@ -15,56 +18,77 @@ const flexContainer = {
 class PViewPhotographerProfile extends Component {
 
   state = {
+    photographerId: this.props.match.params.photographerId,
 
-    userId: this.props.match.params.userId,
-    userName: this.props.match.params.photographerId,
-
-    profile: [{
-      userName: "",
-      filePath: "/images/picture5.jpg",
-      firstName: "Wanda",
-      lastName: "Denkins",
-      dateAdded: "May 4, 2019",
-      aboutMe: "Serving up our own rendition of veggie burgers"
-    }]
+    profile: [],
+    loading: true,
+    isAuthenticated: false,
+    jwt: ""
 
   };
 
- 
-  componentWillMount() {
-    API.viewPhotographerProfile(this.state.userName)
-      .then(profileData => {
-        console.log(profileData)
-        this.setState({ profile: [profileData.data]})
-      })
-      .catch(err => console.log(err));
+
+  componentDidMount() {
+    const photographerId = this.state.photographerId;
+
+    this.setState({ jwt: getJwt() }, () => {
+      API.viewPhotographerProfile(photographerId, this.state.jwt)
+        .then(profileData => {
+          console.log(profileData)
+          this.setState({
+            profile: [profileData.data],
+            loading: false,
+            isAuthenticated: true
+          })
+        })
+        .catch(err => {
+          console.log(err)
+          this.setState({
+            loading: false,
+            isAuthenticated: false
+          })
+        });
+    })
   }
 
 
 
   render() {
 
+    if (this.state.loading === true && this.state.isAuthenticated === false) {
+      return (
+        <NoItems
+          message="Loading...."
+        />
+      )
+    }
+
+    if (this.state.loading === false && this.state.isAuthenticated === false) {
+      removeJwt()
+      return (
+        <Redirect to='/' />
+      )
+    }
+
     return (
       <div className="wrapper">
-        <PurchNav
-          id={this.state.userId}
-        />
+        <PurchNav />
         {this.state.profile.map((item, index) => (
-        <div style={flexContainer}
-        key={index + "s"}>
-          <PUserProfile
-            key={index}
-            fullName={item.firstName + " " + item.lastName}
-            username={item.userName}
-            dateAdded={item.dateAdded}
-            aboutMe={item.aboutMe}
-            filePath={item.filePath}
-            link={"/pviewphotographerphotos/" + this.state.userId + "/" + item.userName}
-            linkDesc={"View Photos"}
-          />
+          <div style={flexContainer}
+            key={index + "s"}>
+            <PUserProfile
+              key={index}
+              fullName={item.firstName + " " + item.lastName}
+              username={item.userName}
+              dateAdded={item.dateAdded}
+              aboutMe={item.aboutMe}
+              filePath={item.filePath}
+              link={"/pviewphotographerphotos/" + item.userName}
+              linkDesc={"View Photos"}
+            />
 
 
-        </div>
+          </div>
         ))}
         <Footer />
       </div>

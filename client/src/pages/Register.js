@@ -40,13 +40,6 @@ class PostPurchase extends Component {
     lastName: ""
   };
 
-  //This needs to be uncommented when ORM is set up
-  // componentWillMount() {
-  //   API.getPictures(this.props.match.params.category)
-  //     .then(res => this.setState({pictures: res.data, searchValue: "" }))
-  //     .catch(err => console.log(err));
-  // }
-
   registerUser = event => {
     event.preventDefault();
     API.registerUser(this.state)

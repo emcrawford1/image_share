@@ -65,34 +65,16 @@ class PCategoryView extends Component {
   //send user to next page
   nextPage() {
     let path = "/postpurchase";
-    let tempCart = this.state.cartItems;
     let orderObj = {};
 
     API.placeOrder(orderObj, this.state.jwt)
       .then(orderData => {
-        console.log("Order Data: " + tempCart)
-        let Cart = tempCart.map(item => {
-          return {
-            priceAtPurchase: item.priceAtPurchase,
-            pictureId: item.pictureId,
-            userEmail: item.userEmail,
-            photographerEmail: item.photographerEmail,
-            purchaseConfirmationId: orderData.data.id
-          }
-        })
-
-        API.makePurchase(Cart, this.state.jwt)
-          .then(purchData => {
-            console.log(purchData)
-
             API.clearCart(this.state.jwt)
               .then(status => {
                 console.log(status);
                 this.props.history.push(path);
               })
               .catch(err => console.log(err))
-          })
-          .catch(err => console.log(err))
       })
       .catch(err => console.log(err))
   }

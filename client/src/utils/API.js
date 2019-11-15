@@ -62,7 +62,7 @@ export default {
 
 
   //PurchasedPhotoView.js
-  displayPurchasedPhoto: picId => axios.get("/api/purchaserRoutes/purchasedphotoview/" + picId),
+  displayPurchasedPhoto: (picId, token) => axios.get("/api/purchaserRoutes/purchasedphotoview/" + picId, { headers: { Authorization: `Bearer ${token}`}}),
 
 
 
@@ -89,10 +89,10 @@ export default {
 
 
   //PViewPhotographerPhotos.js
-  viewPhotographerPhotos: () => axios.get('/api/purchaserRoutes/pviewphotographerphotos/'),
+  viewPhotographerPhotos: (photographerId, token) => axios.get('/api/purchaserRoutes/pviewphotographerphotos/' + photographerId, { headers: { Authorization: `Bearer ${token}`}}),
 
   //PviewPhotographerProfile.js
-  viewPhotographerProfile: photographerId => axios.get('/api/purchaserRoutes/pviewphotographerprofile/' + photographerId),
+  viewPhotographerProfile: (photographerId, token) => axios.get('/api/purchaserRoutes/pviewphotographerprofile/' + photographerId, { headers: { Authorization: `Bearer ${token}`}}),
 
 
   //Register
@@ -105,7 +105,10 @@ export default {
   logoutUser: userInfo => axios.post('/api/authenticated/logout', userInfo),
 
   //photoAuthenticated.js
-  getUser: token => axios.get('/api/authenticated/getUser', { headers: { Authorization: `Bearer ${token}`} })
+  getUser: token => axios.get('/api/authenticated/getUser', { headers: { Authorization: `Bearer ${token}`} }),
 
+  // addPhoto: token => axios.get('/api/photographerRoutes/addphoto', { headers: { Authorization: `Bearer ${token}`}}),
+
+  getCategories: token => axios.get('/api/photographerRoutes/getCategories', { headers: { Authorization: `Bearer ${token}`}})
 }
 

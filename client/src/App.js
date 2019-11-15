@@ -16,6 +16,7 @@ import PhotographerLanding from "./pages/PhotographerLanding";
 import PhotographerMyPictures from "./pages/PhotographerMyPictures";
 import PhotographerPhotoView from "./pages/PhotographerPhotoView";
 import PhotographerSales from "./pages/PhotographerSales";
+import PhotographerAddPhoto from "./pages/PhotographerAddPhoto";
 import Login from "./pages/Login";
 import PhotoLogin from "./pages/PhotoLogin";
 import { getJwt } from "./helpers/jwt";
@@ -81,13 +82,14 @@ class App extends Component {
             <PurchaseAuthenticated exact path="/checkout" accountType={this.state.accountType} component={Checkout} />
             <PurchaseAuthenticated exact path="/postpurchase/" accountType={this.state.accountType} component={PostPurchase} />
             <PurchaseAuthenticated exact path="/mypurchases" accountType={this.state.accountType} component={MyPurchases} />
-            <PurchaseAuthenticated exact path="/pviewphotographerphotos/:userId/:photographerId" accountType={this.state.accountType} component={PViewPhotographerPhotos} />
+            <PurchaseAuthenticated exact path="/pviewphotographerphotos/:photographerId" accountType={this.state.accountType} component={PViewPhotographerPhotos} />
             <PurchaseAuthenticated exact path="/pyourphotos/:confId" accountType={this.state.accountType} component={PYourPhotos} />
-            <PurchaseAuthenticated exact path="/purchasedphotoview/:userId/:picId" accountType={this.state.accountType} component={PurchasedPhotoView} />
+            <PurchaseAuthenticated exact path="/purchasedphotoview/:picId" accountType={this.state.accountType} component={PurchasedPhotoView} />
             <PhotoAuthenticated exact path="/photographerlandingpage" accountType={this.state.accountType} JWT={this.state.jwt} component={PhotographerLanding} />
             <PhotoAuthenticated exact path="/photographermypictures" accountType={this.state.accountType} component={PhotographerMyPictures} />
             <PhotoAuthenticated exact path="/photographerphotoview/:picId" accountType={this.state.accountType} component={PhotographerPhotoView} />
             <PhotoAuthenticated exact path="/photographersales/" accountType={this.state.accountType} component={PhotographerSales} />
+            <PhotoAuthenticated exact path="/photographeraddphoto" accountType={this.state.accountType} component={PhotographerAddPhoto} />
           </Switch>
         </div>
       </Router>

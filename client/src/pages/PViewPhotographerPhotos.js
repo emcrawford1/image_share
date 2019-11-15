@@ -3,6 +3,9 @@ import { PurchNav } from "../components/Nav";
 import Footer from "../components/Footer";
 import { PicGrid } from "../components/Grid";
 import API from "../utils/API";
+import { getJwt, removeJwt } from "../helpers/jwt";
+import { NoItems } from "../helpers/noItems";
+import { Redirect } from "react-router-dom";
 
 //Styling
 const flexContainer = {
@@ -14,64 +17,59 @@ const flexContainer = {
 class PViewPhotographerPhotos extends Component {
 
   state = {
-    userId: this.props.match.params.userId,
     photographerId: this.props.match.params.photographerId,
-    
-    pictures: [{
-      id: "27",
-      title: "Nice Picture",
-      filePath: "/images/picture1.jpg"
-    },
-    {
-      id: "28",
-      title: "Another Nice Picture",
-      filePath: "/images/picture2.jpg"
-    },
-    {
-      id: "290",
-      title: "This is a third picture",
-      filePath: "/images/picture3.jpg"
-    },
-    {
-      id: "30",
-      title: "Twenty-seven",
-      filePath: "/images/picture4.jpg"
-    },
-    {
-      id: "22",
-      title: "Nice Picture",
-      filePath: "/images/picture5.jpg"
-    },
-    {
-      id: "4",
-      title: "Another Nice Picture",
-      filePath: "/images/picture8.jpg"
-    }],
-    
+    pictures: [],
+    loading: true,
+    isAuthenticated: false,
+    jwt: ""
   };
 
   //This needs to be uncommented when ORM is set up
-  componentWillMount() {
+  componentDidMount() {
     const photographerId = this.state.photographerId;
-    API.viewPhotographerPhotos(photographerId)
+    this.setState({ jwt: getJwt() }, () => {
+    API.viewPhotographerPhotos(photographerId, this.state.jwt)
       .then(photoData => { 
         console.log(photoData);
-        this.setState({pictures: photoData.data})
+        this.setState({
+          pictures: photoData.data,
+          loading: false,
+          isAuthenticated: true
+        })
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err)
+        this.setState({ 
+          loading: false,
+          isAuthenticated: false
+        })
+      });
+    })
   }
 
   render() {
+    if(this.state.loading === true && this.state.isAuthenticated === false) {
+      return (
+        <NoItems
+        message="Loading..."
+        />
+      )
+    }
+
+    if(this.state.loading === false && this.state.isAuthenticated === false) {
+      removeJwt();
+      return(
+        <Redirect to="/" />
+      )
+    }
     return (
       <div className="wrapper">
-        <PurchNav 
-          id={this.state.userId}
-        />
+        <PurchNav />
         <div style={flexContainer}>
           {this.state.pictures.map((pic, index) => (
             <PicGrid
               key={index}
-              link={"PSpecificPictureView/" + this.state.userId + "/" + pic.id}
+              link={"PSpecificPictureView/" + pic.id}
               filePath={pic.filePath}
               name={pic.title}
             />

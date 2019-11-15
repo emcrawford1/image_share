@@ -9,8 +9,12 @@ module.exports = function(sequelize, DataTypes) {
   });
 
   Cart.associate = function(models) {
+    Cart.belongsTo(models.picture);
     Cart.belongsTo(models.user);
-    Cart.belongsTo(models.picture)
+    Cart.belongsTo(models.user, {
+      as: "email",
+      foreignKey: "photographerEmail"
+    });
   }
   return Cart;
 }
