@@ -3,7 +3,7 @@ import { PhotoNav } from "../components/Nav";
 import Footer from "../components/Footer";
 import { PUserProfile } from "../components/Card";
 import API from "../utils/API";
-import { getJwt } from "../helpers/jwt";
+import { removeCookieJwt, setCookie } from "../helpers/jwt";
 import { Redirect } from "react-router-dom";
 
 //Styling
@@ -26,28 +26,39 @@ class PViewPhotographerProfile extends Component {
   };
 
 
-
+//React lifecycle componentDidMount method.  Calls getPhotographerProfile method to get the photographer's 
+//profile.
   componentDidMount() {
-    this.setState({ jwt: getJwt() }, () => {
+    API.getPhotographerProfile()
+      .then(profileData => {
 
-      API.getPhotographerProfile(this.state.jwt)
-        .then(profileData => {
-          console.log(profileData);
-          this.setState({
-            profile: profileData.data,
-            loading: false,
-            isAuthenticated: true
-          })
-          console.log(this.state.profile)
+        //Format date
+        let dateStamp = new Date(profileData.data.profile[0].dateAdded).toDateString();
+
+        //Profile object that includes formatted date.  
+        let profile = [{
+          aboutMe: profileData.data.profile[0].aboutMe,
+          dateAdded: dateStamp,
+          filePath: profileData.data.profile[0].filePath,
+          firstName: profileData.data.profile[0].firstName,
+          lastName: profileData.data.profile[0].lastName,
+          userName: profileData.data.profile[0].userName
+        }]
+        
+        setCookie(profileData.data.token);
+        this.setState({
+          profile,
+          loading: false,
+          isAuthenticated: true
         })
-        .catch(err => {
-          console.log(err)
-          this.setState({
-            loading: false,
-            isAuthenticated: false
-          })
-        });
-    });
+      })
+      .catch(err => {
+        console.log(err)
+        this.setState({
+          loading: false,
+          isAuthenticated: false
+        })
+      });
   }
 
 
@@ -59,8 +70,9 @@ class PViewPhotographerProfile extends Component {
     }
 
     if (this.state.loading === false && this.state.isAuthenticated === false) {
+      removeCookieJwt();
       return (
-           <Redirect to='/' />
+        <Redirect to='/' />
       )
     }
 

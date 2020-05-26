@@ -8,11 +8,26 @@ const ExtractJwt = passportJWT.ExtractJwt;
 const jwt = require('jsonwebtoken');
 const models = require('../models');
 const User = models.user;
+const jwtSign = require('../config/jwtSign')
+
+//Function for cookie extraction
+var extractCookie = function(req) {
+  let token = null;
+
+  if(req && req.cookies)
+  {
+    token = req.cookies['imageShare-jwt'];
+  }
+
+  return token;
+
+}
+
 
 
 //Options for passport JWT strategy
 const opts = {
-  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  jwtFromRequest: req => extractCookie(req),
   secretOrKey: process.env.SECRET_OR_KEY
 };
 
@@ -22,8 +37,11 @@ const strategy = new JwtStrategy(opts, (payload, next) => {
     where: { email: payload.email }
   })
   .then( res => {
+    res.token = jwtSign(payload.email);
+    res.payload = payload;
     next(null, res)
   })
 })
+
 
 module.exports = strategy;

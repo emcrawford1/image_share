@@ -17,13 +17,20 @@ const registerFormStyle = {
   width: "70%",
   color: "rgb(76, 83, 88)"
 }
-// const textStyle = {
-//   textAlign: "center"
-// }
-// const price = {
-//   marginRight: "20px",
-//   marginLeft: "20px"
-// }
+
+
+
+//Classname attributes for validation
+//IsValid will be displayed if the data is proper
+//isInValid will be displayed if the data is improper
+//textInfo will display when file is properly uploaded
+//textDanger will display when a file is not properly uploaded (i.e. server returns 400 status)
+const isValid = 'is-valid'
+const isInValid = 'is-invalid'
+const textInfo = 'text-info'
+const textDanger = 'text-danger'
+
+
 
 const Btn = {
   width: "45%",
@@ -42,12 +49,19 @@ export function LoginForm(props) {
           <label htmlFor="inputEmail3" className="col-sm-2 col-form-label">{props.emailLabel}</label>
           <div className="col-sm-10">
             <input type="email" name={props.emailName} onChange={props.onChange} className="form-control" id="inputEmail3" placeholder="Email" />
+
+            {/* Render error message if userNameFlag is true*/}
+            {props.userNameFlag === true ? <small className="form-text text-danger">{props.userNameMessage}</small> : <div></div>}
+
           </div>
         </div>
         <div className="form-group row">
           <label htmlFor="inputPassword3" className="col-sm-2 col-form-label">{props.passwordLabel}</label>
           <div className="col-sm-10">
             <input type="password" name={props.passwordName} onChange={props.onChange} className="form-control" id="inputPassword3" placeholder="Password" />
+            
+             {/* Render error message if userNameFlag is true*/}
+             {props.loginFlag === true ? <small className="form-text text-danger">{props.loginMessage}</small> : <div></div>}
           </div>
         </div>
         <div style={{ textAlign: "center" }}>
@@ -59,45 +73,87 @@ export function LoginForm(props) {
   )
 }
 
+//Function to populate the password input error messages in RegisterForm 
+function PasswordErr(props) {
+  const passwordFlag = props.passwordFlag;
+  const passwordError = props.passwordError.map((x) => {
+    return (<small key={x} value={x} id="passwordErr" className="form-text text-danger">{'**' + x}</small>)
+  })
+  if (passwordFlag === true) {
+    return (
+      <div></div>
+    )
+  }
+  else {
+    return (
+      passwordError
+    )
+  }
+}
 export function RegisterForm(props) {
 
   return (
     <div style={registerFormStyle}><h1 style={{ textAlign: "center" }}>Image Share</h1>
       <form>
         <div className="form-group row">
-          <label htmlFor="inputEmail" className="col-sm-2 col-form-label">{props.emailLabel}</label>
+          <label htmlFor="inputEmail" className="col-sm-2 col-form-label form-control-warning">{props.emailLabel}</label>
           <div className="col-sm-10">
-            <input type="email" name={props.emailName} onChange={props.onChange} className="form-control" id="inputEmail" placeholder="jdoe@email.com" />
-            <small id="emailHelp" className="form-text text-muted">{props.emailMessage}</small>
+            {/*A ternary operator is used to determine if the props.emailFlag variable is set to true, false, or unset.  The styling is set based on this value */}
+            <input type="email" name={props.emailName} onChange={props.onChange} className={`form-control ${props.emailFlag === true && props.duplicateFlag === true ? isValid : (props.emailFlag === false || props.duplicateFlag === false ? isInValid : {})}`} id="inputEmail" placeholder="jdoe@email.com" />
+
+            {/*A ternary operator is used to determine if the props.emailFlag variable is set to true, false, or unset.  The styling is set based on this value */}
+            {props.emailFlag === false || props.duplicateFlag === false ? <small id="inputEmail" className="form-text text-danger">{props.emailError}</small> : <small id="emailHelp" className="form-text text-muted">{props.emailMessage}</small>}
+
           </div>
         </div>
         <div className="form-group row">
           <label htmlFor="inputPassword" className="col-sm-2 col-form-label">{props.passwordLabel}</label>
           <div className="col-sm-10">
-            <input type="password" name={props.passwordName} onChange={props.onChange} className="form-control" id="inputPassword" placeholder="Password" />
+            <input type="password" name={props.passwordName} onChange={props.onChange} className={`form-control ${props.passwordFlag === true ? isValid : (props.passwordFlag === false ? isInValid : {})}`} id="inputPassword" placeholder="Password" />
+            {props.passwordFlag === false ? <PasswordErr
+              passwordFlag={props.passwordFlag}
+              passwordError={props.passwordError}
+            /> : <div></div>
+            }
           </div>
         </div>
+
         <div className="form-group row">
           <label htmlFor="inputFirstName" className="col-sm-2 col-form-label">{props.firstNameLabel}</label>
           <div className="col-sm-10">
-            <input type="text" name={props.firstName} onChange={props.onChange} className="form-control" id="inputFirstName" placeholder="John" />
+            {/*A ternary operator is used to determine if the props.firstNameFlag variable is set to true, false, or unset.  The styling is set based on this value */}
+            <input type="text" name={props.firstName} onChange={props.onChange} className={`form-control ${props.firstNameFlag === true ? isValid : (props.firstNameFlag === false ? isInValid : {})}`} id="inputFirstName" placeholder="John" />
+
+            {/*A ternary operator is used to determine if the props.firstNameFlag variable is set to true, false, or unset.  The styling is set based on this value */}
+            {props.firstNameFlag === false ? <small id="inputFirstName" className="form-text text-danger">{props.standardError}</small> : <div></div>}
+
           </div>
         </div>
         <div className="form-group row">
           <label htmlFor="inputLastName" className="col-sm-2 col-form-label">{props.lastNameLabel}</label>
           <div className="col-sm-10">
-            <input type="text" name={props.lastName} onChange={props.onChange} className="form-control" id="inputLastName" placeholder="Doe" />
+            {/*A ternary operator is used to determine if the props.lastNameFlag variable is set to true, false, or unset.  The styling is set based on this value */}
+            <input type="text" name={props.lastName} onChange={props.onChange} className={`form-control ${props.lastNameFlag === true ? isValid : (props.lastNameFlag === false ? isInValid : {})}`} id="inputLastName" placeholder="Doe" />
+
+            {/*A ternary operator is used to determine if the props.lastNameFlag variable is set to true, false, or unset.  The styling is set based on this value */}
+            {props.lastNameFlag === false ? <small id="inputLastName" className="form-text text-danger">{props.standardError}</small> : <div></div>}
+
           </div>
         </div>
 
         <div className="form-group row">
           <label className="col-sm-2 col-form-label" htmlFor="exampleFormControlSelect1">{props.accountTypeLabel}</label>
           <div className="col-sm-10">
-            <select className="form-control" name={props.accountType} onChange={props.onChange} id="exampleFormControlSelect1" placeholder="Account Type">
+            {/*A ternary operator is used to determine if the props.accountTypeFlag variable is set to true, false, or unset.  The styling is set based on this value */}
+            <select className={`form-control ${props.accountTypeFlag === true ? isValid : (props.accountTypeFlag === false ? isInValid : {})}`} name={props.accountType} onChange={props.onChange} id="accountTypeSelect" placeholder="Account Type">
               <option value="2">{props.accountDefault}</option>
               <option value="0">{props.accountPhotographer}</option>
               <option value="1">{props.accountPurchaser}</option>
             </select>
+
+            {/*A ternary operator is used to determine if the props.accountTypeFlag variable is set to true, false, or unset.  The styling is set based on this value */}
+            {props.accountTypeFlag === false ? <small id="emailHelp" className="form-text text-danger">{props.standardError}</small> : <div></div>}
+
           </div>
         </div>
 
@@ -109,7 +165,7 @@ export function RegisterForm(props) {
         </div>
 
         <div style={{ textAlign: "center" }}>
-          <button type="submit" onClick={props.handleRegister} className="btn btn-outline-info" style={Btn}>{props.BtnLabel}</button>
+          <button type="button" onClick={props.handleRegister} className="btn btn-outline-info" style={Btn}>{props.BtnLabel}</button>
 
         </div>
       </form>
@@ -190,71 +246,47 @@ export function CheckoutForm(props) {
   )
 }
 
-// export function AddPhotos(props) {
-//   return (
-//     <div className="card text-center mx-auto" style={registerFormStyle}>
-//       <div className="card-header">
-//         Upload Image
-//       </div>
-//       <div className="card-body">
-//         <img src="https://via.placeholder.com/700x250" class="align-middle" alt="..." />
-//         <div className="input-group">
-//           <div className="custom-file">
-//             <input type="file" class="custom-file-input" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" />
-//             <label class="custom-file-label" for="inputGroupFile04">Choose file</label>
-//           </div>
-//           <div class="input-group-append">
-//             <button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04">Button</button>
-//           </div>
-//         </div>
-//       </div>
-//       <div class="input-group mb-3">
-//   <div class="input-group-prepend">
-//     <label class="input-group-text" for="inputGroupSelect01">Options</label>
-//   </div>
-//   <select class="custom-select" id="inputGroupSelect01">
-//     <option value="1">{props.picProfile}</option>
-//     <option value="2">{props.picForSale}</option>
-//   </select>
-// </div>
-//     </div>
-//   )
-// }
-
 //Function to populate the list of categories in the AddPhotos form below.
- function CategoryView(props){
+function CategoryView(props) {
   const categoryList = props.categories;
-  console.log("Category List: " + categoryList)
   const categoryOptions = props.categories.map((x) => {
-   return(<option key={x} value={x}>{x}</option>)
+    return (<option key={x} value={x}>{x}</option>)
   })
-  if(categoryList === null){
-    return(
+  if (categoryList === null) {
+    return (
       <option value='N/A'>N/A</option>
     )
   }
-  else{
-    return(
-    categoryOptions
+  else {
+    return (
+      categoryOptions
     )
   }
 }
 
-//->Need fix "Image Description" input
-//->Need add "Image Upload" option 
 
 export function AddPhotos(props) {
 
   return (
     <div style={registerFormStyle}><h1 style={{ textAlign: "center" }}>Upload an Image</h1>
-      <form>
+      <form encType="mulitpart/form-data">
 
         <div className="form-group row">
           <div className="col-sm-3">
             <label htmlFor="inputFirstName" className="col-form-label">{props.nameLabel}</label>
           </div>
           <div className="col-sm-9">
-            <input type="text" name={props.name} onChange={props.onChange} className="form-control" id="inputFirstName" placeholder={props.imageNamePlaceholder} />
+
+            {/* Ternary operator that checks to see if the disabled prop is true or false.  If true, it will render a disabled
+          input element.  If false, it will render an input element that will allow the user to enter a title for the image. 
+          Additionally, the imageNameFlag is checked to see if it is true, false, or other.  The format of the input is changed
+          depending on these values.  */}
+            <div>{props.disabled ? <input type="text" name={props.name} onChange={props.onChange} className="form-control" id="inputFirstName" placeholder={props.titlePlaceHolder} disabled />
+              : <input type="text" name={props.name} onChange={props.onChange} className={`form-control ${props.imageNameFlag === true ? isValid : (props.imageNameFlag === false ? isInValid : {})}`} id="inputFirstName" placeholder={props.titlePlaceHolder} />}</div>
+
+            {/* Ternary operater that will display text informing the user that this is a required field if the data is not proper. */}
+            {props.imageNameFlag === false && props.disabled === false ? <small id="emailHelp" className="form-text text-danger">{props.standardError}</small> : <div></div>}
+
           </div>
         </div>
 
@@ -263,7 +295,12 @@ export function AddPhotos(props) {
             <label htmlFor="description" className="col-form-label">{props.descriptionLabel}</label>
           </div>
           <div className="col-sm-9">
-            <textarea type="text" name={props.description} onChange={props.onChange} className="form-control" rows="3" id="inputDescription" placeholder={props.descriptionPlaceholder}></textarea>
+
+            {/* Ternary operator that checks to see if the disabled prop is true or false.  If true, it will render a disabled
+          input element.  If false, it will render an input element that will allow the user to enter a description of the image. */}
+            <div>{props.disabled ? <textarea type="text" name={props.description} onChange={props.onChange} className="form-control" rows="3" id="inputDescription" placeholder={props.descriptionPlaceholder} disabled></textarea>
+              : <textarea type="text" name={props.description} onChange={props.onChange} className="form-control" rows="3" id="inputDescription" placeholder={props.descriptionPlaceholder}></textarea>}</div>
+
           </div>
         </div>
 
@@ -273,8 +310,8 @@ export function AddPhotos(props) {
           </div>
           <div className="col-sm-9">
             <select className="form-control" name={props.picType} onChange={props.onChange} id="exampleFormControlSelect1" placeholder="Account Type">
-              <option value="0">{props.picProfile}</option>
               <option value="1">{props.picForSale}</option>
+              <option value="0">{props.picProfile}</option>
             </select>
           </div>
         </div>
@@ -282,46 +319,97 @@ export function AddPhotos(props) {
 
         <div className="form-group row">
           <div className="col-sm-3">
-            <label className="col-form-label" htmlFor="inputPicPurpose">{props.picTypeLabel}</label>
+            <label className="col-form-label" htmlFor="inputPicPurpose">{props.categoryLabel}</label>
           </div>
           <div className="col-sm-9">
-            <select className="form-control" name={props.picType} onChange={props.onChange} id="exampleFormControlSelect1" placeholder="Account Type">
-              <CategoryView
-              categories={props.categories}
-              />
-            </select>
+
+            {/* Ternary operator that checks to see if the disabled prop is true or false.  If true, it will render a disabled
+          input element.  If false, it will render an input element that will allow the user to enter a category for the image. */}
+            <div>{props.disabled ? <select className="form-control" name={props.category} onChange={props.onChange} id="exampleFormControlSelect1" placeholder="Account Type" disabled></select>
+              : <select className="form-control" name={props.category} onChange={props.onChange} id="exampleFormControlSelect1" placeholder="Account Type">
+                <CategoryView
+                  categories={props.categories}
+                />
+              </select>}</div>
+
           </div>
         </div>
 
 
-        <div class="input-group mb-3">
-          <div className="col-sm-3">
-            <label className="col-form-label" htmlFor="price">{props.priceLabel}</label>
-          </div>
-          <div className="input-group-prepend">
-            <span className="input-group-text">$</span>
-          </div>
-          <input type="text" name={props.price} onChange={props.onChange} className="form-control" aria-label="Amount (to the nearest dollar)" />
-          <div className="input-group-append">
-            <span className="input-group-text">.00</span>
-          </div>
-        </div>
+        {/* Ternary operator that checks to see if the disabled prop is true or false.  If true, it will render a disabled
+          input element.  If false, it will render an input element that will allow the user to enter a price for the image. */}
+        {props.disabled ?
+          <>
+            <div class="input-group mb-3">
+              <div className="col-sm-3">
+                <label className="col-form-label" htmlFor="price">{props.priceLabel}</label>
+              </div>
+              <div className="input-group-prepend">
+                <span className="input-group-text">$</span>
+              </div>
+
+              <input type="text" name={props.price} onChange={props.onChange} className="form-control" aria-label="Amount (to the nearest dollar)" disabled />
+              <div className="input-group-append">
+                <span className="input-group-text">.00</span>
+              </div>
+            </div>
+          </>
+          :
+
+          <>
+            <div className={`input-group ${props.priceFlag === false ? "mb-0" : "mb-3"}`}>
+              <div className="col-sm-3">
+                <label className="col-form-label" htmlFor="price">{props.priceLabel}</label>
+              </div>
+              <div className="input-group-prepend">
+                <span className="input-group-text">$</span>
+              </div>
+              <input type="text" name={props.price} onChange={props.onChange} className={`form-control ${props.priceFlag === true ? isValid : (props.priceFlag === false ? isInValid : "")}`} aria-label="Amount (to the nearest dollar)" display="block" />
+              <div className="input-group-append">
+                <span className="input-group-text">.00</span>
+              </div>
+            </div>
+
+            {/* Ternary operater that will display text informing the user that this is a required field if the data is not proper. */}
+            {props.priceFlag === false && props.disabled === false ?
+              <>
+                <div className="row">
+                  <div className="col-3"></div>
+                  <small id="emailHelp" className="form-text col-9 mt-0 mb-3 text-danger">{props.priceError}</small>
+                </div>
+              </> :
+              <div></div>}
+          </>}
+
 
         <div className="input-group">
-          <div className="col-sm-3">
+          <div className={`col-sm-3 ${props.fileFlag === false ? "mb-0" : "mb-3"}`}>
             <label className="col-form-label" htmlFor="chooseFile">{props.uploadLabel}</label>
           </div>
           <div className="col-sm-9 custom-file">
-            <input type="file" name={props.fileName} onChange={props.fileUpload} class="custom-file-input" id="fileInput" aria-describedby="inputGroupFileAddon04" />
+
+            {/* Ternary operations performed below to determine if the user tried to submit the form without selecting a proper file (png or jpg). 
+              If not, an error message will be displayed.*/}
+            <input type="file" name={props.imageFile} onChange={props.fileInputChange} className={`custom-file-input ${props.fileFlag === true ? isValid : (props.fileFlag === false ? isInValid : "")}`} id="fileInput" aria-describedby="inputGroupFileAddon04" />
             <label className="custom-file-label" htmlFor="fileInput">{props.uploadMessage}</label>
           </div>
         </div>
 
+        {props.fileFlag === false ?
+          <div className="row">
+            <div className="col-3"></div>
+            <small id="fileInput" className="form-text mb-3 mt-0 col-9 text-danger">{props.fileError}</small>
+          </div> : <div></div>}
+
 
         <div style={{ textAlign: "center" }}>
           <button type="submit" onClick={props.fileUpload} className="btn btn-outline-info" style={Btn}>{props.BtnLabel}</button>
-
         </div>
+
+        {/*Ternary operator to determine if the file was uploaded properly and what message to display*/}
+        {props.uploadFlag === "" ? <div></div> : 
+        <small style={{ textAlign: "center"}} className={`form-text ${props.uploadFlag === true ? textInfo : textDanger}`}>{props.uploadMsg}</small>
+}
       </form>
     </div>
   )

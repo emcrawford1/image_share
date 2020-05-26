@@ -3,7 +3,7 @@ import {PurchNav} from "../components/Nav";
 import Footer from "../components/Footer";
 import { ViewCart } from "../components/Card";
 import { BtnSet } from "../components/Grid";
-import { getJwt } from "../helpers/jwt";
+import { removeCookieJwt, setCookie } from "../helpers/jwt";
 import { NoItems } from "../helpers/noItems";
 import { Redirect } from "react-router-dom";
 import API from "../utils/API";
@@ -28,11 +28,12 @@ class PurchaseCart extends Component {
 //After component has mounted, the user's purchase cart will be obtained by passing the user's jwt to the getPurchaseCart 
 //method.  
   componentDidMount() {
-    this.setState({ jwt: getJwt() }, () => {
-    API.getPurchaseCart(this.state.jwt)
+ 
+    API.getPurchaseCart()
       .then(cartData => {
         console.log(cartData)
-        this.setState({ cartItems: cartData.data })
+        setCookie(cartData.data.token);
+        this.setState({ cartItems: cartData.data.purchData });
         this.getTotalPrice();
         this.setState({
           loading: false,
@@ -47,9 +48,6 @@ class PurchaseCart extends Component {
             isAuthenticated: false
           })
         });
-
-    console.log(this.state.totalPrice);
-     })
   }
 
   //This function calculates the total price of the cart items.  
@@ -61,15 +59,14 @@ class PurchaseCart extends Component {
     const newPrice = priceArray.reduce(reducer, 0);
 
     this.setState({ totalPrice: newPrice });
-    console.log(this.state.totalPrice);
+
   }
 
 
   //Remove a single item from the cart
   removeFromCart(cartItem) {
-    API.removeFromCart(cartItem, this.state.jwt)
+    API.removeFromCart(cartItem)
     .then(cartData => {
-      console.log(cartData);
       window.location.reload();
     })
     .catch(err => console.log(err))
@@ -84,9 +81,8 @@ class PurchaseCart extends Component {
 
   //Testing - this will need to actually call one of the ORM functions above.
   clearCart() {
-    API.clearCart(this.state.jwt)
+    API.clearCart()
     .then(cartData => {
-      console.log(cartData);
       window.location.reload();
     })
     .catch(err => console.log(err))
@@ -102,6 +98,7 @@ class PurchaseCart extends Component {
     }
 
     if (this.state.loading === false && this.state.isAuthenticated === false) {
+      removeCookieJwt();
       return (
            <Redirect to='/' />
       )
@@ -135,7 +132,7 @@ class PurchaseCart extends Component {
               title={item.title}
               fullName={item.userName}
               price={item.price}
-              image={item.filePath}
+              image={item.unrestrictedFilePath}
               onClick={() => this.removeFromCart(item.cartId)}
             />
 

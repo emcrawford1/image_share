@@ -6,6 +6,7 @@ const box = {
   marginBottom: '0%',
   marginLeft: '0.75%',
   cursor: 'pointer',
+  maxWidth: "25em"
 
 }
 
@@ -18,7 +19,8 @@ const price = {
 }
 
 const postPurchaseStyle = {
-  marginTop: "25%"
+  marginTop: "25%",
+ 
 }
 
 const myPurchaseStyle = {
@@ -40,9 +42,9 @@ export function PicGrid(props) {
 export function BtnSet(props) {
   return (
     <div>
-      <button type="button" onClick={props.clearCart} className="btn btn-outline-danger">Clear Cart</button>
       {props.totalPrice}
-      <button type="button" onClick={props.nextPage} className="btn btn-outline-primary">Next</button>
+      <button type="button" onClick={props.nextPage} className="btn btn-outline-primary ml-2">Next</button>
+      <button type="button" onClick={props.clearCart} className="btn btn-outline-danger ml-1">Clear Cart</button>
     </div>
   )
 }

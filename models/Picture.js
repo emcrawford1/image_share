@@ -1,10 +1,10 @@
 module.exports = function(sequelize, DataTypes) {
   let Picture = sequelize.define("picture", {
-    // id: {
-    //  autoIncrement: true,  
-    //  primaryKey: true,
-    //  type: DataTypes.INTEGER
-    // },
+   
+    id: {
+     primaryKey: true,
+     type: DataTypes.STRING
+    },
 
     title: {
       type: DataTypes.STRING
@@ -18,12 +18,25 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER
     },
 
-    filePath: {
+    unrestrictedFilePath: {
+      type: DataTypes.STRING
+    },
+
+    restrictedFilePath: { 
       type: DataTypes.STRING
     },
 
     disabled: {
-      type: DataTypes.BOOLEAN
+      type: DataTypes.BOOLEAN,
+      defaultValue: '0'
+    },
+
+    picType: {
+      type: DataTypes.INTEGER,
+      validate: {
+        min: 0,
+        max: 1
+      }
     }
   });
 

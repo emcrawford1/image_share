@@ -1,18 +1,12 @@
 import React, { Component } from "react";
 import { PurchNav } from "../components/Nav";
 import Footer from "../components/Footer";
-import { PostPurchaseGrid, MyPurchasesGrid } from "../components/Grid";
+import { MyPurchasesGrid } from "../components/Grid";
 import API from "../utils/API";
-import { getJwt, removeJwt } from "../helpers/jwt";
+import { removeCookieJwt, setCookie } from "../helpers/jwt";
 import { NoItems } from "../helpers/noItems";
 import { Redirect } from "react-router-dom";
 
-//Styling
-const flexContainer = {
-  display: 'flex',
-  flexWrap: 'wrap',
-  justifyContent: 'center',
-};
 
 class MyPurchases extends Component {
 
@@ -23,18 +17,32 @@ class MyPurchases extends Component {
     jwt: ""
   };
 
-  //This needs to be uncommented when ORM is set up
+  
   componentDidMount() {
-    this.setState({ jwt: getJwt() }, () => {
-    API.getPurchases(this.state.jwt)
-    .then(purchData => { 
-      console.log(purchData)
-      this.setState({ 
-        purchases: purchData.data,
-        loading: false,
-        isAuthenticated: true
+
+    API.getPurchases()
+      .then(purchData => {
+
+        //Map over array of objects and format date
+        let purchaseData = purchData.data.purchases.map(data => {
+
+          let purchDate = new Date(data.date);
+
+          return {
+            confirmationNumber: data.confirmationNumber,
+            date: `${purchDate.toDateString()} - ${purchDate.toLocaleTimeString()}`,
+            totalPrice: data.totalPrice
+          }
+        })
+
+        setCookie(purchData.data.token);
+       
+        this.setState({
+          purchases: purchaseData,
+          loading: false,
+          isAuthenticated: true
+        })
       })
-    })
       .catch(err => {
         console.log(err)
         this.setState({
@@ -42,7 +50,6 @@ class MyPurchases extends Component {
           isAuthenticated: false
         })
       });
-    })
   }
 
   render() {
@@ -51,22 +58,20 @@ class MyPurchases extends Component {
       return (
         <NoItems
           message="Loading...."
-          />
+        />
       )
     }
 
     if (this.state.loading === false && this.state.isAuthenticated === false) {
-      removeJwt()
+      removeCookieJwt()
       return (
-           <Redirect to='/' />
+        <Redirect to='/' />
       )
     }
     if (this.state.purchases.length === 0) {
       return (
         <div className="wrapper">
-          <PurchNav
-            // id={this.state.userId}
-          />
+          <PurchNav/>
           <div className="container">
             <h2>You have not made any purchases.</h2>
           </div>
@@ -76,14 +81,11 @@ class MyPurchases extends Component {
     }
     return (
       <div className="wrapper">
-        <PurchNav
-          // id={this.state.userId}
-        />
+        <PurchNav/>
         <div className="container" >
           <h1>Your Purchases:</h1>
-          {this.state.purchases.map( (purchase, index) => (
+          {this.state.purchases.map((purchase, index) => (
             <MyPurchasesGrid
-             
               key={index}
               confirmationNumber={"Confirmation Number: " + purchase.confirmationNumber}
               date={"Purchase Date: " + purchase.date}

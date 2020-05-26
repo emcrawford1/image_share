@@ -3,7 +3,7 @@ import { PurchNav } from "../components/Nav";
 import Footer from "../components/Footer";
 import { ViewYourPhoto } from "../components/Card";
 import API from "../utils/API";
-import { getJwt, removeJwt } from "../helpers/jwt";
+import { removeCookieJwt, setCookie } from "../helpers/jwt";
 import { NoItems } from "../helpers/noItems";
 import { Redirect } from "react-router-dom";
 
@@ -26,15 +26,31 @@ class PViewPhotographerProfile extends Component {
     jwt: ""
   };
 
-  //This needs to be uncommented when ORM is set up
+  //React lifecycle method - componentDidMount.  This method will call the displayPurchasedPhoto method which
+  //will 
   componentDidMount() {
     const picId = this.state.pictureId;
-    this.setState({ jwt: getJwt() }, () => {
-      API.displayPurchasedPhoto(picId, this.state.jwt)
+ 
+      API.displayPurchasedPhoto(picId)
         .then(pictureData => {
-          console.log("Picture Data: ", pictureData.data)
+
+          let formattedDate = new Date(pictureData.data.purchData[0].dateAdded);
+          let timeAdded = formattedDate.toLocaleTimeString();
+          let dateStamp = `${formattedDate.toDateString()} - ${timeAdded}`;
+
+          let picData = [{
+            dateAdded: dateStamp,
+            description: pictureData.data.purchData[0].description,
+            pictureId: pictureData.data.purchData[0].pictureId,
+            purchasePrice: pictureData.data.purchData[0].purchasePrice,
+            restrictedFilePath: pictureData.data.purchData[0].restrictedFilePath,
+            title: pictureData.data.purchData[0].title,
+            userName: pictureData.data.purchData[0].userName
+          }]
+
+          setCookie(pictureData.data.token)
           this.setState({
-            picture: pictureData.data,
+            picture: picData,
             loading: false,
             isAuthenticated: true
           })
@@ -46,7 +62,6 @@ class PViewPhotographerProfile extends Component {
             isAuthenticated: false
           })
         });
-    });
   }
 
 
@@ -61,7 +76,7 @@ class PViewPhotographerProfile extends Component {
     }
 
     if (this.state.loading === false && this.state.isAuthenticated === false) {
-      removeJwt()
+      removeCookieJwt()
       return (
         <Redirect to='/' />
       )
@@ -78,7 +93,7 @@ class PViewPhotographerProfile extends Component {
               description={"Description: " + pic.description}
               dateAdded={"Purchase Date: " + pic.dateAdded}
               purchasePrice={"Amount Paid: $" + pic.purchasePrice}
-              filePath={pic.filePath}
+              filePath={pic.restrictedFilePath}
             />
           </div>
         ))}

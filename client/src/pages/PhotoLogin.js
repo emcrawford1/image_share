@@ -38,12 +38,6 @@ class PostPurchase extends Component {
     searchVal: ""
   };
 
-  //This needs to be uncommented when ORM is set up
-  // componentWillMount() {
-  //   API.getPictures(this.props.match.params.category)
-  //     .then(res => this.setState({pictures: res.data, searchValue: "" }))
-  //     .catch(err => console.log(err));
-  // }
 
   registerUser() {
     let path = "/register";
@@ -52,7 +46,6 @@ class PostPurchase extends Component {
 
   loginUser = event => {
     event.preventDefault();
-    console.log(this.state.email)
     let path = "/photographerlanding/" + this.state.email;
    this.props.history.push(path)
   }

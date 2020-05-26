@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { PurchNav } from "../components/Nav";
 import Footer from "../components/Footer";
 import { PicGrid } from "../components/Grid";
-import { getJwt } from "../helpers/jwt";
+import { removeCookieJwt, setCookie } from "../helpers/jwt";
 import API from "../utils/API";
 import { Redirect } from "react-router-dom";
 import { PhotoNav } from "../components/Nav";
@@ -22,31 +22,31 @@ class PurchaserLanding extends Component {
     loading: true,
     isAuthenticated: false,
     jwt: ""
-    
+
   };
 
 
-  componentDidMount() {
-    this.setState({ jwt: getJwt() }, () => {
+  //React lifecylce method componentDidMount() calls the API.loadCategories method to obtain a list of 
+  //categories and their corresponding images.
 
-      API.loadCategories(this.state.jwt)
-        .then(categoryData => {
-          console.log(categoryData);
-          this.setState({
-            pictures: categoryData.data,
-            loading: false,
-            isAuthenticated: true
-          })
-          console.log(this.state)
+  componentDidMount() {
+
+    API.loadCategories()
+      .then(categoryData => {
+        setCookie(categoryData.data.token);
+        this.setState({
+          pictures: categoryData.data.categories,
+          loading: false,
+          isAuthenticated: true
         })
-        .catch(err => {
-          console.log(err)
-          this.setState({
-            loading: false,
-            isAuthenticated: false
-          })
-        });
-    });
+      })
+      .catch(err => {
+        console.log(err)
+        this.setState({
+          loading: false,
+          isAuthenticated: false
+        })
+      });
   }
 
 
@@ -57,13 +57,14 @@ class PurchaserLanding extends Component {
       return (
         <NoItems
           message="Loading...."
-          />
+        />
       )
     }
 
     if (this.state.loading === false && this.state.isAuthenticated === false) {
+      removeCookieJwt();
       return (
-           <Redirect to='/' />
+        <Redirect to='/' />
       )
     }
 
@@ -73,14 +74,14 @@ class PurchaserLanding extends Component {
           <PhotoNav
             id={this.state.userId}
           />
-            <h4>There are not any categories available....</h4>
+          <h4>There are not any categories available....</h4>
           <Footer />
         </div>
       )
     }
     return (
       <div className="wrapper">
-        <PurchNav/>
+        <PurchNav />
         <div style={flexContainer}>
           {this.state.pictures.map((pic, index) => (
             <PicGrid

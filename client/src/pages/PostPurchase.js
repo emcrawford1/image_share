@@ -3,7 +3,7 @@ import { PurchNav } from "../components/Nav";
 import Footer from "../components/Footer";
 import { PostPurchaseGrid } from "../components/Grid";
 import API from "../utils/API";
-import { getJwt, removeJwt } from "../helpers/jwt";
+import { removeCookieJwt, setCookie } from "../helpers/jwt";
 import { NoItems } from "../helpers/noItems";
 import { Redirect } from "react-router-dom";
 
@@ -26,13 +26,12 @@ class PostPurchase extends Component {
 
   //Obtain confirmation number
   componentDidMount() {
-    this.setState({ jwt: getJwt() }, () => {
-      API.displayConf(this.state.jwt)
+      API.displayConf()
         .then(confData => {
-          console.log(confData)
+          setCookie(confData.data.token)
           this.setState({
-            firstName: confData.data[0].firstName,
-            confirmationNumber: confData.data[0].confirmationNumber,
+            firstName: confData.data.purchase[0].firstName,
+            confirmationNumber: confData.data.purchase[0].confirmationNumber,
             loading: false,
             isAuthenticated: true
           })
@@ -44,7 +43,6 @@ class PostPurchase extends Component {
             isAuthenticated: false
           })
         });
-    })
   }
 
   render() {
@@ -58,7 +56,7 @@ class PostPurchase extends Component {
     }
 
     if (this.state.loading === false && this.state.isAuthenticated === false) {
-      removeJwt()
+      removeCookieJwt()
       return (
            <Redirect to='/' />
       )

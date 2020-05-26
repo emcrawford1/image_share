@@ -2,11 +2,11 @@ import React, { Component } from "react";
 import { PhotoNav } from "../components/Nav";
 import Footer from "../components/Footer";
 import { PicGrid } from "../components/Grid";
-import { getJwt } from "../helpers/jwt";
-import { noItems } from "../helpers/noItems";
+import { removeCookieJwt, setCookie } from "../helpers/jwt";
+import { NoItems } from "../helpers/noItems";
 import API from "../utils/API";
 import { Redirect } from "react-router-dom";
-import { timingSafeEqual } from "crypto";
+
 
 //Styling
 const flexContainer = {
@@ -27,18 +27,19 @@ class PhotographerMyPictures extends Component {
   };
 
 
-  componentDidMount() {
-    this.setState({ jwt: getJwt() }, () => {
+  //React lifecycle componentDidMount method used to call getPhotographerPhotos method.  This method sends 
+  //request to the server for all of the photographer's photos.
 
-      API.getPhotographerPhotos(this.state.jwt)
+  componentDidMount() {
+
+      API.getPhotographerPhotos()
         .then(pictureData => {
-          console.log(pictureData);
+          setCookie(pictureData.data.token);
           this.setState({
-            pictures: pictureData.data,
-            loading: false,
+            pictures: pictureData.data.picData,
+            loading: false, 
             isAuthenticated: true
           })
-          console.log(this.state)
         })
         .catch(err => {
           console.log(err)
@@ -47,20 +48,20 @@ class PhotographerMyPictures extends Component {
             isAuthenticated: false
           })
         });
-    });
   }
 
   render() {
 
     if (this.state.loading === true && this.state.isAuthenticated === false) {
       return (
-        <noItems
+        <NoItems
           message="Loading...."
           />
       )
     }
 
     if (this.state.loading === false && this.state.isAuthenticated === false) {
+      removeCookieJwt();
       return (
            <Redirect to='/' />
       )
@@ -87,7 +88,7 @@ class PhotographerMyPictures extends Component {
             <PicGrid
               key={index}
               link={"photographerphotoview/" + pic.id}
-              filePath={pic.filePath}
+              filePath={pic.restrictedFilePath}
               name={pic.title}
             />
           )

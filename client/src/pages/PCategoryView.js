@@ -3,7 +3,9 @@ import { PurchNav } from "../components/Nav";
 import Footer from "../components/Footer";
 import { PicGrid } from "../components/Grid";
 import API from "../utils/API";
-import { getJwt } from "../helpers/jwt";
+import { setCookie, removeCookieJwt } from "../helpers/jwt";
+import { NoItems } from "../helpers/noItems";
+import { Redirect } from "react-router-dom";
 
 //Styling
 const flexContainer = {
@@ -23,21 +25,44 @@ class PCategoryView extends Component {
 
   };
 
-  //Calling API to set state to pictures
+  //Calling API to set state to pictures and to set the imageShare cookie to the new token
   componentDidMount() {
 
-    this.setState({ jwt: getJwt()}, () => {
-
-    API.loadSpecificCategory(this.state.jwt, this.state.catId)
+    API.loadSpecificCategory(this.state.catId)
       .then(catData => {
-        console.log("Category Data: " + catData)
-        this.setState({ pictures: catData.data })
+        setCookie(catData.data.token)
+        this.setState({
+          pictures: catData.data.data,
+          loading: false,
+          isAuthenticated: true
+        })
       })
-      .catch(err => console.log(err));
-    });
+      .catch(err => 
+        {
+          console.log(err)
+          this.setState({
+            loading: false,
+            isAuthenticated: false
+          })
+        });
+
   }
 
   render() {
+    if (this.state.loading === true && this.state.isAuthenticated === false) {
+      return (
+        <NoItems
+          message="Loading...."
+        />
+      )
+    }
+
+    if (this.state.loading === false && this.state.isAuthenticated === false) {
+      removeCookieJwt()
+      return (
+        <Redirect to='/' />
+      )
+    }
 
     if (this.state.pictures.length === 0) {
       return (
@@ -62,7 +87,7 @@ class PCategoryView extends Component {
             <PicGrid
               key={index}
               link={"PSpecificPictureView/" + pic.id}
-              filePath={pic.filePath}
+              filePath={pic.unrestrictedFilePath}
               name={pic.title}
             />
           )

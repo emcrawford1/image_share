@@ -5,6 +5,7 @@ import Footer from "../components/Footer";
 import { PostPurchaseGrid } from "../components/Grid";
 import { Redirect } from 'react-router-dom';
 import API from "../utils/API";
+import { setCookie } from "../helpers/jwt"
 
 
 //Styling
@@ -26,8 +27,6 @@ const backgroundImage = {
   backgroundAttachment: "fixed",
   color: "rgba(192, 199, 228, 0.3)",
   marginBottom: "100px"
-
-
 }
 
 class Login extends Component {
@@ -35,9 +34,30 @@ class Login extends Component {
   state = {
     email: "",
     password: "",
-    accountType: "",  
+    accountType: "",
+    userNameFlag: "",
+    loginFlag: "",
+    userNameMessage: "**Please enter a username.",
+    loginMessage: "**Please enter a valid username and password."
   };
 
+
+  //Attaching keydown event to document so that the form will submit if the user has pressed "Enter"
+  componentDidMount() {
+    document.body.addEventListener('keydown', this.submitForm)
+  }
+
+  //Remove listener
+  componentWillUnmount() {
+    document.body.removeEventListener('keydown', this.submitForm)
+  }
+
+  //Method that checks to see if the user clicked "Enter" (keyCode 13).  If so, the user is logged in.
+  submitForm = event => {
+    if (event.keyCode === 13) {
+      this.loginUser(event)
+    }
+  }
 
   registerUser() {
     let path = "/register";
@@ -47,26 +67,48 @@ class Login extends Component {
   loginUser = event => {
     event.preventDefault();
     const purchPath = "/purchaserlandingpage";
-    // const photoPath = "/photographerlanding";
     const photoPath = "/photographerlandingpage";
 
-    API.loginUser(this.state)
-      .then(loginRes => {
-        localStorage.setItem('ImageShare-jwt', loginRes.data.token);
-        this.setState({accountType: loginRes.data.accountType})
-      
-        if(this.state.accountType === 0) {
-          console.log(photoPath)
-          // return (<Redirect to='/photographerlandingpage' />)
-          this.props.history.push(photoPath)
-          
-        }
-        if(this.state.accountType === 1) {
-     
-          this.props.history.push(purchPath)
-        }
-      })
-      .catch(err => console.log(err));
+    let authObj = {
+      loginFlag: this.state.loginFlag,
+      userNameFlag: this.state.userNameFlag,
+      loginMessage: this.state.loginMessage
+    }
+
+    if (this.state.email === "") {
+      this.setState({ userNameFlag: true });
+      authObj.userNameFlag = true;
+    }
+    else {
+      this.setState({ userNameFlag: false })
+      authObj.userNameFlag = false;
+    }
+
+    if (this.state.password === "") {
+      this.setState({ loginFlag: true, loginMessage: "**Please enter a password." })
+      authObj.loginFlag = true;
+      authObj.loginMessage = "**Please enter a password.";
+    }
+    else {
+      this.setState({ loginFlag: false })
+      authObj.loginFlag = false;
+    }
+
+    if (authObj.userNameFlag !== true && authObj.loginFlag !== true) {
+      API.loginUser(this.state)
+        .then(loginRes => {
+          setCookie(loginRes.data.token)
+          this.setState({ accountType: loginRes.data.accountType })
+
+          if (this.state.accountType === 0) this.props.history.push(photoPath)
+          if (this.state.accountType === 1) this.props.history.push(purchPath)
+
+        })
+        .catch(err => {
+          console.log('Err: ', err.response.data.message)
+          this.setState({ loginFlag: true, loginMessage: "**Please enter a valid username and password." })
+        });
+    }
   }
 
   handleInputChange = event => {
@@ -91,6 +133,10 @@ class Login extends Component {
             LgnBtnLabel={"Login"}
             emailName={"email"}
             passwordName={"password"}
+            userNameFlag={this.state.userNameFlag}
+            loginFlag={this.state.loginFlag}
+            userNameMessage={this.state.userNameMessage}
+            loginMessage={this.state.loginMessage}
             onChange={this.handleInputChange}
             handleRegister={() => this.registerUser()}
             handleLogin={this.loginUser}

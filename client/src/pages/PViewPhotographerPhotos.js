@@ -3,7 +3,7 @@ import { PurchNav } from "../components/Nav";
 import Footer from "../components/Footer";
 import { PicGrid } from "../components/Grid";
 import API from "../utils/API";
-import { getJwt, removeJwt } from "../helpers/jwt";
+import { removeCookieJwt, setCookie } from "../helpers/jwt";
 import { NoItems } from "../helpers/noItems";
 import { Redirect } from "react-router-dom";
 
@@ -24,15 +24,15 @@ class PViewPhotographerPhotos extends Component {
     jwt: ""
   };
 
-  //This needs to be uncommented when ORM is set up
+  //Get photographer's photos
   componentDidMount() {
     const photographerId = this.state.photographerId;
-    this.setState({ jwt: getJwt() }, () => {
-    API.viewPhotographerPhotos(photographerId, this.state.jwt)
+   
+    API.viewPhotographerPhotos(photographerId)
       .then(photoData => { 
-        console.log(photoData);
+       setCookie(photoData.data.token);
         this.setState({
-          pictures: photoData.data,
+          pictures: photoData.data.photographerData,
           loading: false,
           isAuthenticated: true
         })
@@ -44,7 +44,6 @@ class PViewPhotographerPhotos extends Component {
           isAuthenticated: false
         })
       });
-    })
   }
 
   render() {
@@ -57,7 +56,7 @@ class PViewPhotographerPhotos extends Component {
     }
 
     if(this.state.loading === false && this.state.isAuthenticated === false) {
-      removeJwt();
+      removeCookieJwt();
       return(
         <Redirect to="/" />
       )
@@ -70,7 +69,7 @@ class PViewPhotographerPhotos extends Component {
             <PicGrid
               key={index}
               link={"PSpecificPictureView/" + pic.id}
-              filePath={pic.filePath}
+              filePath={pic.unrestrictedFilePath}
               name={pic.title}
             />
           )

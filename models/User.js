@@ -38,14 +38,12 @@ module.exports = function(sequelize, DataTypes) {
   }
 
   User.beforeCreate((user) => {
-    let pwHash = "nothing";
     let saltPassword = user.password;
     console.log(saltPassword)
 
     return new Promise((resolve, reject) => {
     bcrypt.genSalt(saltRounds)
     .then(salt => {
-      console.log("Salt: " + salt);
       return bcrypt.hash(saltPassword, salt)
     })
     .catch(err => {
@@ -53,9 +51,7 @@ module.exports = function(sequelize, DataTypes) {
       reject(err);
     })
     .then(hash => {
-      console.log("User password before: " + user.password);
       user.password = hash;
-      console.log("User Password: " + user.password);
       if(hash) {
         resolve("resolved");
       }

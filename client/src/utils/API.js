@@ -3,76 +3,76 @@ import axios from "axios";
 export default {
 
   //Checkout.js
-  getTotalCost: (token) => axios.get("/api/purchaserRoutes/checkout/", { headers: { Authorization: `Bearer ${token}`}}),
+  getTotalCost: () => axios.get("/api/purchaserRoutes/checkout/"),
 
-  getCartItems: (token) => axios.get("/api/purchaserRoutes/getpurchaseitems/", { headers: { Authorization: `Bearer ${token}`}}),
+  getCartItems: () => axios.get("/api/purchaserRoutes/getpurchaseitems/"),
 
-  placeOrder: (order, token) => axios.post("/api/purchaserRoutes/placeorder/", order, { headers: { Authorization: `Bearer ${token}`}}),
+  placeOrder: order => axios.post("/api/purchaserRoutes/placeorder/", order),
 
   makePurchase: (cartItems, token) => axios.post("/api/purchaserRoutes/purchasepost", cartItems, { headers: { Authorization: `Bearer ${token}`}}),
 
-  clearCart: (token) => axios.delete("/api/purchaserRoutes/clearcart/", { headers: { Authorization: `Bearer ${token}`}}),
+  clearCart: () => axios.delete("/api/purchaserRoutes/clearcart/" ),
 
 
   //PostPurchase.js
-  displayConf: (token) => axios.get("/api/purchaserRoutes/postpurchase/", { headers: { Authorization: `Bearer ${token}`}}),
+  displayConf: () => axios.get("/api/purchaserRoutes/postpurchase/"),
 
   //MyPurchases.js
-  getPurchases: (token) => axios.get("/api/purchaserRoutes/mypurchases/", { headers: { Authorization: `Bearer ${token}`}}),
+  getPurchases: () => axios.get("/api/purchaserRoutes/mypurchases/"),
 
   //PurchaserLandingPage.js
-  loadCategories: token => axios.get("/api/purchaserRoutes/categories", { headers: { Authorization: `Bearer ${token}`} }),
+  loadCategories: () => axios.get("/api/purchaserRoutes/categories" ),
 
   //PCategoryView.js
-  loadSpecificCategory: (token, catId) => axios.get("/api/purchaserRoutes/specificcategoryview/" + catId, { headers: { Authorization: `Bearer ${token}`}}),
+  loadSpecificCategory: (catId) => axios.get("/api/purchaserRoutes/specificcategoryview/" + catId),
 
 
 
   //PSpecificPictureView.js
 
   //Load picture
-  loadSpecificPicture: (token, picId) => axios.get("/api/purchaserRoutes/PSpecificPictureView/" + picId, { headers: { Authorization: `Bearer ${token}`}}),
+  loadSpecificPicture: picId => axios.get("/api/purchaserRoutes/PSpecificPictureView/" + picId),
 
   //Check cart to see if user has already added to cart
-  checkCart: (token, picId) => axios.get("/api/purchaserRoutes/PSpecificPictureView/cart/" + picId, { headers: { Authorization: `Bearer ${token}`}}),
+  checkCart: picId => axios.get("/api/purchaserRoutes/PSpecificPictureView/cart/" + picId),
 
   //Check to see if user has already purchased photo
-  checkPurchases: (token, picId) => axios.get("/api/purchaserRoutes/PSpecificPictureView/purchases/" + picId, { headers: { Authorization: `Bearer ${token}`}}),
+  checkPurchases: picId => axios.get("/api/purchaserRoutes/PSpecificPictureView/purchases/" + picId),
 
   //Add to cart
-  addToCart: (token, picId) => axios.post("/api/purchaserRoutes/addtocart/", picId, { headers: { Authorization: `Bearer ${token}`}}),
+  addToCart: picId => axios.post("/api/purchaserRoutes/addtocart/", picId),
 
 
   //PYourPhotos.js
 
   //Get photos by confirmation number
-  getByConf: (confId, token) => axios.get('/api/purchaserRoutes/pyourphotosconf/' + confId, {headers: { Authorization: `Bearer ${token}`}}),
+  getByConf: confId => axios.get('/api/purchaserRoutes/pyourphotosconf/' + confId ),
 
   //Get photos by email
-  getByEmail: (token) => axios.get('/api/purchaserRoutes/pyourphotosemail/', { headers: { Authorization: `Bearer ${token}`}}),
+  getByEmail: () => axios.get('/api/purchaserRoutes/pyourphotosemail/'),
 
   
   //PurchaseCart.js
 
   //Get cart items
-  getPurchaseCart: (token) => axios.get('/api/purchaserRoutes/purchasecart/', { headers: { Authorization: `Bearer ${token}`}}),
+  getPurchaseCart: () => axios.get('/api/purchaserRoutes/purchasecart/'),
 
   //Delete one cart item
-  removeFromCart: (picId, token) => axios.delete('/api/purchaserRoutes/removeitem/' + picId, { headers: { Authorization: `Bearer ${token}`}}),
+  removeFromCart: picId => axios.delete('/api/purchaserRoutes/removeitem/' + picId ),
 
 
   //PurchasedPhotoView.js
-  displayPurchasedPhoto: (picId, token) => axios.get("/api/purchaserRoutes/purchasedphotoview/" + picId, { headers: { Authorization: `Bearer ${token}`}}),
+  displayPurchasedPhoto: picId => axios.get("/api/purchaserRoutes/purchasedphotoview/" + picId ),
 
 
 
 
   //PhotographerLanding.js
-  getPhotographerProfile: (token) => axios.get("/api/photographerroutes/photographerlanding/", { headers: { Authorization: `Bearer ${token}`} }),
+  getPhotographerProfile: () => axios.get("/api/photographerroutes/photographerlanding/"),
 
 
   //PhotographerMyPictures.js
-  getPhotographerPhotos: (token) => axios.get('/api/photographerRoutes/photographermypictures/', { headers: { Authorization: `Bearer ${token}`} }),
+  getPhotographerPhotos: () => axios.get('/api/photographerRoutes/photographermypictures/'),
 
 
   //PhotographerPhotoView.js
@@ -81,18 +81,18 @@ export default {
   checkOwnPhoto: picId => axios.get('/api/photographerRoutes/photographerphotoview/' + picId),
 
   //Disable pic
-  disablePhoto: picId => axios.put('/api/photographerRoutes/setdisable/' + picId),
+  disablePhoto: picId => axios.put('/api/photographerRoutes/setdisable/' + picId, {}),
 
 
   //PhotographerSales.js
-  getSales: token => axios.get('/api/photographerRoutes/photographersales/', { headers: { Authorization: `Bearer ${token}`} }),
+  getSales: () => axios.get('/api/photographerRoutes/photographersales/'),
 
 
   //PViewPhotographerPhotos.js
-  viewPhotographerPhotos: (photographerId, token) => axios.get('/api/purchaserRoutes/pviewphotographerphotos/' + photographerId, { headers: { Authorization: `Bearer ${token}`}}),
+  viewPhotographerPhotos: photographerId => axios.get('/api/purchaserRoutes/pviewphotographerphotos/' + photographerId ),
 
   //PviewPhotographerProfile.js
-  viewPhotographerProfile: (photographerId, token) => axios.get('/api/purchaserRoutes/pviewphotographerprofile/' + photographerId, { headers: { Authorization: `Bearer ${token}`}}),
+  viewPhotographerProfile: photographerId => axios.get('/api/purchaserRoutes/pviewphotographerprofile/' + photographerId ),
 
 
   //Register
@@ -105,10 +105,14 @@ export default {
   logoutUser: userInfo => axios.post('/api/authenticated/logout', userInfo),
 
   //photoAuthenticated.js
-  getUser: token => axios.get('/api/authenticated/getUser', { headers: { Authorization: `Bearer ${token}`} }),
+  getUser: () => axios.get('/api/authenticated/getUser'),
 
-  // addPhoto: token => axios.get('/api/photographerRoutes/addphoto', { headers: { Authorization: `Bearer ${token}`}}),
 
-  getCategories: token => axios.get('/api/photographerRoutes/getCategories', { headers: { Authorization: `Bearer ${token}`}})
+ 
+  getCategories: () => axios.get('/api/photographerRoutes/getCategories'),
+
+  uploadPhoto: imageInfo => axios.post('/api/photographerRoutes/uploads/', imageInfo),
+
+  uploadProfilePic: imageInfo => axios.post('/api/photographerRoutes/profileUploads/', imageInfo)
 }
 

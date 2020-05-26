@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 import { PSpecificPic } from "../components/Card";
 import API from "../utils/API";
 import { Redirect } from "react-router-dom";
-import { getJwt } from "../helpers/jwt";
+import { removeCookieJwt, setCookie } from "../helpers/jwt";
 import { noItems } from "../helpers/noItems";
 
 //Styling
@@ -33,16 +33,33 @@ class PSpecificPictureView extends Component {
   // Loading a specific picture and then searching the Cart and Purchases table for this picture.  If the picture is found
   //the Add button will be disabled.
   componentDidMount() {
-   
-    this.setState({ jwt: getJwt() }, () => {
       
-    API.loadSpecificPicture(this.state.jwt, this.state.picId)
+    API.loadSpecificPicture(this.state.picId)
       .then(picData => {
-        this.setState({ picture: picData.data })
-        console.log(this.state)
-        API.checkCart(this.state.jwt, this.state.picId)
+        setCookie(picData.data.token);
+
+        //Format date 
+        let formattedDate = new Date(picData.data.picture.dateAdded);
+        let timeAdded = formattedDate.toLocaleTimeString();
+        let dateStamp = `${formattedDate.toDateString()} - ${timeAdded}`;
+
+        //Create object with formatted date
+        let pictureData = {
+          dateAdded: dateStamp,
+          description: picData.data.picture.description,
+          firstName: picData.data.picture.firstName,
+          id: picData.data.picture.id,
+          lastName: picData.data.picture.lastName,
+          price: picData.data.picture.price,
+          title: picData.data.picture.title,
+          unrestrictedFilePath: picData.data.picture.unrestrictedFilePath,
+          userName: picData.data.picture.userName
+        }
+
+        this.setState({ picture: pictureData})
+        API.checkCart(this.state.picId)
           .then(cartData => {
-            console.log(cartData);
+           
             if (cartData.data.length > 0) {
               this.setState({ 
                 disabled: "true",
@@ -52,7 +69,7 @@ class PSpecificPictureView extends Component {
             }
 
             else {
-              API.checkPurchases(this.state.jwt, this.state.picId)
+              API.checkPurchases(this.state.picId)
                 .then(purchData => {
                   
                   if (purchData.data.length > 0) {
@@ -74,19 +91,16 @@ class PSpecificPictureView extends Component {
         console.log(err)
         this.setState({ loading: false })
       });
-    })
   }
 
  //Add to cart method
   addToCart(picId) {
-    console.log(picId)
-    console.log(this.state.jwt)
     const picObject = {
       picId
     }
-    API.addToCart(this.state.jwt, picObject)
+    API.addToCart(picObject)
       .then(cartData => {
-        console.log(cartData)
+        setCookie(cartData.data.token);
         this.setState({ disabled: "true" })
       })
       .catch(err => console.log(err));
@@ -102,6 +116,7 @@ class PSpecificPictureView extends Component {
     }
 
     if (this.state.loading === false && this.state.isAuthenticated === false) {
+      removeCookieJwt();
       return (
            <Redirect to='/' />
       )
@@ -120,7 +135,7 @@ class PSpecificPictureView extends Component {
             dateAdded={"Date Added: " + this.state.picture.dateAdded}
             description={"Description: " + this.state.picture.description}
             price={"Price: $" + this.state.picture.price}
-            filePath={this.state.picture.filePath}
+            filePath={this.state.picture.unrestrictedFilePath}
             link={"/pviewphotographerprofile/" + this.state.picture.userName}
             disabled={addCartDisabled}
             BtnClass={BtnStyle}

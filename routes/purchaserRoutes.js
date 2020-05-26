@@ -12,16 +12,19 @@ const purchConf = models.purchase_confirmation;
 const Purchases = models.purchases;
 
 
+
+
+
 // Checkout.js - Purchaser
 router.get('/checkout', (req, res) => {
   const email = req.user.email;
+
   Cart.findAll({
     where: {
       userEmail: email,
     },
     include: [{
-      model: Picture,
-      where: { id: Sequelize.col('cart.pictureId') }
+      model: Picture
     }]
   })
     .then(cart => {
@@ -30,12 +33,14 @@ router.get('/checkout', (req, res) => {
       }
 
       else {
+        console.log('Cart: ', req.user)
         let checkOutItems = cart.map(item => item.picture.price);
         const reducer = (accumulator, currentValue) => accumulator + currentValue;
         const priceObject = {
-          totalPrice: checkOutItems.reduce(reducer)
+          totalPrice: checkOutItems.reduce(reducer),
+          token: req.user.token
         }
-        console.log(priceObject);
+        console.log('Checkout: ', priceObject);
         res.json(priceObject);
       }
     })
@@ -146,8 +151,8 @@ router.get('/mypurchases', (req, res) => {
     },
     include: [{
       model: Purchases,
-      attributes: [['priceAtPurchase', 'totalPrice']],
-      where: { purchaseConfirmationId: Sequelize.col('purchase_confirmation.id') }
+      attributes: [['priceAtPurchase', 'totalPrice']]
+      // where: { purchaseConfirmationId: Sequelize.col('purchase_confirmation.id') }
     }]
   })
     .then(data => {
@@ -159,8 +164,11 @@ router.get('/mypurchases', (req, res) => {
         date: item.date,
         totalPrice: item.purchases.map(item => item.totalPrice).reduce(reducer)
       }));
-      console.log(data);
-      res.send(purchases);
+      const purchaseListing = {
+        purchases,
+        token: req.user.token
+      }
+      res.send(purchaseListing);
     })
     .catch(err => console.log("Error: " + err))
 })
@@ -171,8 +179,11 @@ router.get('/categories', (req, res) =>
     attributes: ['id', ['name', 'category'], ['pic', 'filePath']]
   })
     .then(categories => {
-      console.log(categories);
-      res.send(categories);
+      const catData = {
+        token: req.user.token,
+        categories
+      }
+      res.send(catData);
     })
     .catch(err => console.log(err))
 );
@@ -180,16 +191,21 @@ router.get('/categories', (req, res) =>
 //PCategoryView.js = Authenticated
 router.get('/specificcategoryview/:id', (req, res) => {
   const categorySearch = req.params.id;
-  console.log(categorySearch);
   Picture.findAll({
-    attributes: ['id', 'title', 'filePath', 'disabled'],
+    attributes: ['id', 'title', 'unrestrictedFilePath', 'disabled'],
     where: {
       categoryId: categorySearch,
-      disabled: '0'
+      disabled: '0',
+      picType: '1'
     }
   })
-    .then(data =>
-      res.send(data))
+    .then(data => {
+      categoryData = {
+        token: req.user.token,
+        data
+      }
+      res.send(categoryData)
+    })
     .catch(err => console.log(err))
 });
 
@@ -238,7 +254,7 @@ router.get('/PSpecificPictureView/:picId', (req, res) => {
   const pictId = req.params.picId;
 
   Picture.findAll({
-    attributes: ['id', 'title', ['createdAt', 'dateAdded'], 'description', 'price', 'filePath', 'userEmail'],
+    attributes: ['id', 'title', ['createdAt', 'dateAdded'], 'description', 'price', 'unrestrictedFilePath', 'userEmail'],
     where: {
       id: pictId
     },
@@ -261,13 +277,16 @@ router.get('/PSpecificPictureView/:picId', (req, res) => {
         dateAdded: data1[0].dateAdded,
         description: data1[0].description,
         price: data1[0].price,
-        filePath: data1[0].filePath,
+        unrestrictedFilePath: data1[0].unrestrictedFilePath,
         userName: data1[0].userEmail,
         firstName: data1[0].user.user_info.firstName,
         lastName: data1[0].user.user_info.lastName
       }
-      console.log(responseData);
-      res.send(responseData);
+      const picData = {
+        token: req.user.token,
+        picture: responseData
+      }
+      res.send(picData);
     })
     .catch(err => console.log(err))
 })
@@ -277,7 +296,6 @@ router.get('/PSpecificPictureView/:picId', (req, res) => {
 router.post('/addtocart/', (req, res) => {
   const email = req.user.email;
   const picId = req.body.picId;
-  console.log("hey")
   Picture.findAll({
     where: { id: picId }
   })
@@ -288,7 +306,13 @@ router.post('/addtocart/', (req, res) => {
         photographerEmail: picData[0].userEmail
 
       })
-        .then(data => res.json(picData[0].userEmail))
+        .then(data => {
+          const cartData = {
+            token: req.user.token,
+            data: picData[0].userEmail
+          }
+          res.json(cartData)
+        })
         .catch(err => console.log(err))
     })
     .catch(err => console.log(err))
@@ -307,7 +331,7 @@ router.get('/pyourphotosconf/:confId', (req, res) => {
       },
     include: [{
       model: Picture,
-      attributes: ['title', 'filePath']
+      attributes: ['title', 'restrictedFilePath']
     }]
   })
     .then(data => {
@@ -316,11 +340,17 @@ router.get('/pyourphotosconf/:confId', (req, res) => {
         return {
           id: item.pictureId,
           title: item.picture.title,
-          filePath: item.picture.filePath
+          restrictedFilePath: item.picture.restrictedFilePath
         }
 
       })
-      res.send(dataResponse)
+
+      const confData = {
+        token: req.user.token,
+        confirmationData: dataResponse
+      }
+      
+      res.send(confData)
     })
     .catch(err => console.log(err))
 })
@@ -333,7 +363,7 @@ router.get('/pyourphotosemail', (req, res) => {
     where: { userEmail: email },
     include: {
       model: Picture,
-      attributes: ['title', 'filePath']
+      attributes: ['title', 'restrictedFilePath']
     }
   })
     .then(data => {
@@ -342,11 +372,15 @@ router.get('/pyourphotosemail', (req, res) => {
         return {
           id: item.pictureId,
           title: item.picture.title,
-          filePath: item.picture.filePath
+          restrictedFilePath: item.picture.restrictedFilePath
         }
 
       })
-      res.send(dataResponse)
+      const photosByEmail = {
+        token: req.user.token,
+        photoData: dataResponse
+      }
+      res.send(photosByEmail)
     })
     .catch(err => console.log(err))
 })
@@ -359,7 +393,7 @@ router.get("/purchasecart", (req, res) => {
     where: { userEmail: email },
     include: {
       model: Picture,
-      attributes: ['id', 'title', 'price', 'filePath', 'userEmail']
+      attributes: ['id', 'title', 'price', 'unrestrictedFilePath', 'userEmail']
     }
   })
     .then(data => {
@@ -371,12 +405,16 @@ router.get("/purchasecart", (req, res) => {
           pictureId: item.picture.id,
           title: item.picture.title,
           price: item.picture.price,
-          filePath: item.picture.filePath,
+          unrestrictedFilePath: item.picture.unrestrictedFilePath,
           userName: item.picture.userEmail
         }
       })
-      console.log(responseData)
-      res.send(responseData)
+      
+      const purchaseCart = {
+        token: req.user.token,
+        purchData: responseData
+      }
+      res.send(purchaseCart)
     })
     .catch(err => console.log(err))
 })
@@ -426,7 +464,11 @@ router.get('/postpurchase', (req, res) => {
           firstName: item.user.user_info.firstName
         }
       })
-      res.send(responseData)
+      const postPurchData = {
+        token: req.user.token,
+        purchase: responseData
+      }
+      res.send(postPurchData)
     }
     )
     .catch(err => console.log(err))
@@ -446,11 +488,10 @@ router.get('/purchasedphotoview/:picId', (req, res) => {
     },
     include: [{
       model: Picture,
-      attributes: ['description', 'title', 'filePath']
+      attributes: ['description', 'title', 'restrictedFilePath']
     }]
   })
     .then(data => {
-      console.log("Data: ", data)
       const data1 = JSON.parse(JSON.stringify(data));
       const responseData = data1.map(item => {
         return {
@@ -460,10 +501,14 @@ router.get('/purchasedphotoview/:picId', (req, res) => {
           userName: item.userName,
           dateAdded: item.dateAdded,
           purchasePrice: item.purchasePrice,
-          filePath: item.picture.filePath
+          restrictedFilePath: item.picture.restrictedFilePath 
         }
       })
-      res.send(responseData)
+      const purchasedPhotoData = {
+        token: req.user.token,
+        purchData: responseData
+      }
+      res.send(purchasedPhotoData)
     })
     .catch(err => console.log(err))
 })
@@ -473,13 +518,20 @@ router.get('/pviewphotographerphotos/:photographerId', (req, res) => {
   const photographerId = req.params.photographerId;
 
   Picture.findAll({
-    attributes: ['id', 'title', 'filePath'],
+    attributes: ['id', 'title', 'unrestrictedFilePath'],
     where: {
       userEmail: photographerId,
-      disabled: '0'
+      disabled: '0',
+      picType: '1'
     }
   })
-    .then(data => res.json(data))
+    .then(data => {
+      const photoData = {
+        token: req.user.token,
+        photographerData: data
+      }
+      res.json(photoData)
+    })
     .catch(err => console.log(err))
 })
 
@@ -506,7 +558,11 @@ router.get('/pviewphotographerprofile/:userId', (req, res) => {
         aboutMe: data1.user_info.aboutMe,
         filePath: data1.user_info.filePath
       };
-      res.json(responseData)
+      const photographerProfile = {
+        token: req.user.token,
+        photoProfileData: responseData
+      }
+      res.json(photographerProfile)
     })
     .catch(err => console.log(err))
 })

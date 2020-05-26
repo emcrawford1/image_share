@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { PhotoNav } from "../components/Nav";
 import Footer from "../components/Footer";
 import { PhotographerSalesGrid } from "../components/Grid";
-import { getJwt } from "../helpers/jwt";
+import { removeCookieJwt, setCookie } from "../helpers/jwt";
 import { Redirect } from "react-router-dom";
 import API from "../utils/API";
 
@@ -23,32 +23,44 @@ class PhotographerSales extends Component {
 
   };
 
-  //Get token and query database for this user's sales. 
-  componentDidMount() {
-    this.setState({ jwt: getJwt() }, () => {
+  //React lifecycle method componentDidMount used to call the getSales method.  The getSales method queries the 
+  //database and returns a list of the photographer's sales.
 
-      API.getSales(this.state.jwt)
-        .then(salesData => {
-          console.log(salesData);
-          this.setState({
-            sales: salesData.data,
-            loading: false,
-            isAuthenticated: true
-          })
-          console.log(this.state)
+  componentDidMount() {
+    API.getSales()
+      .then(salesData => {
+
+        console.log('Sales data: ', salesData.data.sales[0]
+        )
+
+        let sales = salesData.data.sales.map(data => {
+          return {
+            title: data.title,
+            date: new Date(data.date).toDateString(),
+            picId: data.picId,
+            price: data.price,
+            purchaser: data.purchaser
+          }
         })
-        .catch(err => {
-          console.log(err)
-          this.setState({
-            loading: false,
-            isAuthenticated: false
-          })
-        });
-    });
+        
+        setCookie(salesData.data.token);
+        this.setState({
+          sales,
+          loading: false,
+          isAuthenticated: true
+        })
+      })
+      .catch(err => {
+        console.log(err)
+        this.setState({
+          loading: false,
+          isAuthenticated: false
+        })
+      });
   }
 
 
-  
+
   render() {
 
     //Display "Loading...." message while the app queries the database for this user's sales
@@ -56,14 +68,15 @@ class PhotographerSales extends Component {
       return (
         <noItems
           message="Loading...."
-          />
+        />
       )
     }
 
     //If there is an error with the query, the user will be sent back to their profile page
     if (this.state.loading === false && this.state.isAuthenticated === false) {
+      removeCookieJwt();
       return (
-           <Redirect to='/photographerlandingpage' />
+        <Redirect to='/' />
       )
     }
 
@@ -75,7 +88,7 @@ class PhotographerSales extends Component {
           <PhotoNav
             id={this.state.userId}
           />
-            <h4>You do not have any sales.</h4>
+          <h4>You do not have any sales.</h4>
           <Footer />
         </div>
       )
@@ -89,9 +102,9 @@ class PhotographerSales extends Component {
         />
         <div className="container" >
           <h1>Your Sales:</h1>
-          {this.state.sales.map( (sale, index) => (
+          {this.state.sales.map((sale, index) => (
             <PhotographerSalesGrid
-             
+
               key={index}
               title={sale.title}
               purchaser={sale.purchaser}

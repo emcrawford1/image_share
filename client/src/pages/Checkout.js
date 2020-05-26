@@ -3,7 +3,7 @@ import { PurchNav } from "../components/Nav";
 import Footer from "../components/Footer";
 import { CheckoutForm } from "../components/Form";
 import API from "../utils/API";
-import { getJwt } from "../helpers/jwt";
+import { setCookie, removeCookieJwt } from "../helpers/jwt";
 import { NoItems } from "../helpers/noItems";
 import { Redirect } from "react-router-dom";
 
@@ -28,11 +28,10 @@ class PCategoryView extends Component {
 
 
   componentDidMount() {
-    this.setState({jwt: getJwt() }, () => {
-    API.getTotalCost(this.state.jwt)
+    API.getTotalCost()
       .then(cost => {
-        console.log(cost)
         this.setState({ totalPrice: cost.data.totalPrice })
+        setCookie(cost.data.token)
       })
       .catch(err => {
         console.log(err)
@@ -41,14 +40,14 @@ class PCategoryView extends Component {
           isAuthenticated: false
         })
       });
-    API.getCartItems(this.state.jwt)
+    API.getCartItems()
       .then(cart => {
-        this.setState({ 
+        this.setState({
           cartItems: cart.data,
           loading: false,
           isAuthenticated: true
         })
-        console.log(this.state)
+        console.log(cart)
       })
       .catch(err => {
         console.log(err)
@@ -56,7 +55,6 @@ class PCategoryView extends Component {
           loading: false,
           isAuthenticated: false
         })
-      })
       })
   }
 
@@ -67,14 +65,13 @@ class PCategoryView extends Component {
     let path = "/postpurchase";
     let orderObj = {};
 
-    API.placeOrder(orderObj, this.state.jwt)
+    API.placeOrder(orderObj)
       .then(orderData => {
-            API.clearCart(this.state.jwt)
-              .then(status => {
-                console.log(status);
-                this.props.history.push(path);
-              })
-              .catch(err => console.log(err))
+        API.clearCart()
+          .then(status => {
+            this.props.history.push(path);
+          })
+          .catch(err => console.log(err))
       })
       .catch(err => console.log(err))
   }
@@ -84,13 +81,14 @@ class PCategoryView extends Component {
       return (
         <NoItems
           message="Loading...."
-          />
+        />
       )
     }
 
     if (this.state.loading === false && this.state.isAuthenticated === false) {
+      removeCookieJwt();
       return (
-           <Redirect to='/' />
+        <Redirect to='/' />
       )
     }
     return (

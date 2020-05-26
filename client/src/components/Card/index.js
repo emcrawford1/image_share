@@ -1,5 +1,6 @@
 import React from "react";
 
+
 //These components could probably be refactored
 
 //Styling
@@ -37,7 +38,7 @@ export function PSpecificPic(props) {
         <div className="card-body">
           <h2 className="card-title">{props.fullName}</h2>
           <a href={props.link}><p className="card-text"><small className="text-muted">{props.username}</small></p></a>
-          <p className="card-text">{props.dateAdded}</p>
+          <p className="card-text"> {props.dateAdded}</p>
           <p className="card-text">{props.description}</p>
           <div className="center">{props.price}<button style={addToCartButtonStyle} type="button" onClick={props.onClick} className={props.BtnClass} disabled={props.disabled}>{props.BtnName}</button></div>
         </div>

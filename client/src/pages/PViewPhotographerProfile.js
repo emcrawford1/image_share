@@ -3,7 +3,7 @@ import { PurchNav } from "../components/Nav";
 import Footer from "../components/Footer";
 import { PUserProfile } from "../components/Card";
 import API from "../utils/API";
-import { getJwt, removeJwt } from "../helpers/jwt";
+import { removeCookieJwt, setCookie } from "../helpers/jwt";
 import { NoItems } from "../helpers/noItems";
 import { Redirect } from "react-router-dom";
 
@@ -31,24 +31,38 @@ class PViewPhotographerProfile extends Component {
   componentDidMount() {
     const photographerId = this.state.photographerId;
 
-    this.setState({ jwt: getJwt() }, () => {
-      API.viewPhotographerProfile(photographerId, this.state.jwt)
-        .then(profileData => {
-          console.log(profileData)
-          this.setState({
-            profile: [profileData.data],
-            loading: false,
-            isAuthenticated: true
-          })
+    API.viewPhotographerProfile(photographerId)
+      .then(profileData => {
+
+        //Format date 
+        let formattedDate = new Date(profileData.data.photoProfileData.dateAdded);
+        let timeAdded = formattedDate.toLocaleTimeString();
+        let dateStamp = `${formattedDate.toDateString()} - ${timeAdded}`;
+
+        
+        let profile = [{
+          aboutMe: profileData.data.photoProfileData.aboutMe,
+          dateAdded: dateStamp,
+          filePath: profileData.data.photoProfileData.filePath,
+          firstName: profileData.data.photoProfileData.firstName,
+          lastName: profileData.data.photoProfileData.lastName,
+          userName: profileData.data.photoProfileData.userName
+        }];
+
+        setCookie(profileData.data.token);
+        this.setState({
+          profile,
+          loading: false,
+          isAuthenticated: true
         })
-        .catch(err => {
-          console.log(err)
-          this.setState({
-            loading: false,
-            isAuthenticated: false
-          })
-        });
-    })
+      })
+      .catch(err => {
+        console.log(err)
+        this.setState({
+          loading: false,
+          isAuthenticated: false
+        })
+      });
   }
 
 
@@ -64,7 +78,7 @@ class PViewPhotographerProfile extends Component {
     }
 
     if (this.state.loading === false && this.state.isAuthenticated === false) {
-      removeJwt()
+      removeCookieJwt()
       return (
         <Redirect to='/' />
       )

@@ -18,10 +18,10 @@ import PhotographerPhotoView from "./pages/PhotographerPhotoView";
 import PhotographerSales from "./pages/PhotographerSales";
 import PhotographerAddPhoto from "./pages/PhotographerAddPhoto";
 import Login from "./pages/Login";
-import PhotoLogin from "./pages/PhotoLogin";
-import { getJwt } from "./helpers/jwt";
+import { getCookieJwt, removeCookieJwt } from "./helpers/jwt";
 import Register from "./pages/Register";
 import './App.css';
+
 
 //Authentication Components
 import { PurchaseAuthenticated, PhotoAuthenticated } from "./authWrappers/purchaseAuthenticated";
@@ -39,29 +39,30 @@ class App extends Component {
   //Get the web token (jwt) if the user has it.  If not, each of the components that are rendered will redirect the user back 
   //to the Login component (except for the Register component)
   componentDidMount() {
-    const jwt = getJwt();
+
+    //Get JWT from cookie
+    const jwt = getCookieJwt();
 
     if (!jwt) {
       console.log("No Jwt")
     }
 
     else {
-      console.log(jwt)
-      API.getUser(jwt)
+      API.getUser()
         .then(userData => {
-          console.log("this.props.children = " + JSON.stringify(userData.data))
           this.setState({
             email: userData.data.email,
             accountType: parseInt(userData.data.accountType),
             jwt,
             loggedIn: true
           });
-          console.log(this.state);
 
         })
+        
+        //Console log errors and remove the Jwt from the cookie
         .catch(err => {
           console.log(err);
-          localStorage.removeItem('ImageShare-jwt')
+          removeCookieJwt();
         })
     }
   }

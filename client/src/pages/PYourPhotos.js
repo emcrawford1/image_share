@@ -3,7 +3,7 @@ import { PurchNav } from "../components/Nav";
 import Footer from "../components/Footer";
 import { PicGrid } from "../components/Grid";
 import API from "../utils/API";
-import { getJwt, removeJwt } from "../helpers/jwt";
+import { removeCookieJwt, setCookie } from "../helpers/jwt";
 import { NoItems } from "../helpers/noItems";
 import { Redirect } from "react-router-dom";
 
@@ -27,14 +27,14 @@ class PYourPhotos extends Component {
 //Check to see if the confNum is greater than 0.  If so, display the pictures associated with that specific confirmation 
 //number.  If the confNum is less than 0, display all the user's purchased photos.
   componentDidMount() {
-    this.setState({ jwt: getJwt() }, () => {
+ 
       const confNum = this.state.confId;
       if (confNum > 0) {
-        API.getByConf(confNum, this.state.jwt)
+        API.getByConf(confNum)
           .then(confData => {
-            console.log(confData)
+            setCookie(confData.data.token)
             this.setState({ 
-              pictures: confData.data,
+              pictures: confData.data.confirmationData,
               loading: false,
               isAuthenticated: true
              })
@@ -49,11 +49,11 @@ class PYourPhotos extends Component {
             })
       }
       else {
-        API.getByEmail(this.state.jwt)
+        API.getByEmail()
           .then(emailData => {
-            console.log(emailData)
+            setCookie(emailData.data.token)
             this.setState({ 
-              pictures: emailData.data,
+              pictures: emailData.data.photoData,
               loading: false,
               isAuthenticated: true
              })
@@ -66,7 +66,6 @@ class PYourPhotos extends Component {
             })
           })
       }
-    })
   }
 
   render() {
@@ -80,7 +79,7 @@ class PYourPhotos extends Component {
     }
 
     if (this.state.loading === false && this.state.isAuthenticated === false) {
-      removeJwt()
+      removeCookieJwt()
       return (
            <Redirect to='/' />
       )
@@ -89,7 +88,6 @@ class PYourPhotos extends Component {
       return (
         <div className="wrapper">
           <PurchNav
-          // id={this.state.userId}
           />
           <div className="container">
             <h2>You have not purchased any photos yet.</h2>
@@ -102,14 +100,13 @@ class PYourPhotos extends Component {
     return (
       <div className="wrapper">
         <PurchNav
-        // id={this.state.userId}
         />
         <div style={flexContainer}>
           {this.state.pictures.map((pic, index) => (
             <PicGrid
               key={index}
               link={"purchasedphotoview/" + pic.id}
-              filePath={pic.filePath}
+              filePath={pic.restrictedFilePath}
               name={pic.title}
             />
           )
