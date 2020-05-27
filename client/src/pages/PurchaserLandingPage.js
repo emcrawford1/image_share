@@ -33,7 +33,7 @@ class PurchaserLanding extends Component {
 
     API.loadCategories()
       .then(categoryData => {
-        // setCookie(categoryData.data.token);
+        setCookie(categoryData.data.token);
         this.setState({
           pictures: categoryData.data.categories,
           loading: false,
