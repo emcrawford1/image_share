@@ -39,6 +39,7 @@ class PurchaserLanding extends Component {
           loading: false,
           isAuthenticated: true
         })
+        console.log(this.categoryData);
       })
       .catch(err => {
         console.log(err)
