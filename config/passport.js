@@ -16,7 +16,7 @@ var extractCookie = function(req) {
 
   if(req && req.cookies)
   {
-    token = req.cookies['imageShare-jwt'];
+    token = req.cookies["imageShare-jwt"];
   }
 
   return token;
