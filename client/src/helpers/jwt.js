@@ -11,12 +11,12 @@ export const setCookie = token => {
 }
 
 export const getCookieJwt = () => {
-  const name = 'imageShare-jwt=';
+  const name = "imageShare-jwt=";
   const decodedCookie = decodeURIComponent(document.cookie);
-  const cookieList = decodedCookie.split(';');
+  const cookieList = decodedCookie.split(";");
   for (let i = 0; i < cookieList.length; i++) {
     let cookieRef = cookieList[i];
-    while (cookieRef.charAt(0) === ' ') {
+    while (cookieRef.charAt(0) === " ") {
       cookieRef = cookieRef.substring(1);
     }
     if (cookieRef.indexOf(name) === 0) {
@@ -26,6 +26,6 @@ export const getCookieJwt = () => {
 }
 
 export const removeCookieJwt = () => {
- const name = 'imageShare-jwt=';
- document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/';
+ const name = "imageShare-jwt=";
+ document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/";
 }
