@@ -61,12 +61,12 @@ class PurchaserLanding extends Component {
       )
     }
 
-    if (this.state.loading === false && this.state.isAuthenticated === false) {
-      removeCookieJwt();
-      return (
-        <Redirect to='/' />
-      )
-    }
+    // if (this.state.loading === false && this.state.isAuthenticated === false) {
+    //   removeCookieJwt();
+    //   return (
+    //     <Redirect to='/' />
+    //   )
+    // }
 
     if (this.state.pictures.length === 0) {
       return (
