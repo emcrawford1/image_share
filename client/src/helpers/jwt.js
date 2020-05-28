@@ -1,6 +1,6 @@
 
 export const setCookie = token => {
-  document.cookie = "imageShare-jwt=" + token + ";path=/";
+  if(token !== "undefined") document.cookie = "imageShare-jwt=" + token + ";path=/";
 }
 
 export const getCookieJwt = () => {

@@ -69,7 +69,7 @@ class PurchaserLanding extends Component {
       )
     }
 
-    if (this.state.pictures.length === 0 || this.state.pictures === "undefined" ) {
+    if (this.state.pictures === "undefined" || this.state.pictures.length === 0 ) {
       return (
         <div className="wrapper">
           <PhotoNav
