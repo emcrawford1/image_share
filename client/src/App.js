@@ -50,6 +50,7 @@ class App extends Component {
     else {
       API.getUser()
         .then(userData => {
+          console.log('User Data: ', userData)
           this.setState({
             email: userData.data.email,
             accountType: parseInt(userData.data.accountType),
@@ -62,8 +63,7 @@ class App extends Component {
         //Console log errors and remove the Jwt from the cookie
         .catch(err => {
           console.log(err);
-          console.log('Error state: ', this.state)
-          // removeCookieJwt();
+          removeCookieJwt();
         })
     }
   }
