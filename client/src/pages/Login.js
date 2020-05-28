@@ -97,6 +97,7 @@ class Login extends Component {
     if (authObj.userNameFlag !== true && authObj.loginFlag !== true) {
       API.loginUser(this.state)
         .then(loginRes => {
+          console.log('Login Res: ', loginRes)
           setCookie(loginRes.data.token)
           this.setState({ accountType: loginRes.data.accountType })
 
