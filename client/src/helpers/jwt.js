@@ -1,11 +1,4 @@
-// export const getJwt = () => {
-//   return localStorage.getItem('ImageShare-jwt');
 
-// }
-
-// export const removeJwt = () => {
-//   return localStorage.removeItem('ImageShare-jwt');
-// }
 export const setCookie = token => {
   document.cookie = "imageShare-jwt=" + token + ";path=/";
 }

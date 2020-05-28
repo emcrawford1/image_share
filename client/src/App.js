@@ -62,7 +62,8 @@ class App extends Component {
         //Console log errors and remove the Jwt from the cookie
         .catch(err => {
           console.log(err);
-          removeCookieJwt();
+          console.log('Error state: ', this.state)
+          // removeCookieJwt();
         })
     }
   }
