@@ -50,7 +50,6 @@ class App extends Component {
     else {
       API.getUser()
         .then(userData => {
-          console.log('User Data: ', userData)
           this.setState({
             email: userData.data.email,
             accountType: parseInt(userData.data.accountType),
