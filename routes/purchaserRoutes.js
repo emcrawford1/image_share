@@ -175,10 +175,12 @@ router.get('/mypurchases', (req, res) => {
 
 //PurchaserLandingPage.js = Purchaser
 router.get('/categories', (req, res) =>
+
   Category.findAll({
     attributes: ['id', ['name', 'category'], ['pic', 'filePath']]
   })
     .then(categories => {
+      console.log('Category Request: ', req)
       const catData = {
         token: req.user.token,
         categories
