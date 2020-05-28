@@ -24,7 +24,7 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-app.get('/api/purchaserroutes/categores', (req, res) => console.log('HEYYYY'))
+app.get('/api/purchaserroutes/categories', (req, res) => console.log('HEYYYY'))
 //Database
 const db = require('./models');
 
