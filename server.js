@@ -23,6 +23,8 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
   });
 }
+
+app.get('*', (req, res) => console.log('Request: ', req))
 //Database
 const db = require('./models');
 
