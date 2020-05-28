@@ -96,6 +96,7 @@ class PurchaserLanding extends Component {
           )
           )} */}
           Hello
+          {console.log("State: ", this.state)}
         </div>
         <Footer />
       </div>
