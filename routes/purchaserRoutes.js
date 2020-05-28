@@ -12,7 +12,7 @@ const purchConf = models.purchase_confirmation;
 const Purchases = models.purchases;
 
 
-
+router.get('/', (req, res) => console.log(req))
 
 
 // Checkout.js - Purchaser
