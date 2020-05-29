@@ -69,9 +69,9 @@ class PurchaserLanding extends Component {
       )
     }
 
-    // || this.state.pictures.length === 0 
+ 
 
-    if (this.state.pictures === "undefined" ) {
+    if (this.state.pictures.length === 0 || this.state.pictures === "undefined" ) {
       return (
         <div className="wrapper">
           <PhotoNav
@@ -95,8 +95,6 @@ class PurchaserLanding extends Component {
             />
           )
           )}
-          Hello
-          {console.log("State: ", this.state)}
         </div>
         <Footer />
       </div>
