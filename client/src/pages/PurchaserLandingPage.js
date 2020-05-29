@@ -74,7 +74,7 @@ class PurchaserLanding extends Component {
     if (this.state.pictures.length === 0 || this.state.pictures === "undefined" ) {
       return (
         <div className="wrapper">
-          <PhotoNav
+          <PurchNav
             id={this.state.userId}
           />
           <h4>There are not any categories available....</h4>
