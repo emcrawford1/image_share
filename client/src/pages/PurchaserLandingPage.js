@@ -86,7 +86,7 @@ class PurchaserLanding extends Component {
       <div className="wrapper">
         <PurchNav />
         <div style={flexContainer}>
-          {/* {this.state.pictures.map((pic, index) => (
+          {this.state.pictures.map((pic, index) => (
             <PicGrid
               key={index}
               link={"pcategoryview/" + pic.id}
@@ -94,7 +94,7 @@ class PurchaserLanding extends Component {
               name={pic.category}
             />
           )
-          )} */}
+          )}
           Hello
           {console.log("State: ", this.state)}
         </div>
