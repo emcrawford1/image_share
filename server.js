@@ -12,6 +12,13 @@ const strategy = require('./config/passport');
 //PORT
 const PORT = process.env.PORT || 3001;
 
+//Database
+const db = require('./models');
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(cookieParser());
+
 
 if (process.env.NODE_ENV === 'production') {
   // Exprees will serve up production assets
@@ -20,18 +27,11 @@ if (process.env.NODE_ENV === 'production') {
   // Express serve up index.html file if it doesn't recognize route
   const path = require('path');
   app.get('*', (req, res) => {
+    console.log('Req cookie: ', req.cookie)
     res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
   });
 }
 
-//Database
-const db = require('./models');
-
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use(cookieParser());
-
-console.log('Req cookie: ', req.cookie)
 //Passport middleware
 passport.use(strategy)
 app.use(passport.initialize());
