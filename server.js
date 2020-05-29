@@ -31,6 +31,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+console.log('Req cookie: ', req.cookie)
 //Passport middleware
 passport.use(strategy)
 app.use(passport.initialize());
