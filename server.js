@@ -37,9 +37,6 @@ if (process.env.NODE_ENV === 'production') {
 
   // Express serve up index.html file if it doesn't recognize route
   app.get('*', (req, res) => {
-    console.log('Request: ', req.cookies)
-    console.log('Request body: ', req.body)
-    console.log('Response: ', res)
     res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
   });
 }
