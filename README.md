@@ -6,4 +6,4 @@ Image Share is a mock application that allows users to upload and sell images to
 
 See deployed version at https://app-image-share.herokuapp.com
 
-###Update 1/28/2023 - This project is no longer available on Heroku.  Users will need to clone the project and run it on their local.
+### Update 1/28/2023 - This project is no longer available on Heroku.  Users will need to clone the project and run it on their local.
